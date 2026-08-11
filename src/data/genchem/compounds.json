@@ -1,0 +1,43 @@
+[
+  { "name": "methane",            "formula": "CH₄",        "bp": -161.5, "carbons": 1, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "ethane",             "formula": "C₂H₆",       "bp": -88.6,  "carbons": 2, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "propane",            "formula": "C₃H₈",       "bp": -42.1,  "carbons": 3, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "butane",             "formula": "C₄H₁₀",      "bp": -0.5,   "carbons": 4, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "pentane",            "formula": "C₅H₁₂",      "bp": 36.1,   "carbons": 5, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "hexane",             "formula": "C₆H₁₄",      "bp": 68.7,   "carbons": 6, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "heptane",            "formula": "C₇H₁₆",      "bp": 98.4,   "carbons": 7, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+  { "name": "octane",             "formula": "C₈H₁₈",      "bp": 125.6,  "carbons": 8, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkane" },
+
+  { "name": "methanol",           "formula": "CH₃OH",      "bp": 64.7,   "carbons": 1, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "alcohol" },
+  { "name": "ethanol",            "formula": "C₂H₅OH",     "bp": 78.4,   "carbons": 2, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "alcohol" },
+  { "name": "propan-1-ol",        "formula": "C₃H₇OH",     "bp": 97.2,   "carbons": 3, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "alcohol" },
+  { "name": "butan-1-ol",         "formula": "C₄H₉OH",     "bp": 117.7,  "carbons": 4, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "alcohol" },
+  { "name": "pentan-1-ol",        "formula": "C₅H₁₁OH",    "bp": 138.0,  "carbons": 5, "force": "hydrogen bonding", "polar": true, "waterSoluble": false, "family": "alcohol" },
+
+  { "name": "dimethyl ether",     "formula": "CH₃OCH₃",    "bp": -24.0,  "carbons": 2, "force": "dipole-dipole", "polar": true, "waterSoluble": true, "family": "ether" },
+  { "name": "diethyl ether",      "formula": "C₂H₅OC₂H₅",  "bp": 34.6,   "carbons": 4, "force": "dipole-dipole", "polar": true, "waterSoluble": false, "family": "ether" },
+
+  { "name": "acetaldehyde",       "formula": "CH₃CHO",     "bp": 20.2,   "carbons": 2, "force": "dipole-dipole", "polar": true, "waterSoluble": true, "family": "aldehyde" },
+  { "name": "propanal",           "formula": "C₂H₅CHO",    "bp": 48.8,   "carbons": 3, "force": "dipole-dipole", "polar": true, "waterSoluble": true, "family": "aldehyde" },
+  { "name": "acetone",            "formula": "CH₃COCH₃",   "bp": 56.1,   "carbons": 3, "force": "dipole-dipole", "polar": true, "waterSoluble": true, "family": "ketone" },
+  { "name": "butanone",           "formula": "CH₃COC₂H₅",  "bp": 79.6,   "carbons": 4, "force": "dipole-dipole", "polar": true, "waterSoluble": true, "family": "ketone" },
+
+  { "name": "formic acid",        "formula": "HCOOH",      "bp": 100.8,  "carbons": 1, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "carboxylic acid" },
+  { "name": "acetic acid",        "formula": "CH₃COOH",    "bp": 118.1,  "carbons": 2, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "carboxylic acid" },
+  { "name": "propanoic acid",     "formula": "C₂H₅COOH",   "bp": 141.2,  "carbons": 3, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "carboxylic acid" },
+
+  { "name": "methylamine",        "formula": "CH₃NH₂",     "bp": -6.3,   "carbons": 1, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "amine" },
+  { "name": "ethylamine",         "formula": "C₂H₅NH₂",    "bp": 16.6,   "carbons": 2, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "amine" },
+
+  { "name": "chloromethane",      "formula": "CH₃Cl",      "bp": -24.2,  "carbons": 1, "force": "dipole-dipole", "polar": true, "waterSoluble": false, "family": "alkyl halide" },
+  { "name": "dichloromethane",    "formula": "CH₂Cl₂",     "bp": 39.6,   "carbons": 1, "force": "dipole-dipole", "polar": true, "waterSoluble": false, "family": "alkyl halide" },
+  { "name": "chloroform",         "formula": "CHCl₃",      "bp": 61.2,   "carbons": 1, "force": "dipole-dipole", "polar": true, "waterSoluble": false, "family": "alkyl halide" },
+  { "name": "carbon tetrachloride","formula": "CCl₄",      "bp": 76.7,   "carbons": 1, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "alkyl halide" },
+
+  { "name": "benzene",            "formula": "C₆H₆",       "bp": 80.1,   "carbons": 6, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "aromatic" },
+  { "name": "toluene",            "formula": "C₇H₈",       "bp": 110.6,  "carbons": 7, "force": "dispersion", "polar": false, "waterSoluble": false, "family": "aromatic" },
+  { "name": "phenol",             "formula": "C₆H₅OH",     "bp": 181.7,  "carbons": 6, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "aromatic alcohol" },
+
+  { "name": "water",              "formula": "H₂O",        "bp": 100.0,  "carbons": 0, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "inorganic" },
+  { "name": "ammonia",            "formula": "NH₃",        "bp": -33.3,  "carbons": 0, "force": "hydrogen bonding", "polar": true, "waterSoluble": true, "family": "inorganic" }
+]

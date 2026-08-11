@@ -21,6 +21,7 @@ import pkaComparisons from '../data/curated/pkaComparisons.json'
 import mechanismConcepts from '../data/curated/mechanismConcepts.json'
 import snsE from '../data/curated/snsE.json'
 import imf from '../data/curated/imf.json'
+import * as imfGen from '../generators/imf.js'
 
 function hashId(str) {
   let h = 2166136261
@@ -64,13 +65,13 @@ export const TOPICS = [
     blurb: 'Symbols, valence, bonding patterns, and the trends that drive everything else.',
     speedRound: true,
     build: () => [
-      ...buildBank(elements.generateSymbolName, 40),
-      ...buildBank(elements.generateAtomicNumber, 30),
-      ...buildBank(elements.generateValence, 24),
-      ...buildBank(elements.generateBondCount, 24),
-      ...buildBank(elements.generateBondCompare, 30),
-      ...buildBank(elements.generateTrendCompare, 45),
-      ...buildBank(elements.generateENRanking, 30),
+      ...buildBank(elements.generateSymbolName, 70),
+      ...buildBank(elements.generateAtomicNumber, 50),
+      ...buildBank(elements.generateValence, 60),
+      ...buildBank(elements.generateBondCount, 40),
+      ...buildBank(elements.generateBondCompare, 80),
+      ...buildBank(elements.generateTrendCompare, 110),
+      ...buildBank(elements.generateENRanking, 60),
       ...buildBank(elements.generateTrendDirection, 12),
       ...withKind(electronConfig),
     ],
@@ -81,9 +82,9 @@ export const TOPICS = [
     blurb: 'Which atom gets δ−, how polar a bond is, and where dipoles point.',
     speedRound: true,
     build: () => [
-      ...buildBank(elements.generatePolarityDirection, 40),
-      ...buildBank(elements.generatePolarityClass, 30),
-      ...buildBank(elements.generateMorePolarBond, 30),
+      ...buildBank(elements.generatePolarityDirection, 90),
+      ...buildBank(elements.generatePolarityClass, 60),
+      ...buildBank(elements.generateMorePolarBond, 70),
     ],
   },
   {
@@ -125,12 +126,12 @@ export const TOPICS = [
     label: 'Acids & Bases',
     blurb: 'pKa comparisons, conjugate pairs, and which way a proton actually moves.',
     build: () => [
-      ...buildBank(acidBase.generateStrongerAcid, 40),
-      ...buildBank(acidBase.generateStrongerBase, 30),
+      ...buildBank(acidBase.generateStrongerAcid, 80),
+      ...buildBank(acidBase.generateStrongerBase, 60),
       ...buildBank(acidBase.generateConjugateBase, 27),
       ...buildBank(acidBase.generateConjugateAcid, 27),
-      ...buildBank(acidBase.generateProtonTransfer, 45),
-      ...buildBank(acidBase.generateAcidRanking, 30),
+      ...buildBank(acidBase.generateProtonTransfer, 90),
+      ...buildBank(acidBase.generateAcidRanking, 60),
       ...buildBank(acidBase.generatePkaRecall, 27),
       ...buildBank(acidBase.generateAcidBaseRole, 4),
       ...withKind(acidBaseCurated),
@@ -141,7 +142,13 @@ export const TOPICS = [
     id: 'imf',
     label: 'Intermolecular Forces',
     blurb: 'H-bonding, dipoles, dispersion — what sets boiling points and solubility.',
-    build: () => withKind(imf),
+    build: () => [
+      ...withKind(imf),
+      ...buildBank(imfGen.generateBoilingCompare, 90),
+      ...buildBank(imfGen.generateStrongestForce, 40),
+      ...buildBank(imfGen.generateSolubility, 40),
+      ...buildBank(imfGen.generateFamilyForce, 40),
+    ],
   },
   {
     id: 'skeletal',
@@ -164,8 +171,8 @@ export const TOPICS = [
     blurb: 'Spot alcohols, carbonyls, amines and the rest on sight.',
     speedRound: true,
     build: () => [
-      ...buildBank(functionalGroups.generateGroupId, 52),
-      ...buildBank(functionalGroups.generateMultiGroupId, 21),
+      ...buildBank(functionalGroups.generateGroupId, 110),
+      ...buildBank(functionalGroups.generateMultiGroupId, 60),
       ...buildBank(functionalGroups.generateGroupFromDescription, 13),
     ],
   },

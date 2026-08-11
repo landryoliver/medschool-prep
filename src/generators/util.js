@@ -40,13 +40,42 @@ export function makeChoices(rng, correct, distractorPool, count = 4) {
   return { choices, correctIndex: choices.indexOf(String(correct)) }
 }
 
-/** Deterministic bank: seed i always yields the same question, so SRS
- *  progress stays attached to a stable question identity. */
+/**
+ * What makes two questions the same question. The visual is included
+ * because many questions legitimately share a prompt and choice list and
+ * differ only in the structure drawn.
+ */
+function contentSignature(q) {
+  return JSON.stringify([
+    q.prompt,
+    q.choices ?? null,
+    q.correctIndex ?? q.correctIndices ?? q.answer ?? null,
+    q.visual ?? null,
+    q.choiceVisuals ?? null,
+  ])
+}
+
+/**
+ * Deterministic bank: seed i always yields the same question, so SRS
+ * progress stays attached to a stable question identity.
+ *
+ * Generators that sample from a small pool will repeat themselves once
+ * the seed count exceeds the pool — asking for 24 questions about "how
+ * many bonds does X form" when only 10 elements qualify. Duplicates are
+ * dropped here rather than in each generator, so a bank is always as
+ * large as its content actually supports and never larger. Asking for
+ * more than a pool can supply is therefore harmless.
+ */
 export function buildBank(genFn, count, seedOffset = 0) {
   const out = []
+  const seen = new Set()
   for (let i = 0; i < count; i++) {
     const q = genFn(seedOffset + i)
-    if (q) out.push(q)
+    if (!q) continue
+    const sig = contentSignature(q)
+    if (seen.has(sig)) continue
+    seen.add(sig)
+    out.push(q)
   }
   return out
 }

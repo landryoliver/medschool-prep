@@ -13,6 +13,12 @@ const fail = (msg) => {
 }
 
 const seenIds = new Map()
+// Content signature -> first id seen. Two questions that differ only by id
+// are one question occupying two spaced-repetition rows, so the user is
+// asked the same thing twice and "mastering" it takes double the work.
+// The visual is part of the signature: many questions legitimately share a
+// prompt and choice list and differ only in the structure drawn.
+const seenContent = new Map()
 
 console.log('=== Topic banks ===')
 for (const topic of TOPICS) {
@@ -45,6 +51,19 @@ for (const topic of TOPICS) {
       fail(`duplicate id "${q.id}" (${seenIds.get(q.id)} and ${topic.id}) — two questions would share one progress record`)
     }
     seenIds.set(q.id, topic.id)
+
+    const signature = JSON.stringify([
+      q.prompt,
+      q.choices ?? null,
+      q.correctIndex ?? q.correctIndices ?? q.answer ?? null,
+      q.visual ?? null,
+      q.choiceVisuals ?? null,
+    ])
+    if (seenContent.has(signature)) {
+      fail(`${q.id}: identical question to "${seenContent.get(signature)}" — same prompt, options and answer`)
+    } else {
+      seenContent.set(signature, q.id)
+    }
 
     if (!q.topic) fail(`${q.id}: missing topic`)
     if (!q.prompt) fail(`${q.id}: missing prompt`)
