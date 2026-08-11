@@ -11,6 +11,7 @@ import * as nomenclature from '../generators/nomenclature.js'
 import * as functionalGroups from '../generators/functionalGroups.js'
 
 import lewisStructures from '../data/genchem/lewisStructures.json'
+import electronConfig from '../data/genchem/electronConfig.json'
 import vseprCurated from '../data/genchem/vsepr.json'
 import acidBaseCurated from '../data/genchem/acidBase.json'
 import curvedArrows from '../data/curated/curvedArrows.json'
@@ -71,6 +72,7 @@ export const TOPICS = [
       ...buildBank(elements.generateTrendCompare, 45),
       ...buildBank(elements.generateENRanking, 30),
       ...buildBank(elements.generateTrendDirection, 12),
+      ...withKind(electronConfig),
     ],
   },
   {

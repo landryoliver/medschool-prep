@@ -1,0 +1,145 @@
+[
+  {
+    "id": "econf-1",
+    "topic": "electron-config",
+    "prompt": "What is the ground-state electron configuration of carbon (6 electrons)?",
+    "choices": ["1s² 2s² 2p²", "1s² 2s⁴", "1s² 2p⁴", "1s⁶"],
+    "correctIndex": 0,
+    "explanation": "Fill lowest energy first: two in 1s, two in 2s, and the remaining two in the 2p orbitals.",
+    "teach": "Filling order for the first ten electrons: 1s → 2s → 2p. Superscripts count electrons and must add up to the total."
+  },
+  {
+    "id": "econf-2",
+    "topic": "electron-config",
+    "prompt": "How many electrons can a single orbital hold?",
+    "choices": ["2, with opposite spins", "1", "8", "As many as needed"],
+    "correctIndex": 0,
+    "explanation": "The Pauli exclusion principle caps every orbital at two electrons, and they must have opposite spins.",
+    "teach": "Orbital = a region holding at most 2 electrons. Shell capacity is just the orbital count × 2."
+  },
+  {
+    "id": "econf-3",
+    "topic": "electron-config",
+    "prompt": "What shape is an s orbital, and what shape is a p orbital?",
+    "choices": [
+      "s is a sphere; p is a dumbbell with two lobes",
+      "Both are spheres",
+      "s is a dumbbell; p is a sphere",
+      "Both are flat rings"
+    ],
+    "correctIndex": 0,
+    "explanation": "The spherical s and two-lobed p are the only shapes organic chemistry needs — hybrid orbitals are mixtures of these.",
+    "teach": "The p orbital's two lobes with a node at the nucleus are what make pi bonds and resonance possible."
+  },
+  {
+    "id": "econf-4",
+    "topic": "electron-config",
+    "prompt": "How many p orbitals are in the second shell, and how are they arranged?",
+    "choices": [
+      "Three, mutually perpendicular (px, py, pz)",
+      "One large one",
+      "Two, parallel to each other",
+      "Six, in a ring"
+    ],
+    "correctIndex": 0,
+    "explanation": "Three p orbitals at right angles, each holding up to 2 electrons — 6 p electrons total, plus 2 in the 2s, gives the shell's capacity of 8.",
+    "teach": "The octet IS the second shell: 2s (2 electrons) + three 2p (6 electrons) = 8."
+  },
+  {
+    "id": "econf-5",
+    "topic": "electron-config",
+    "prompt": "What is the ground-state configuration of oxygen (8 electrons)?",
+    "choices": ["1s² 2s² 2p⁴", "1s² 2s² 2p⁶", "1s² 2s⁶", "1s² 2s² 2p² 3s²"],
+    "correctIndex": 0,
+    "explanation": "2 + 2 + 4 = 8. The six electrons past the 1s core are oxygen's valence electrons — the 2s² and 2p⁴.",
+    "teach": "Valence electron count = everything in the outermost shell. For O: 2s² 2p⁴ → 6 valence electrons, matching group 16."
+  },
+  {
+    "id": "econf-6",
+    "topic": "electron-config",
+    "prompt": "When filling the three equal-energy 2p orbitals, electrons go in:",
+    "choices": [
+      "One per orbital first, then pairing up (Hund's rule)",
+      "All paired in the first orbital before touching the next",
+      "Random orbitals with random spins",
+      "Highest-energy orbital first"
+    ],
+    "correctIndex": 0,
+    "explanation": "Electrons repel, so they spread across degenerate orbitals singly before any orbital takes a second one.",
+    "teach": "Hund's rule is why carbon has TWO unpaired 2p electrons and nitrogen has three — and why nitrogen's half-filled 2p is extra stable."
+  },
+  {
+    "id": "econf-7",
+    "topic": "electron-config",
+    "prompt": "What distinguishes CORE electrons from VALENCE electrons?",
+    "choices": [
+      "Core electrons fill inner shells and rarely react; valence electrons occupy the outer shell and do all the bonding",
+      "Core electrons are negative, valence are positive",
+      "Valence electrons are inside the nucleus",
+      "There is no difference"
+    ],
+    "correctIndex": 0,
+    "explanation": "Chemistry happens in the outermost shell. Carbon's 1s² core just shields; its 2s² 2p² valence set makes all four bonds.",
+    "teach": "This is why the periodic table column predicts bonding: same column = same valence configuration = same chemistry."
+  },
+  {
+    "id": "econf-8",
+    "topic": "electron-config",
+    "prompt": "Why are noble gases like neon essentially unreactive?",
+    "choices": [
+      "Their valence shell is completely full, so gaining, losing, or sharing electrons offers no stability gain",
+      "They have no electrons",
+      "They are too heavy to react",
+      "Their nuclei repel other atoms"
+    ],
+    "correctIndex": 0,
+    "explanation": "Neon's 2s² 2p⁶ shell is complete. Every octet-seeking atom is trying to reach exactly this arrangement.",
+    "teach": "The octet rule is shorthand for 'reach the nearest noble-gas configuration'."
+  },
+  {
+    "id": "econf-9",
+    "topic": "electron-config",
+    "prompt": "Nitrogen's configuration is 1s² 2s² 2p³. How many valence electrons does it have?",
+    "choices": ["5", "3", "7", "2"],
+    "correctIndex": 0,
+    "explanation": "The second shell holds 2s² plus 2p³ = 5 valence electrons. The 1s² pair is core.",
+    "teach": "Read valence count straight off the configuration: add every superscript in the outermost shell number."
+  },
+  {
+    "id": "econf-10",
+    "topic": "electron-config",
+    "prompt": "Hybridization (sp³, sp², sp) is possible for carbon because:",
+    "choices": [
+      "Its 2s and 2p orbitals are close enough in energy to mix into new, equivalent orbitals",
+      "Carbon has d orbitals available",
+      "Its 1s electrons participate in bonding",
+      "Carbon's orbitals are all spheres"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mixing one 2s with three 2p orbitals gives four equivalent sp³ hybrids — which is how carbon makes four identical bonds in methane despite a 2s² 2p² configuration.",
+    "teach": "Hybridization is the bridge between electron configuration and molecular shape — this is where gen-chem hands off to orgo."
+  },
+  {
+    "id": "econf-11",
+    "topic": "electron-config",
+    "prompt": "What is the configuration of the chloride ion, Cl⁻ (18 electrons)?",
+    "choices": ["1s² 2s² 2p⁶ 3s² 3p⁶", "1s² 2s² 2p⁶ 3s² 3p⁵", "1s² 2s² 2p⁶ 3s² 3p⁴", "1s² 2s² 2p⁶ 3s¹ 3p⁶"],
+    "correctIndex": 0,
+    "explanation": "Neutral Cl (17 electrons) ends 3p⁵; the extra electron completes the 3p, matching argon. That full shell is why chloride is so stable — and such a good leaving group.",
+    "teach": "Anions ADD electrons to the configuration; cations remove them from the OUTERMOST shell first."
+  },
+  {
+    "id": "econf-12",
+    "topic": "electron-config",
+    "prompt": "An unhybridized p orbital lying perpendicular to a molecule's plane matters in orgo because:",
+    "choices": [
+      "Side-by-side overlap of such p orbitals is what forms pi bonds and conjugated systems",
+      "It stores core electrons",
+      "It makes the molecule ionic",
+      "It has no chemical role"
+    ],
+    "correctIndex": 0,
+    "explanation": "An sp² carbon keeps one unhybridized p orbital; lining those up side-by-side builds double bonds, aromatic rings, and resonance.",
+    "teach": "sp² = three hybrid orbitals in a plane + one leftover p sticking up. That leftover p is where all the interesting orgo happens."
+  }
+]

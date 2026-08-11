@@ -7,6 +7,7 @@ import TopicAccuracyBars from './TopicAccuracyBars.jsx'
 const TOPIC_LABELS = {
   'element-recall': 'Element recall',
   'periodic-trends': 'Periodic trends',
+  'electron-config': 'Electron configuration',
   'bond-polarity': 'Bond polarity',
   'lewis-structures': 'Lewis structures',
   'formal-charge': 'Formal charge',

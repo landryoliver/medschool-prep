@@ -18,6 +18,16 @@
       ]
     },
     {
+      "heading": "Orbitals & electron configuration — the 5-minute refresher",
+      "points": [
+        "An orbital is a region holding at most 2 electrons (opposite spins). s orbitals are spheres; p orbitals are two-lobed dumbbells, three per shell at right angles.",
+        "Filling order for everything orgo cares about: 1s → 2s → 2p → 3s → 3p. Carbon: 1s² 2s² 2p². Nitrogen: …2p³. Oxygen: …2p⁴.",
+        "Equal-energy orbitals fill one electron at a time before pairing (Hund's rule).",
+        "Valence electrons = the outermost shell. Core electrons just shield. The octet is literally the second shell filled: 2s² + 2p⁶ = 8.",
+        "Hybridization is mixing 2s with 2p: one s + three p → four sp³; one s + two p → three sp² plus a leftover p orbital. That leftover p is what makes pi bonds."
+      ]
+    },
+    {
       "heading": "Electronegativity ordering worth memorizing",
       "points": [
         "F (3.98) > O (3.44) > N (3.04) ≈ Cl (3.16) > Br (2.96) > I (2.66) ≈ S (2.58) ≈ C (2.55) > H (2.20)",
