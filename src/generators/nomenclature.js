@@ -242,6 +242,99 @@ export function generateNameToStructure(seed) {
   }
 }
 
+/**
+ * Branched alkanes, hand-verified rather than generated.
+ *
+ * Naming a branched skeleton correctly needs a real longest-chain search
+ * with tie-breaking, and a subtly wrong generated name would teach the
+ * wrong rule. Every entry below was checked by hand — including the cases
+ * where an alternative chain ties in length and the name still comes out
+ * the same. Questions are still generated FROM the table, so both
+ * directions and fresh distractors come for free.
+ */
+const BRANCHED = [
+  { size: 4, subs: [[1, 'CH3']], name: '2-methylbutane' },
+  { size: 3, subs: [[1, 'CH3'], [1, 'CH3']], name: '2,2-dimethylpropane' },
+  { size: 5, subs: [[1, 'CH3']], name: '2-methylpentane' },
+  { size: 5, subs: [[2, 'CH3']], name: '3-methylpentane' },
+  { size: 4, subs: [[1, 'CH3'], [1, 'CH3']], name: '2,2-dimethylbutane' },
+  { size: 4, subs: [[1, 'CH3'], [2, 'CH3']], name: '2,3-dimethylbutane' },
+  { size: 6, subs: [[1, 'CH3']], name: '2-methylhexane' },
+  { size: 6, subs: [[2, 'CH3']], name: '3-methylhexane' },
+  { size: 5, subs: [[1, 'CH3'], [1, 'CH3']], name: '2,2-dimethylpentane' },
+  { size: 5, subs: [[1, 'CH3'], [2, 'CH3']], name: '2,3-dimethylpentane' },
+  { size: 5, subs: [[1, 'CH3'], [3, 'CH3']], name: '2,4-dimethylpentane' },
+  { size: 5, subs: [[2, 'CH3'], [2, 'CH3']], name: '3,3-dimethylpentane' },
+  { size: 5, subs: [[2, 'CH2CH3']], name: '3-ethylpentane' },
+  { size: 4, subs: [[1, 'CH3'], [1, 'CH3'], [2, 'CH3']], name: '2,2,3-trimethylbutane' },
+  { size: 7, subs: [[1, 'CH3']], name: '2-methylheptane' },
+  { size: 7, subs: [[2, 'CH3']], name: '3-methylheptane' },
+  { size: 7, subs: [[3, 'CH3']], name: '4-methylheptane' },
+  { size: 6, subs: [[1, 'CH3'], [3, 'CH3']], name: '2,4-dimethylhexane' },
+  { size: 6, subs: [[1, 'CH3'], [4, 'CH3']], name: '2,5-dimethylhexane' },
+  { size: 6, subs: [[2, 'CH3'], [3, 'CH3']], name: '3,4-dimethylhexane' },
+]
+
+const branchedMolecule = (entry) => ({
+  shape: 'chain',
+  size: entry.size,
+  doubleBondAt: [],
+  tripleBondAt: [],
+  substituents: entry.subs.map(([vertexIndex, label]) => ({ vertexIndex, label })),
+})
+
+const carbonCount = (entry) =>
+  entry.size + entry.subs.reduce((n, [, label]) => n + (label === 'CH2CH3' ? 2 : 1), 0)
+
+/** Branched structure → name, from the hand-checked table. */
+export function generateBranchedName(seed) {
+  const rng = rngFor(seed * 4093 + 11)
+  const entry = BRANCHED[seed % BRANCHED.length]
+
+  // Prefer distractors with the same carbon count so the question can't be
+  // answered by counting carbons alone.
+  const sameSize = BRANCHED.filter((e) => e !== entry && carbonCount(e) === carbonCount(entry))
+  const pool = [...sameSize, ...BRANCHED.filter((e) => e !== entry && !sameSize.includes(e))]
+  const distractors = pool.slice(0, 6).map((e) => e.name)
+  const { choices, correctIndex } = makeChoices(rng, entry.name, distractors)
+
+  return {
+    id: `branch-name-${seed % BRANCHED.length}`,
+    topic: 'nomenclature',
+    kind: 'mcq',
+    prompt: 'What is the IUPAC name of this structure?',
+    choices,
+    correctIndex,
+    explanation: `${entry.name}. The longest chain is ${entry.size} carbons (${alkaneName(entry.size)}), numbered to give the branches the lowest locants.`,
+    teach: 'Find the longest chain first — it may bend on the page — then number from the end that reaches a branch soonest.',
+    visual: { type: 'skeletal', molecule: branchedMolecule(entry) },
+  }
+}
+
+/** Name → branched structure. */
+export function generateBranchedStructure(seed) {
+  const rng = rngFor(seed * 7481 + 43)
+  const entry = BRANCHED[seed % BRANCHED.length]
+  const sameSize = BRANCHED.filter((e) => e !== entry && carbonCount(e) === carbonCount(entry))
+  const pool = [...sameSize, ...BRANCHED.filter((e) => e !== entry && !sameSize.includes(e))]
+  if (pool.length < 3) return null
+
+  const molecules = shuffleWith(rng, [entry, ...pool.slice(0, 3)]).map(branchedMolecule)
+  const correctIndex = molecules.findIndex((m) => JSON.stringify(m) === JSON.stringify(branchedMolecule(entry)))
+
+  return {
+    id: `branch-struct-${seed % BRANCHED.length}`,
+    topic: 'nomenclature',
+    kind: 'mcq',
+    prompt: `Which structure is ${entry.name}?`,
+    choices: molecules.map((_, i) => `Structure ${'ABCD'[i]}`),
+    choiceVisuals: molecules.map((m) => ({ type: 'skeletal', molecule: m })),
+    correctIndex,
+    explanation: `${entry.name} needs a ${entry.size}-carbon chain carrying ${entry.subs.length} branch${entry.subs.length === 1 ? '' : 'es'} at the stated position(s).`,
+    teach: 'Build it in order: draw the parent chain, number it, then attach each branch at its locant.',
+  }
+}
+
 /** Parent-chain naming: how many carbons does a stem imply. */
 export function generateStemRecall(seed) {
   const rng = rngFor(seed * 51 + 3)

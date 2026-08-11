@@ -33,6 +33,39 @@ const MOLECULES = [
   { formula: 'SF₄', center: 'S', ligand: 'F', bonding: 4, lone: 1, note: 'four bonds plus one lone pair' },
 ]
 
+/**
+ * Specific atoms inside organic functional groups — the form the question
+ * actually takes in an orgo course ("what is the hybridization of the
+ * oxygen in an ester?"), as opposed to the gen-chem inorganics above.
+ *
+ * `groups` counts sigma bonds plus lone pairs on that atom.
+ */
+const ORGANIC_ATOMS = [
+  { molecule: 'a ketone (R₂C=O)', atom: 'carbonyl carbon', groups: 3, note: 'two single bonds to carbon plus one double bond to oxygen = 3 groups' },
+  { molecule: 'a ketone (R₂C=O)', atom: 'carbonyl oxygen', groups: 3, note: 'one double bond to carbon plus two lone pairs = 3 groups' },
+  { molecule: 'an aldehyde (RCHO)', atom: 'carbonyl carbon', groups: 3, note: 'bonds to R, H and a double bond to O = 3 groups' },
+  { molecule: 'a carboxylic acid (RCOOH)', atom: 'carbonyl carbon', groups: 3, note: 'bonds to R, to the –OH oxygen, and a double bond to O = 3 groups' },
+  { molecule: 'an alcohol (ROH)', atom: 'oxygen', groups: 4, note: 'two single bonds plus two lone pairs = 4 groups' },
+  { molecule: 'an ether (ROR)', atom: 'oxygen', groups: 4, note: 'two single bonds to carbon plus two lone pairs = 4 groups' },
+  { molecule: 'an amine (RNH₂)', atom: 'nitrogen', groups: 4, note: 'three single bonds plus one lone pair = 4 groups' },
+  { molecule: 'an alkene (R₂C=CR₂)', atom: 'either alkene carbon', groups: 3, note: 'two single bonds plus one double bond = 3 groups' },
+  { molecule: 'an alkyne (RC≡CR)', atom: 'either alkyne carbon', groups: 2, note: 'one single bond plus one triple bond = 2 groups' },
+  { molecule: 'benzene', atom: 'any ring carbon', groups: 3, note: 'two ring bonds plus one C–H bond = 3 groups' },
+  { molecule: 'a nitrile (RC≡N)', atom: 'the nitrile carbon', groups: 2, note: 'one single bond plus one triple bond = 2 groups' },
+  { molecule: 'a nitrile (RC≡N)', atom: 'the nitrile nitrogen', groups: 2, note: 'one triple bond plus one lone pair = 2 groups' },
+  { molecule: 'an alkane (RCH₃)', atom: 'any carbon', groups: 4, note: 'four single bonds = 4 groups' },
+  { molecule: 'a carbocation (R₃C⁺)', atom: 'the positive carbon', groups: 3, note: 'three single bonds and an EMPTY p orbital — the empty orbital is not a group' },
+  { molecule: 'a carbanion (R₃C⁻)', atom: 'the negative carbon', groups: 4, note: 'three single bonds plus one lone pair = 4 groups' },
+  {
+    molecule: 'an amide (RCONH₂)',
+    atom: 'the nitrogen',
+    groups: 3,
+    note: "the nitrogen's lone pair delocalizes into the C=O, so it sits in a p orbital and the nitrogen is planar rather than pyramidal",
+  },
+]
+
+const GROUPS_TO_HYBRIDIZATION = { 2: 'sp', 3: 'sp2', 4: 'sp3' }
+
 const GROUP_RULE = 'Count electron GROUPS, not bonds: a double or triple bond counts as one group, and each lone pair counts as one.'
 
 function geometryVisual(geo, centerLabel = 'A', ligandLabel = 'X') {
@@ -181,6 +214,43 @@ export function generateMoleculeHybridization(seed) {
     teach: GROUP_RULE,
     visual: geometryVisual(geo, mol.center, mol.ligand),
     visualAfter: true,
+  }
+}
+
+/** Hybridization of a named atom inside an organic functional group. */
+export function generateOrganicHybridization(seed) {
+  const rng = rngFor(seed * 1543 + 31)
+  const entry = ORGANIC_ATOMS[seed % ORGANIC_ATOMS.length]
+  const correct = GROUPS_TO_HYBRIDIZATION[entry.groups]
+  const choices = ['sp', 'sp2', 'sp3']
+
+  return {
+    id: `orghyb-${seed % ORGANIC_ATOMS.length}`,
+    topic: 'hybridization',
+    kind: 'mcq',
+    prompt: `What is the hybridization of ${entry.atom} in ${entry.molecule}?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${entry.note} → ${entry.groups} electron groups → ${correct}.`,
+    teach: 'Lone pairs count as groups; an empty orbital does not. A carbocation is sp² with an empty p orbital, while a carbanion is sp³.',
+  }
+}
+
+/** Electron-group count on a named organic atom. */
+export function generateOrganicGroupCount(seed) {
+  const rng = rngFor(seed * 2129 + 47)
+  const entry = ORGANIC_ATOMS[seed % ORGANIC_ATOMS.length]
+  const choices = shuffleWith(rng, ['2', '3', '4', '5'])
+
+  return {
+    id: `orggrp-${seed % ORGANIC_ATOMS.length}`,
+    topic: 'vsepr',
+    kind: 'mcq',
+    prompt: `How many electron groups surround ${entry.atom} in ${entry.molecule}?`,
+    choices,
+    correctIndex: choices.indexOf(String(entry.groups)),
+    explanation: `${entry.note}.`,
+    teach: GROUP_RULE,
   }
 }
 

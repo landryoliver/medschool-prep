@@ -169,6 +169,51 @@ function randomChain(seed) {
   return { shape: 'chain', size: mol.size, doubleBondAt: [], tripleBondAt: [], substituents: mol.substituents ?? [] }
 }
 
+/**
+ * Near-miss variants: same molecule with ONE feature changed. Distractors
+ * drawn from unrelated molecules can be eliminated by counting carbons,
+ * which lets the user skip the hydrogen counting that is the actual skill.
+ */
+function nearMissMolecules(mol) {
+  const variants = []
+  const clone = () => JSON.parse(JSON.stringify(mol))
+
+  for (const sub of mol.substituents ?? []) {
+    for (const shift of [-1, 1]) {
+      const target = sub.vertexIndex + shift
+      if (target < 0 || target >= mol.size) continue
+      const v = clone()
+      v.substituents.find((s) => s.vertexIndex === sub.vertexIndex && s.label === sub.label).vertexIndex = target
+      variants.push(v)
+    }
+  }
+
+  for (const bondList of ['doubleBondAt', 'tripleBondAt']) {
+    for (const b of mol[bondList] ?? []) {
+      for (const shift of [-1, 1]) {
+        const target = b + shift
+        if (target < 0 || target >= mol.size - 1) continue
+        const v = clone()
+        v[bondList] = (v[bondList] ?? []).map((x) => (x === b ? target : x))
+        variants.push(v)
+      }
+    }
+  }
+
+  for (const delta of [-1, 1]) {
+    const size = mol.size + delta
+    if (size < 3 || size > 9) continue
+    const v = clone()
+    v.size = size
+    v.substituents = (v.substituents ?? []).filter((s) => s.vertexIndex < size)
+    v.doubleBondAt = (v.doubleBondAt ?? []).filter((b) => b < size - 1)
+    v.tripleBondAt = (v.tripleBondAt ?? []).filter((b) => b < size - 1)
+    variants.push(v)
+  }
+
+  return variants
+}
+
 /** Skeletal drawing → condensed structural formula. */
 export function generateCondensed(seed) {
   const rng = rngFor(seed * 8191 + 23)
@@ -176,10 +221,9 @@ export function generateCondensed(seed) {
   const correct = condensedFormula(mol)
 
   const distractors = new Set()
-  let guard = 0
-  while (distractors.size < 3 && guard++ < 40) {
-    const alt = randomChain(seed + guard * 37)
-    const candidate = condensedFormula(alt)
+  for (const variant of shuffleWith(rng, nearMissMolecules(mol))) {
+    if (distractors.size >= 3) break
+    const candidate = condensedFormula(variant)
     if (candidate && candidate !== correct) distractors.add(candidate)
   }
   if (distractors.size < 3) return null
@@ -206,12 +250,11 @@ export function generateCondensedToSkeletal(seed) {
   const correct = condensedFormula(mol)
 
   const alternatives = []
-  let guard = 0
-  while (alternatives.length < 3 && guard++ < 40) {
-    const alt = randomChain(seed + guard * 53)
-    const candidate = condensedFormula(alt)
+  for (const variant of shuffleWith(rng, nearMissMolecules(mol))) {
+    if (alternatives.length >= 3) break
+    const candidate = condensedFormula(variant)
     if (candidate && candidate !== correct && !alternatives.some((m) => condensedFormula(m) === candidate)) {
-      alternatives.push(alt)
+      alternatives.push(variant)
     }
   }
   if (alternatives.length < 3) return null

@@ -1,71 +1,5 @@
 [
   {
-    "id": "branch-1",
-    "topic": "nomenclature",
-    "kind": "mcq",
-    "prompt": "What is the IUPAC name of this structure?",
-    "choices": ["2-methylbutane", "3-methylbutane", "2-methylpropane", "pentane"],
-    "correctIndex": 0,
-    "explanation": "The longest chain is 4 carbons (butane) with a methyl branch. Numbering from the nearer end puts the methyl at C2, not C3.",
-    "teach": "Always find the LONGEST continuous chain first, then number from whichever end reaches a branch sooner.",
-    "visual": { "type": "skeletal", "molecule": { "shape": "chain", "size": 4, "doubleBondAt": [], "substituents": [{ "vertexIndex": 1, "label": "CH3" }] }, "showVertexNumbers": true }
-  },
-  {
-    "id": "branch-2",
-    "topic": "nomenclature",
-    "kind": "mcq",
-    "prompt": "What is the IUPAC name of this structure?",
-    "choices": ["2,2-dimethylpropane", "2-methylbutane", "2,2-dimethylbutane", "pentane"],
-    "correctIndex": 0,
-    "explanation": "The longest chain is only 3 carbons (propane) with two methyl groups on the middle carbon. Commonly called neopentane.",
-    "teach": "Identical substituents on the same carbon still each get their own locant: 2,2-dimethyl, never just 2-dimethyl.",
-    "visual": { "type": "skeletal", "molecule": { "shape": "chain", "size": 3, "doubleBondAt": [], "substituents": [{ "vertexIndex": 1, "label": "CH3" }, { "vertexIndex": 1, "label": "CH3" }] }, "showVertexNumbers": true }
-  },
-  {
-    "id": "branch-3",
-    "topic": "nomenclature",
-    "kind": "mcq",
-    "prompt": "What is the IUPAC name of this structure?",
-    "choices": ["3-methylpentane", "2-methylpentane", "3-methylbutane", "2-ethylbutane"],
-    "correctIndex": 0,
-    "explanation": "Five carbons in the longest chain (pentane) with a methyl at the middle carbon, which is C3 counting from either end.",
-    "teach": "When both directions give the same locant, the name is unambiguous — the branch is genuinely at the centre.",
-    "visual": { "type": "skeletal", "molecule": { "shape": "chain", "size": 5, "doubleBondAt": [], "substituents": [{ "vertexIndex": 2, "label": "CH3" }] }, "showVertexNumbers": true }
-  },
-  {
-    "id": "branch-4",
-    "topic": "nomenclature",
-    "kind": "mcq",
-    "prompt": "What is the IUPAC name of this structure?",
-    "choices": ["2,3-dimethylbutane", "2,3-dimethylpentane", "2,2-dimethylbutane", "hexane"],
-    "correctIndex": 0,
-    "explanation": "A four-carbon parent chain (butane) with methyl groups on C2 and C3.",
-    "teach": "Multiple identical branches use di/tri/tetra, and every branch keeps its own number.",
-    "visual": { "type": "skeletal", "molecule": { "shape": "chain", "size": 4, "doubleBondAt": [], "substituents": [{ "vertexIndex": 1, "label": "CH3" }, { "vertexIndex": 2, "label": "CH3" }] }, "showVertexNumbers": true }
-  },
-  {
-    "id": "branch-5",
-    "topic": "nomenclature",
-    "kind": "mcq",
-    "prompt": "What is the IUPAC name of this structure?",
-    "choices": ["2-methylpentane", "4-methylpentane", "2-methylhexane", "3-methylpentane"],
-    "correctIndex": 0,
-    "explanation": "Five carbons in the chain with a methyl branch. Numbering from the closer end gives C2 rather than C4 — always take the lower locant.",
-    "teach": "Number from the end that gives the FIRST point of difference the lowest number.",
-    "visual": { "type": "skeletal", "molecule": { "shape": "chain", "size": 5, "doubleBondAt": [], "substituents": [{ "vertexIndex": 1, "label": "CH3" }] }, "showVertexNumbers": true }
-  },
-  {
-    "id": "branch-6",
-    "topic": "nomenclature",
-    "kind": "mcq",
-    "prompt": "What is the IUPAC name of this structure?",
-    "choices": ["3-ethylpentane", "3-methylhexane", "2-ethylpentane", "heptane"],
-    "correctIndex": 0,
-    "explanation": "The longest chain is 5 carbons with a two-carbon (ethyl) branch at the middle carbon.",
-    "teach": "Name the branch by its own carbon count: 1 = methyl, 2 = ethyl, 3 = propyl.",
-    "visual": { "type": "skeletal", "molecule": { "shape": "chain", "size": 5, "doubleBondAt": [], "substituents": [{ "vertexIndex": 2, "label": "CH2CH3" }] }, "showVertexNumbers": true }
-  },
-  {
     "id": "branch-7",
     "topic": "nomenclature",
     "kind": "mcq",
@@ -94,5 +28,65 @@
     "correctIndex": 0,
     "explanation": "The parent chain is the longest continuous path of carbons — it does not have to be the one drawn horizontally.",
     "teach": "Trace every possible path through the skeleton; the longest one wins, and ties are broken by whichever has more branches."
+  },
+  {
+    "id": "branch-9",
+    "topic": "nomenclature",
+    "kind": "mcq",
+    "prompt": "Which of these names is INCORRECTLY formed?",
+    "choices": [
+      "2-dimethylbutane",
+      "2,2-dimethylbutane",
+      "2,3-dimethylbutane",
+      "2-methylbutane"
+    ],
+    "correctIndex": 0,
+    "explanation": "'2-dimethylbutane' uses the di prefix but supplies only one locant. Every substituent needs its own number: 2,2-dimethylbutane.",
+    "teach": "The count of locants must always match the multiplying prefix — di needs two numbers, tri needs three."
+  },
+  {
+    "id": "branch-10",
+    "topic": "nomenclature",
+    "kind": "mcq",
+    "prompt": "Why is '1-methylbutane' never a correct IUPAC name?",
+    "choices": [
+      "A methyl on C1 just extends the chain — that molecule is pentane",
+      "Methyl groups cannot go on carbon 1",
+      "The locant should be 5 instead",
+      "Butane cannot carry substituents"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adding a methyl to the end of a 4-carbon chain produces a continuous 5-carbon chain, so the correct parent is pentane with no substituent.",
+    "teach": "If a branch sits at position 1, you did not pick the longest chain. Re-trace before naming."
+  },
+  {
+    "id": "branch-11",
+    "topic": "nomenclature",
+    "kind": "mcq",
+    "prompt": "A six-carbon chain has methyl groups on the 2nd and 5th carbons. What is the correct name?",
+    "choices": [
+      "2,5-dimethylhexane",
+      "2,5-methylhexane",
+      "3,6-dimethylhexane",
+      "2,5-dimethylpentane"
+    ],
+    "correctIndex": 0,
+    "explanation": "Six carbons gives hexane; two methyl branches at 2 and 5 gives 2,5-dimethylhexane. Numbering from the other end gives the same locants here.",
+    "teach": "Check both numbering directions and take the set with the lower first point of difference."
+  },
+  {
+    "id": "branch-12",
+    "topic": "nomenclature",
+    "kind": "mcq",
+    "prompt": "In 3-ethyl-2-methylpentane, why is 'ethyl' written before 'methyl'?",
+    "choices": [
+      "Substituent prefixes are listed alphabetically, and e comes before m",
+      "Ethyl is larger, so it comes first",
+      "Ethyl has the higher locant",
+      "Ethyl groups always precede methyl groups by convention"
+    ],
+    "correctIndex": 0,
+    "explanation": "Prefixes are ordered alphabetically regardless of size or locant, so ethyl precedes methyl.",
+    "teach": "Alphabetical order controls the written name; the lowest-locant rule controls the numbers."
   }
 ]
