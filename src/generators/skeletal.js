@@ -13,11 +13,15 @@ const SUB_POOL = ['OH', 'Cl', 'Br', 'F', 'I', 'NH2', 'CH3', 'CH2CH3', 'SH']
 
 function isValid(mol) {
   for (let i = 0; i < mol.size; i++) {
+    if (hydrogensAt(mol, i) < 0) return false
     const neighbors = mol.shape === 'ring' ? 2 : (i > 0 ? 1 : 0) + (i < mol.size - 1 ? 1 : 0)
     const pairs = bondPairs(mol)
-    const pi = (mol.doubleBondAt ?? []).filter((b) => pairs[b]?.includes(i)).length
-    const subs = (mol.substituents ?? []).filter((s) => s.vertexIndex === i).length
-    if (neighbors + pi + subs > 4) return false
+    const touches = (b) => pairs[b]?.includes(i)
+    const pi = (mol.doubleBondAt ?? []).filter(touches).length + 2 * (mol.tripleBondAt ?? []).filter(touches).length
+    const subBonds = (mol.substituents ?? [])
+      .filter((s) => s.vertexIndex === i)
+      .reduce((n, s) => n + (s.bond ?? 1), 0)
+    if (neighbors + pi + subBonds > 4) return false
   }
   return true
 }
@@ -42,15 +46,17 @@ export function randomMolecule(seed) {
   for (let attempt = 0; attempt < 12; attempt++) {
     const isRing = rng() < 0.3
     const size = isRing ? pick(rng, [5, 6, 6, 6]) : 4 + Math.floor(rng() * 5)
-    const mol = { shape: isRing ? 'ring' : 'chain', size, doubleBondAt: [], substituents: [] }
+    const mol = { shape: isRing ? 'ring' : 'chain', size, doubleBondAt: [], tripleBondAt: [], substituents: [] }
 
     // Benzene shows up constantly, so give the aromatic pattern its own path.
     const aromatic = isRing && size === 6 && rng() < 0.35
     if (aromatic) {
       mol.doubleBondAt = [0, 2, 4]
-    } else {
-      const nDoubles = rng() < 0.45 ? 1 : 0
-      if (nDoubles) mol.doubleBondAt = pickDoubleBonds(rng, mol, nDoubles)
+    } else if (!isRing && rng() < 0.15) {
+      // Small rings cannot accommodate a linear sp carbon, so alkynes are chain-only.
+      mol.tripleBondAt = pickDoubleBonds(rng, mol, 1)
+    } else if (rng() < 0.45) {
+      mol.doubleBondAt = pickDoubleBonds(rng, mol, 1)
     }
 
     const nSubs = aromatic ? (rng() < 0.5 ? 1 : 0) : Math.floor(rng() * 3)
@@ -59,7 +65,7 @@ export function randomMolecule(seed) {
 
     if (isValid(mol)) return mol
   }
-  return { shape: 'chain', size: 6, doubleBondAt: [], substituents: [] }
+  return { shape: 'chain', size: 6, doubleBondAt: [], tripleBondAt: [], substituents: [] }
 }
 
 /** Read a skeletal structure and give its molecular formula. */
@@ -159,7 +165,8 @@ export function generateDegreesUnsaturation(seed) {
 function randomChain(seed) {
   const mol = randomMolecule(seed)
   if (mol.shape === 'chain') return mol
-  return { shape: 'chain', size: mol.size, doubleBondAt: [], substituents: mol.substituents ?? [] }
+  // Ring bond indices don't carry over to a chain, so drop the pi bonds.
+  return { shape: 'chain', size: mol.size, doubleBondAt: [], tripleBondAt: [], substituents: mol.substituents ?? [] }
 }
 
 /** Skeletal drawing → condensed structural formula. */

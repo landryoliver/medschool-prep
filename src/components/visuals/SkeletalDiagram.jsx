@@ -1,20 +1,50 @@
-import { bondPairs, substituentsAt } from '../../lib/chem/molecule.js'
+import { bondPairs, substituentsAt, bondOrder } from '../../lib/chem/molecule.js'
 
 const BOND = 46
 const SUB_BOND = 26
 
+/**
+ * Chain layout is a zigzag, except around a triple bond: an sp carbon is
+ * linear, so the triple bond and both bonds flanking it are drawn
+ * collinear. Drawing an alkyne on the zigzag would show the wrong
+ * geometry, which matters because the app quizzes on exactly that.
+ */
+function chainAngles(mol) {
+  const bondCount = mol.size - 1
+  const isTriple = (i) => i >= 0 && i < bondCount && bondOrder(mol, i) === 3
+  const angles = []
+  let up = true
+  for (let i = 0; i < bondCount; i++) {
+    if (isTriple(i) || isTriple(i - 1) || isTriple(i + 1)) {
+      angles.push(0)
+    } else {
+      angles.push(up ? 30 : -30)
+      up = !up
+    }
+  }
+  return angles
+}
+
 function layout(mol) {
   const pts = []
   if (mol.shape === 'ring') {
-    const r = (BOND / 2) / Math.sin(Math.PI / mol.size)
+    const r = BOND / 2 / Math.sin(Math.PI / mol.size)
     for (let i = 0; i < mol.size; i++) {
       const angle = Math.PI / 2 + (i * 2 * Math.PI) / mol.size
       pts.push({ x: r * Math.cos(angle), y: -r * Math.sin(angle) })
     }
-  } else {
-    for (let i = 0; i < mol.size; i++) {
-      pts.push({ x: i * BOND * 0.866, y: i % 2 === 0 ? 0 : -BOND * 0.5 })
-    }
+    return pts
+  }
+
+  const angles = chainAngles(mol)
+  let x = 0
+  let y = 0
+  pts.push({ x, y })
+  for (let i = 0; i < mol.size - 1; i++) {
+    const rad = (angles[i] * Math.PI) / 180
+    x += BOND * Math.cos(rad)
+    y -= BOND * Math.sin(rad)
+    pts.push({ x, y })
   }
   return pts
 }
@@ -46,7 +76,6 @@ function perpendicular(a, b, amount) {
 export default function SkeletalDiagram({ molecule, highlightVertex = null, showVertexNumbers = false, height = 150 }) {
   const pts = layout(molecule)
   const pairs = bondPairs(molecule)
-  const doubles = new Set(molecule.doubleBondAt ?? [])
 
   const labels = []
   for (let i = 0; i < molecule.size; i++) {
@@ -87,14 +116,22 @@ export default function SkeletalDiagram({ molecule, highlightVertex = null, show
       {pairs.map(([a, b], i) => {
         const p1 = pts[a]
         const p2 = pts[b]
-        if (!doubles.has(i)) {
-          return <line key={i} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#e2e8f0" strokeWidth="2" />
-        }
+        const order = bondOrder(molecule, i)
         const off = perpendicular(p1, p2, 3.5)
+        const offsets = order === 1 ? [0] : order === 2 ? [-1, 1] : [-1, 0, 1]
         return (
           <g key={i}>
-            <line x1={p1.x + off.x} y1={p1.y + off.y} x2={p2.x + off.x} y2={p2.y + off.y} stroke="#e2e8f0" strokeWidth="2" />
-            <line x1={p1.x - off.x} y1={p1.y - off.y} x2={p2.x - off.x} y2={p2.y - off.y} stroke="#e2e8f0" strokeWidth="2" />
+            {offsets.map((m, k) => (
+              <line
+                key={k}
+                x1={p1.x + off.x * m}
+                y1={p1.y + off.y * m}
+                x2={p2.x + off.x * m}
+                y2={p2.y + off.y * m}
+                stroke="#e2e8f0"
+                strokeWidth="2"
+              />
+            ))}
           </g>
         )
       })}

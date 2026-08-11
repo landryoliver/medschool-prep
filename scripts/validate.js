@@ -1,6 +1,6 @@
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/topics.js'
-import { molecularFormula, condensedFormula, hydrogensAt } from '../src/lib/chem/molecule.js'
-import { nameHaloalkane, nameAlkanol, nameAlkene } from '../src/generators/nomenclature.js'
+import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt } from '../src/lib/chem/molecule.js'
+import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
 import { lookupGeometry } from '../src/lib/chem/vsepr.js'
 
 let errors = 0
@@ -142,6 +142,40 @@ check('pentan-2-ol from far end', nameAlkanol(5, 3), 'pentan-2-ol')
 check('hex-1-ene', nameAlkene(6, 0), 'hex-1-ene')
 check('hex-2-ene', nameAlkene(6, 1), 'hex-2-ene')
 check('hex-2-ene from far end', nameAlkene(6, 3), 'hex-2-ene')
+check('but-1-yne', nameAlkyne(4, 0), 'but-1-yne')
+check('pent-2-yne', nameAlkyne(5, 1), 'pent-2-yne')
+
+// Alkynes: triple bonds count as two pi bonds everywhere
+check(
+  'propyne formula',
+  molecularFormula({ shape: 'chain', size: 3, doubleBondAt: [], tripleBondAt: [0], substituents: [] }),
+  'C3H4',
+)
+check(
+  'ethyne (acetylene) formula',
+  molecularFormula({ shape: 'chain', size: 2, doubleBondAt: [], tripleBondAt: [0], substituents: [] }),
+  'C2H2',
+)
+check(
+  'alkyne terminal carbon H count',
+  hydrogensAt({ shape: 'chain', size: 4, doubleBondAt: [], tripleBondAt: [0], substituents: [] }, 0),
+  1,
+)
+check(
+  'alkyne degrees of unsaturation',
+  degreesOfUnsaturation({ shape: 'chain', size: 4, doubleBondAt: [], tripleBondAt: [0], substituents: [] }),
+  2,
+)
+check(
+  'alkyne carbon is sp',
+  hybridizationAt({ shape: 'chain', size: 4, doubleBondAt: [], tripleBondAt: [0], substituents: [] }, 0),
+  'sp',
+)
+check(
+  'condensed but-1-yne',
+  condensedFormula({ shape: 'chain', size: 4, doubleBondAt: [], tripleBondAt: [0], substituents: [] }),
+  'CH≡CCH2CH3',
+)
 
 // VSEPR
 check('water shape', lookupGeometry(2, 2).shape, 'bent')

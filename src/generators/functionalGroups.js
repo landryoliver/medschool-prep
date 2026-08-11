@@ -94,6 +94,11 @@ const TEMPLATES = [
     build: (rng, n) => ({ shape: 'chain', size: n, doubleBondAt: [Math.floor(rng() * (n - 1))] }),
   },
   {
+    group: 'Alkyne',
+    hint: 'a carbon-carbon triple bond, drawn as a straight linear segment',
+    build: (rng, n) => ({ shape: 'chain', size: n, tripleBondAt: [rng() < 0.5 ? 0 : n - 2] }),
+  },
+  {
     group: 'Aromatic ring',
     hint: 'a six-membered ring with alternating double bonds',
     build: () => ({ shape: 'ring', size: 6, doubleBondAt: [0, 2, 4] }),
@@ -107,7 +112,7 @@ export function generateGroupId(seed) {
   const rng = rngFor(seed)
   const template = TEMPLATES[seed % TEMPLATES.length]
   const size = 4 + Math.floor(rng() * 4)
-  const mol = { doubleBondAt: [], substituents: [], ...template.build(rng, size) }
+  const mol = { doubleBondAt: [], tripleBondAt: [], substituents: [], ...template.build(rng, size) }
   const { choices, correctIndex } = makeChoices(rng, template.group, ALL_GROUPS)
 
   return {

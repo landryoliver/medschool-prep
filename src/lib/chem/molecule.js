@@ -46,10 +46,18 @@ export function neighborCount(mol, vertexIndex) {
   return (hasLeft ? 1 : 0) + (hasRight ? 1 : 0)
 }
 
-/** Extra bonds contributed by pi bonds at this vertex (one per double bond). */
+/** Extra bonds from pi bonds at this vertex: 1 per double bond, 2 per triple. */
 export function piBondsAt(mol, vertexIndex) {
   const pairs = bondPairs(mol)
-  return (mol.doubleBondAt ?? []).filter((b) => pairs[b] && pairs[b].includes(vertexIndex)).length
+  const touches = (b) => pairs[b] && pairs[b].includes(vertexIndex)
+  return (mol.doubleBondAt ?? []).filter(touches).length + 2 * (mol.tripleBondAt ?? []).filter(touches).length
+}
+
+/** Bond order of backbone bond i. */
+export function bondOrder(mol, bondIndex) {
+  if ((mol.tripleBondAt ?? []).includes(bondIndex)) return 3
+  if ((mol.doubleBondAt ?? []).includes(bondIndex)) return 2
+  return 1
 }
 
 export function substituentsAt(mol, vertexIndex) {
@@ -103,7 +111,10 @@ export function condensedFormula(mol) {
     }
     parts.push(seg)
     const isLast = i === mol.size - 1
-    if (!isLast) parts.push((mol.doubleBondAt ?? []).includes(i) ? '=' : '')
+    if (!isLast) {
+      const order = bondOrder(mol, i)
+      parts.push(order === 3 ? '≡' : order === 2 ? '=' : '')
+    }
   }
   return parts.join('')
 }
@@ -111,7 +122,12 @@ export function condensedFormula(mol) {
 /** Rings + pi bonds (backbone and substituent) — degrees of unsaturation. */
 export function degreesOfUnsaturation(mol) {
   const subPi = (mol.substituents ?? []).reduce((n, s) => n + (substituentBondOrder(s) - 1), 0)
-  return (mol.shape === 'ring' ? 1 : 0) + (mol.doubleBondAt ?? []).length + subPi
+  return (
+    (mol.shape === 'ring' ? 1 : 0) +
+    (mol.doubleBondAt ?? []).length +
+    2 * (mol.tripleBondAt ?? []).length +
+    subPi
+  )
 }
 
 /** Total pi bonds at a carbon, counting double/triple bonds to substituents. */

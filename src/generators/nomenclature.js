@@ -71,6 +71,12 @@ export function nameAlkene(size, bondIndex) {
   return `${STEMS[size - 1]}-${locant}-ene`
 }
 
+/** Names a straight-chain alkyne, e.g. hex-2-yne. */
+export function nameAlkyne(size, bondIndex) {
+  const locant = Math.min(bondIndex + 1, size - 1 - bondIndex)
+  return `${STEMS[size - 1]}-${locant}-yne`
+}
+
 function haloalkaneMolecule(rng, size) {
   const count = rng() < 0.55 ? 1 : 2
   const vertices = pickN(rng, Array.from({ length: size }, (_, i) => i), count)
@@ -91,7 +97,7 @@ function haloalkaneMolecule(rng, size) {
 export function generateStructureToName(seed) {
   const rng = rngFor(seed)
   const size = 4 + Math.floor(rng() * 5)
-  const family = seed % 3
+  const family = seed % 4
 
   let mol
   let correct
@@ -106,11 +112,16 @@ export function generateStructureToName(seed) {
     mol = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex, label: 'OH' }] }
     correct = nameAlkanol(size, vertexIndex)
     teach = 'An –OH is a suffix (-ol) and outranks halogens, so it always gets the lowest possible number.'
-  } else {
+  } else if (family === 2) {
     const bondIndex = Math.floor(rng() * (size - 1))
     mol = { shape: 'chain', size, doubleBondAt: [bondIndex], substituents: [] }
     correct = nameAlkene(size, bondIndex)
     teach = 'A double bond is numbered by its FIRST carbon, counting from whichever end gives the lower number.'
+  } else {
+    const bondIndex = Math.floor(rng() * (size - 1))
+    mol = { shape: 'chain', size, doubleBondAt: [], tripleBondAt: [bondIndex], substituents: [] }
+    correct = nameAlkyne(size, bondIndex)
+    teach = 'Triple bonds take the -yne suffix and are numbered exactly like double bonds, by their first carbon.'
   }
 
   // Distractors: same family, different locants or chain length.
@@ -122,7 +133,8 @@ export function generateStructureToName(seed) {
     let candidate
     if (family === 0) candidate = nameHaloalkane(altSize, haloalkaneMolecule(altSeed, altSize).substituents)
     else if (family === 1) candidate = nameAlkanol(altSize, Math.floor(altSeed() * altSize))
-    else candidate = nameAlkene(altSize, Math.floor(altSeed() * (altSize - 1)))
+    else if (family === 2) candidate = nameAlkene(altSize, Math.floor(altSeed() * (altSize - 1)))
+    else candidate = nameAlkyne(altSize, Math.floor(altSeed() * (altSize - 1)))
     if (candidate !== correct) distractors.add(candidate)
   }
   if (distractors.size < 3) return null
@@ -157,10 +169,14 @@ export function generateNameToStructure(seed) {
     const vertexIndex = Math.floor(rng() * size)
     mol = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex, label: 'OH' }] }
     correct = nameAlkanol(size, vertexIndex)
-  } else {
+  } else if (family === 2) {
     const bondIndex = Math.floor(rng() * (size - 1))
     mol = { shape: 'chain', size, doubleBondAt: [bondIndex], substituents: [] }
     correct = nameAlkene(size, bondIndex)
+  } else {
+    const bondIndex = Math.floor(rng() * (size - 1))
+    mol = { shape: 'chain', size, doubleBondAt: [], tripleBondAt: [bondIndex], substituents: [] }
+    correct = nameAlkyne(size, bondIndex)
   }
 
   // Wrong structures that would earn a different name.
@@ -176,10 +192,14 @@ export function generateNameToStructure(seed) {
       const v = Math.floor(r() * size)
       candidate = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex: v, label: 'OH' }] }
       if (nameAlkanol(size, v) === correct) continue
-    } else {
+    } else if (family === 2) {
       const b = Math.floor(r() * (size - 1))
       candidate = { shape: 'chain', size, doubleBondAt: [b], substituents: [] }
       if (nameAlkene(size, b) === correct) continue
+    } else {
+      const b = Math.floor(r() * (size - 1))
+      candidate = { shape: 'chain', size, doubleBondAt: [], tripleBondAt: [b], substituents: [] }
+      if (nameAlkyne(size, b) === correct) continue
     }
     alternatives.push(candidate)
   }
