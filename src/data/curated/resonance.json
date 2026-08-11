@@ -1,0 +1,193 @@
+[
+  {
+    "id": "res-1",
+    "topic": "resonance",
+    "prompt": "What do two resonance structures of the same molecule actually represent?",
+    "choices": [
+      "One real structure whose electrons are delocalized — the true molecule is a hybrid of both",
+      "Two different molecules that interconvert rapidly",
+      "The same molecule at two different temperatures",
+      "An equilibrium between two isomers"
+    ],
+    "correctIndex": 0,
+    "explanation": "Resonance structures are not real, separate species. The molecule never 'flips' between them — it exists as a single averaged hybrid at all times.",
+    "teach": "The double-headed arrow (↔) means resonance. The equilibrium arrows (⇌) mean two real species interconverting. They are completely different ideas."
+  },
+  {
+    "id": "res-2",
+    "topic": "resonance",
+    "prompt": "When drawing resonance structures, what is allowed to move?",
+    "choices": [
+      "Only electrons — pi bonds and lone pairs",
+      "Electrons and hydrogen atoms",
+      "Any atom, as long as the formula stays the same",
+      "Only sigma bonds"
+    ],
+    "correctIndex": 0,
+    "explanation": "If an atom moves, you have drawn a different molecule (an isomer), not a resonance structure.",
+    "teach": "Resonance moves electrons only. Every resonance structure must keep the identical arrangement of atoms."
+  },
+  {
+    "id": "res-3",
+    "topic": "resonance",
+    "prompt": "Which resonance structure is generally the MAJOR contributor to the hybrid?",
+    "choices": [
+      "The one with the most atoms holding a full octet",
+      "The one with the most formal charges",
+      "The one drawn first",
+      "The one with the most lone pairs"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filled octets are the single strongest stabilizing factor, which is why a structure that completes every octet dominates the hybrid.",
+    "teach": "Ranking rules, in order: (1) maximize full octets, (2) minimize formal charges, (3) put negative charge on the most electronegative atom, (4) avoid like charges on adjacent atoms."
+  },
+  {
+    "id": "res-4",
+    "topic": "resonance",
+    "prompt": "Between two resonance structures that both have full octets, which contributes more?",
+    "choices": [
+      "The one with the negative charge on the more electronegative atom",
+      "The one with the negative charge on the less electronegative atom",
+      "The one with more total charges",
+      "They always contribute equally"
+    ],
+    "correctIndex": 0,
+    "explanation": "An electronegative atom like oxygen stabilizes negative charge better than carbon does, so that structure is a larger contributor.",
+    "teach": "Negative charge is happiest on electronegative atoms; positive charge is happiest on electropositive ones."
+  },
+  {
+    "id": "res-5",
+    "topic": "resonance",
+    "prompt": "Why is a carboxylate ion (RCOO⁻) more stable than an alkoxide (RO⁻)?",
+    "choices": [
+      "Its negative charge is delocalized over two equivalent oxygens by resonance",
+      "It has more carbon atoms",
+      "It has no formal charge at all",
+      "It contains a stronger sigma bond"
+    ],
+    "correctIndex": 0,
+    "explanation": "Spreading a charge over more atoms always lowers energy. The carboxylate's two equivalent resonance structures put half a negative charge on each oxygen.",
+    "teach": "Delocalization = stabilization. This single idea explains why carboxylic acids (pKa ~4.8) are far more acidic than alcohols (pKa ~16)."
+  },
+  {
+    "id": "res-6",
+    "topic": "resonance",
+    "prompt": "When two resonance structures are EQUIVALENT (identical in every way but which atom holds the charge), what does that imply?",
+    "choices": [
+      "The hybrid is especially stabilized, and the charge is shared equally between those atoms",
+      "One of the two must be wrong",
+      "The molecule rapidly flips between them",
+      "Resonance does not apply"
+    ],
+    "correctIndex": 0,
+    "explanation": "Equivalent resonance structures contribute equally, giving maximum delocalization. In carboxylate, each oxygen genuinely carries −½ charge.",
+    "teach": "Equivalent resonance structures give the strongest stabilization — this is why benzene and carboxylates are so unusually stable."
+  },
+  {
+    "id": "res-7",
+    "topic": "resonance",
+    "prompt": "Which of these is NOT a valid resonance structure relationship?",
+    "choices": [
+      "Two structures that differ by the position of a hydrogen atom",
+      "Two structures that differ by the position of a pi bond",
+      "Two structures that differ by the position of a lone pair",
+      "Two structures that differ by where a formal charge sits"
+    ],
+    "correctIndex": 0,
+    "explanation": "Moving a hydrogen moves an ATOM, which creates a constitutional isomer (or a tautomer), not a resonance structure.",
+    "teach": "If you had to move a nucleus to get from one drawing to the other, they are not resonance structures."
+  },
+  {
+    "id": "res-8",
+    "topic": "resonance",
+    "prompt": "For resonance delocalization to occur, the participating p orbitals must be:",
+    "choices": [
+      "Parallel and overlapping (conjugated), on adjacent atoms",
+      "Perpendicular to each other",
+      "On atoms at opposite ends of the molecule",
+      "Fully occupied by lone pairs"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delocalization requires continuous side-by-side p-orbital overlap. An sp³ carbon breaks the conjugation because it has no available p orbital.",
+    "teach": "Conjugation needs an unbroken chain of p orbitals: alternating double bonds, or a lone pair / empty orbital next to a pi bond."
+  },
+  {
+    "id": "res-9",
+    "topic": "resonance",
+    "prompt": "An allylic carbocation (CH₂=CH–CH₂⁺) is more stable than a simple primary carbocation because:",
+    "choices": [
+      "The positive charge is delocalized over two carbons by resonance with the adjacent pi bond",
+      "It has more hydrogens",
+      "It is a tertiary carbocation",
+      "It has a complete octet on every atom"
+    ],
+    "correctIndex": 0,
+    "explanation": "The adjacent pi bond shifts over, so the positive charge is shared between C1 and C3. That delocalization outweighs its primary classification.",
+    "teach": "Resonance stabilization often beats the usual 3° > 2° > 1° carbocation ranking — always check for an adjacent pi bond or lone pair."
+  },
+  {
+    "id": "res-10",
+    "topic": "resonance",
+    "prompt": "How many equivalent resonance structures does the carbonate ion (CO₃²⁻) have?",
+    "choices": ["3", "1", "2", "4"],
+    "correctIndex": 0,
+    "explanation": "The C=O double bond can sit on any of the three oxygens, giving three equivalent structures. Each oxygen carries −⅔ charge in the hybrid.",
+    "teach": "Count resonance structures by asking how many symmetry-equivalent positions the mobile pi bond can occupy."
+  },
+  {
+    "id": "res-11",
+    "topic": "resonance",
+    "prompt": "In benzene, all six carbon-carbon bonds are measured to be exactly the same length. Why?",
+    "choices": [
+      "The pi electrons are fully delocalized around the ring, so every bond is identical and intermediate between a single and double bond",
+      "The molecule alternates between two forms too fast to measure",
+      "Three bonds are single and three are double, but the measurement averages them",
+      "The ring is not actually planar"
+    ],
+    "correctIndex": 0,
+    "explanation": "Benzene is one delocalized structure, not a rapid alternation. Each C–C bond has a bond order of 1.5 and every bond is 1.39 Å.",
+    "teach": "Benzene's equal bond lengths are the classic experimental proof that resonance describes one real hybrid, not flipping structures."
+  },
+  {
+    "id": "res-12",
+    "topic": "resonance",
+    "prompt": "Which structural feature would NOT allow resonance delocalization of an adjacent lone pair?",
+    "choices": [
+      "A lone pair on an sp³ carbon separated from the pi bond by another sp³ carbon",
+      "A lone pair on an oxygen directly attached to a C=C",
+      "A lone pair on a nitrogen directly attached to a C=O",
+      "A lone pair adjacent to a carbocation"
+    ],
+    "correctIndex": 0,
+    "explanation": "An intervening sp³ carbon has no p orbital, breaking the conjugated chain. Delocalization requires the lone pair to sit directly next to the pi system or empty orbital.",
+    "teach": "Check adjacency: the donating lone pair must be on an atom bonded DIRECTLY to the pi bond or empty orbital."
+  },
+  {
+    "id": "res-13",
+    "topic": "resonance",
+    "prompt": "Which is a poor (minor) resonance contributor?",
+    "choices": [
+      "One with a positive charge on a highly electronegative oxygen and an incomplete octet on carbon",
+      "One where every atom has a full octet",
+      "One with no formal charges at all",
+      "One with a negative charge on oxygen"
+    ],
+    "correctIndex": 0,
+    "explanation": "Putting positive charge on an electronegative atom is destabilizing, and an incomplete octet costs more energy still. Such a structure contributes very little.",
+    "teach": "Minor contributors still matter — they show where a molecule is electron-rich or electron-poor, which predicts where it will react."
+  },
+  {
+    "id": "res-14",
+    "topic": "resonance",
+    "prompt": "What kind of arrow is used BETWEEN two resonance structures?",
+    "choices": [
+      "A single double-headed arrow (↔)",
+      "Two half arrows pointing opposite ways (⇌)",
+      "A single forward arrow (→)",
+      "A curved arrow"
+    ],
+    "correctIndex": 0,
+    "explanation": "The double-headed arrow ↔ specifically means resonance. Equilibrium arrows ⇌ would wrongly imply two real, separate species.",
+    "teach": "Curved arrows go INSIDE a structure to show which electrons move; the double-headed arrow sits BETWEEN the two drawings."
+  }
+]

@@ -1,6 +1,7 @@
 import { buildBank } from '../generators/util.js'
 import * as elements from '../generators/elements.js'
 import * as formalCharge from '../generators/formalCharge.js'
+import * as lewisErrors from '../generators/lewisErrors.js'
 import * as vsepr from '../generators/vsepr.js'
 import * as acidBase from '../generators/acidBase.js'
 import * as skeletal from '../generators/skeletal.js'
@@ -11,6 +12,7 @@ import lewisStructures from '../data/genchem/lewisStructures.json'
 import vseprCurated from '../data/genchem/vsepr.json'
 import acidBaseCurated from '../data/genchem/acidBase.json'
 import curvedArrows from '../data/curated/curvedArrows.json'
+import resonance from '../data/curated/resonance.json'
 import branchedNomenclature from '../data/curated/branchedNomenclature.json'
 import pkaComparisons from '../data/curated/pkaComparisons.json'
 import mechanismConcepts from '../data/curated/mechanismConcepts.json'
@@ -54,12 +56,13 @@ export const TOPICS = [
   {
     id: 'lewis',
     label: 'Lewis & Formal Charge',
-    blurb: 'Lone pairs, octets, and formal charge on real species.',
+    blurb: 'Lone pairs, octets, formal charge, and spotting a broken structure.',
     build: () => [
       ...buildBank(formalCharge.generateFormalCharge, 20),
       ...buildBank(formalCharge.generateLonePairCount, 20),
       ...buildBank(formalCharge.generateOctetCheck, 20),
       ...buildBank(formalCharge.generateChargeIdentify, 20),
+      ...buildBank(lewisErrors.generateSpotError, 48),
       ...withKind(lewisStructures),
     ],
   },
@@ -129,6 +132,12 @@ export const TOPICS = [
       ...buildBank(nomenclature.generateStemRecall, 20),
       ...withKind(branchedNomenclature),
     ],
+  },
+  {
+    id: 'resonance',
+    label: 'Resonance',
+    blurb: 'Delocalization, major vs minor contributors, and what resonance is not.',
+    build: () => withKind(resonance),
   },
   {
     id: 'arrows',

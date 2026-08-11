@@ -17,6 +17,7 @@ const TOPIC_LABELS = {
   'skeletal-fluency': 'Skeletal structures',
   'functional-groups': 'Functional groups',
   nomenclature: 'Nomenclature',
+  resonance: 'Resonance',
   'curved-arrows': 'Curved arrows',
   mechanism: 'Mechanism concepts',
   'sn-e': 'SN1/SN2/E1/E2',
