@@ -1,5 +1,5 @@
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/topics.js'
-import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt } from '../src/lib/chem/molecule.js'
+import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt, canonicalKey, isValidMolecule } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
 import { lookupGeometry } from '../src/lib/chem/vsepr.js'
 import { createElement } from 'react'
@@ -66,12 +66,25 @@ for (const topic of TOPICS) {
       fail(`${q.id}: unknown kind "${q.kind}"`)
     }
 
-    if (q.visual?.type === 'skeletal') {
-      const mol = q.visual.molecule
-      if (!mol || !mol.size) fail(`${q.id}: skeletal visual missing molecule`)
-      for (let v = 0; v < mol.size; v++) {
-        const h = hydrogensAt(mol, v)
-        if (h < 0 || h > 3) fail(`${q.id}: vertex ${v} has impossible H count ${h}`)
+    // Check answer options too, not just the question's own diagram —
+    // an invalid structure offered as a distractor is still drawn.
+    for (const visual of [q.visual, ...(q.choiceVisuals ?? [])]) {
+      if (visual?.type !== 'skeletal') continue
+      const mol = visual.molecule
+      if (!mol || !mol.size) {
+        fail(`${q.id}: skeletal visual missing molecule`)
+        continue
+      }
+      // hydrogensAt clamps at 0, so a pentavalent carbon looks fine there.
+      // Count the bonds directly instead.
+      if (!isValidMolecule(mol)) fail(`${q.id}: structure has a carbon with more than four bonds`)
+    }
+
+    // Two options that are the same molecule mean two correct answers.
+    if (q.choiceVisuals?.every((v) => v?.type === 'skeletal')) {
+      const keys = q.choiceVisuals.map((v) => canonicalKey(v.molecule))
+      if (new Set(keys).size !== keys.length) {
+        fail(`${q.id}: two answer options are the same molecule`)
       }
     }
   }
@@ -220,6 +233,36 @@ check(
   'condensed but-1-yne',
   condensedFormula({ shape: 'chain', size: 4, doubleBondAt: [], tripleBondAt: [0], substituents: [] }),
   'CH≡CCH2CH3',
+)
+
+// Canonical keys: a chain and its end-to-end reversal are one molecule
+check(
+  '3-bromohexane == 4-bromohexane (same molecule)',
+  canonicalKey({ shape: 'chain', size: 6, doubleBondAt: [], substituents: [{ vertexIndex: 2, label: 'Br' }] }) ===
+    canonicalKey({ shape: 'chain', size: 6, doubleBondAt: [], substituents: [{ vertexIndex: 3, label: 'Br' }] }),
+  true,
+)
+check(
+  '2-bromohexane != 3-bromohexane (different molecules)',
+  canonicalKey({ shape: 'chain', size: 6, doubleBondAt: [], substituents: [{ vertexIndex: 1, label: 'Br' }] }) ===
+    canonicalKey({ shape: 'chain', size: 6, doubleBondAt: [], substituents: [{ vertexIndex: 2, label: 'Br' }] }),
+  false,
+)
+check(
+  'pent-1-yne == pent-4-yne reversed',
+  canonicalKey({ shape: 'chain', size: 5, doubleBondAt: [], tripleBondAt: [0], substituents: [] }) ===
+    canonicalKey({ shape: 'chain', size: 5, doubleBondAt: [], tripleBondAt: [3], substituents: [] }),
+  true,
+)
+check(
+  'pentavalent carbon rejected',
+  isValidMolecule({
+    shape: 'chain',
+    size: 5,
+    doubleBondAt: [2],
+    substituents: [{ vertexIndex: 2, label: 'CH3' }, { vertexIndex: 2, label: 'F' }],
+  }),
+  false,
 )
 
 // VSEPR

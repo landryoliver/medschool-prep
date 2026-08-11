@@ -59,8 +59,16 @@ const ORGANIC_ATOMS = [
   {
     molecule: 'an amide (RCONH₂)',
     atom: 'the nitrogen',
-    groups: 3,
-    note: "the nitrogen's lone pair delocalizes into the C=O, so it sits in a p orbital and the nitrogen is planar rather than pyramidal",
+    groups: 4,
+    // Counting groups gives 4 (sp3, pyramidal), but the lone pair
+    // delocalizes into the carbonyl, so the observed nitrogen is sp2 and
+    // planar. The group count and the hybridization genuinely disagree
+    // here, which is why this entry carries an explicit override rather
+    // than deriving one from the other.
+    hybridization: 'sp2',
+    note: 'three sigma bonds plus one lone pair = 4 groups',
+    hybridizationNote:
+      "counting groups would suggest sp³, but the nitrogen's lone pair delocalizes into the C=O, so it sits in a p orbital and the nitrogen is planar — a genuine exception to the group-count shortcut",
   },
 ]
 
@@ -156,7 +164,9 @@ export function generateBondAngle(seed) {
   const rng = rngFor(seed)
   const geo = pick(rng, ORGO_GEOMETRIES)
   const keyDeg = ANGLE_DEGREES[geo.angle]
-  const distinct = ALL_ANGLES.filter((a) => Math.abs(ANGLE_DEGREES[a] - keyDeg) >= MIN_ANGLE_GAP)
+  const distinct = ALL_ANGLES.filter(
+    (a) => !a.includes('and') && Math.abs(ANGLE_DEGREES[a] - keyDeg) >= MIN_ANGLE_GAP,
+  )
   const { choices, correctIndex } = makeChoices(rng, geo.angle, distinct)
 
   return {
@@ -240,12 +250,26 @@ export function generateShapeFromDiagram(seed) {
   }
 }
 
-/** Read a bond angle off a drawn geometry. */
+/**
+ * Read a bond angle off a drawn geometry.
+ *
+ * Restricted to the planar geometries, whose 2-D drawing shows the real
+ * angle. A tetrahedron drawn with wedges and hashes necessarily renders
+ * its bonds ~90° apart on the page, so asking for the angle "shown" while
+ * keying 109.5° — and offering 90° as a choice — punishes anyone who
+ * actually looks at the picture.
+ */
+const FAITHFULLY_DRAWN = ORGO_GEOMETRIES.filter(
+  (g) => g.electronGeometry === 'linear' || g.electronGeometry === 'trigonal planar',
+)
+
 export function generateAngleFromDiagram(seed) {
   const rng = rngFor(seed * 5417 + 29)
-  const geo = pick(rng, ORGO_GEOMETRIES)
+  const geo = pick(rng, FAITHFULLY_DRAWN)
   const keyDeg = ANGLE_DEGREES[geo.angle]
-  const distinct = ALL_ANGLES.filter((a) => Math.abs(ANGLE_DEGREES[a] - keyDeg) >= MIN_ANGLE_GAP)
+  const distinct = ALL_ANGLES.filter(
+    (a) => !a.includes('and') && Math.abs(ANGLE_DEGREES[a] - keyDeg) >= MIN_ANGLE_GAP,
+  )
   const { choices, correctIndex } = makeChoices(rng, geo.angle, distinct)
 
   return {
@@ -287,8 +311,8 @@ export function generateDiagramFromShape(seed) {
 export function generateOrganicHybridization(seed) {
   const rng = rngFor(seed * 1543 + 31)
   const entry = ORGANIC_ATOMS[seed % ORGANIC_ATOMS.length]
-  const correct = GROUPS_TO_HYBRIDIZATION[entry.groups]
-  const choices = ['sp', 'sp2', 'sp3']
+  const correct = entry.hybridization ?? GROUPS_TO_HYBRIDIZATION[entry.groups]
+  const choices = shuffleWith(rng, ['sp', 'sp2', 'sp3'])
 
   return {
     id: `orghyb-${seed % ORGANIC_ATOMS.length}`,
@@ -297,7 +321,9 @@ export function generateOrganicHybridization(seed) {
     prompt: `What is the hybridization of ${entry.atom} in ${entry.molecule}?`,
     choices,
     correctIndex: choices.indexOf(correct),
-    explanation: `${entry.note} → ${entry.groups} electron groups → ${correct}.`,
+    explanation: entry.hybridizationNote
+      ? `${entry.hybridizationNote} → ${correct}.`
+      : `${entry.note} → ${entry.groups} electron groups → ${correct}.`,
     teach: 'Lone pairs count as groups; an empty orbital does not. A carbocation is sp² with an empty p orbital, while a carbanion is sp³.',
   }
 }

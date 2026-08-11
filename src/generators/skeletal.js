@@ -6,10 +6,14 @@ import {
   degreesOfUnsaturation,
   hybridizationAt,
   bondPairs,
+  canonicalKey,
+  isValidMolecule,
   SUBSTITUENTS,
 } from '../lib/chem/molecule.js'
 
 const SUB_POOL = ['OH', 'Cl', 'Br', 'F', 'I', 'NH2', 'CH3', 'CH2CH3', 'SH']
+/** Groups that stay meaningful on a terminal carbon (alkyls do not). */
+const HETERO_POOL = ['OH', 'Cl', 'Br', 'F', 'I', 'NH2', 'SH']
 
 function isValid(mol) {
   for (let i = 0; i < mol.size; i++) {
@@ -61,7 +65,15 @@ export function randomMolecule(seed) {
 
     const nSubs = aromatic ? (rng() < 0.5 ? 1 : 0) : Math.floor(rng() * 3)
     const vertices = pickN(rng, Array.from({ length: size }, (_, i) => i), nSubs)
-    mol.substituents = vertices.map((vertexIndex) => ({ vertexIndex, label: pick(rng, SUB_POOL) }))
+    mol.substituents = vertices.map((vertexIndex) => {
+      let label = pick(rng, SUB_POOL)
+      // An alkyl group on a chain end is not a branch — it just extends the
+      // chain, and drawing it as a branch models exactly the mistake the
+      // nomenclature questions warn against.
+      const terminal = mol.shape === 'chain' && (vertexIndex === 0 || vertexIndex === size - 1)
+      if (terminal && (label === 'CH3' || label === 'CH2CH3')) label = pick(rng, HETERO_POOL)
+      return { vertexIndex, label }
+    })
 
     if (isValid(mol)) return mol
   }
@@ -155,7 +167,7 @@ export function generateDegreesUnsaturation(seed) {
     prompt: 'How many degrees of unsaturation does this structure have?',
     choices,
     correctIndex,
-    explanation: `${mol.shape === 'ring' ? '1 ring' : 'no rings'} + ${(mol.doubleBondAt ?? []).length} pi bond${(mol.doubleBondAt ?? []).length === 1 ? '' : 's'} = ${dou}.`,
+    explanation: `${mol.shape === 'ring' ? '1 ring' : 'no rings'} + ${(mol.doubleBondAt ?? []).length} double bond${(mol.doubleBondAt ?? []).length === 1 ? '' : 's'}${(mol.tripleBondAt ?? []).length ? ` + ${(mol.tripleBondAt ?? []).length} triple bond (2 pi bonds each)` : ''} = ${dou}.`,
     teach: 'Degrees of unsaturation = rings + pi bonds. A benzene ring is 4 (one ring plus three double bonds).',
     visual: { type: 'skeletal', molecule: mol },
   }
@@ -211,7 +223,17 @@ function nearMissMolecules(mol) {
     variants.push(v)
   }
 
-  return variants
+  // Shrinking or shifting can crowd a carbon past four bonds, and a
+  // reversal-equivalent variant is the same molecule as the original.
+  const originalKey = canonicalKey(mol)
+  const seen = new Set([originalKey])
+  return variants.filter((v) => {
+    if (!isValidMolecule(v)) return false
+    const key = canonicalKey(v)
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 }
 
 /** Skeletal drawing → condensed structural formula. */
@@ -249,13 +271,16 @@ export function generateCondensedToSkeletal(seed) {
   const mol = randomChain(seed)
   const correct = condensedFormula(mol)
 
+  // nearMissMolecules already excludes reversal-equivalents of the answer,
+  // so distinct keys here guarantee four genuinely different structures.
   const alternatives = []
+  const seen = new Set([canonicalKey(mol)])
   for (const variant of shuffleWith(rng, nearMissMolecules(mol))) {
     if (alternatives.length >= 3) break
-    const candidate = condensedFormula(variant)
-    if (candidate && candidate !== correct && !alternatives.some((m) => condensedFormula(m) === candidate)) {
-      alternatives.push(variant)
-    }
+    const key = canonicalKey(variant)
+    if (seen.has(key) || !condensedFormula(variant)) continue
+    seen.add(key)
+    alternatives.push(variant)
   }
   if (alternatives.length < 3) return null
 
@@ -280,7 +305,7 @@ export function generateSkeletalHybridization(seed) {
   const mol = randomMolecule(seed)
   const vertex = Math.floor(rng() * mol.size)
   const hyb = hybridizationAt(mol, vertex)
-  const choices = ['sp', 'sp2', 'sp3']
+  const choices = shuffleWith(rng, ['sp', 'sp2', 'sp3'])
 
   return {
     id: `skhyb-${seed}`,

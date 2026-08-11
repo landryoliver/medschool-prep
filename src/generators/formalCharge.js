@@ -32,12 +32,14 @@ const SPECIES = [
 const formalCharge = (s) => s.valence - 2 * s.lonePairs - s.bonds
 const electronsAround = (s) => 2 * s.bonds + 2 * s.lonePairs
 
-function lewisVisual(s) {
+/** `showCharge: false` hides the charge label, for questions that ask the
+ *  user to calculate it — otherwise the diagram just prints the answer. */
+function lewisVisual(s, { showCharge = true } = {}) {
   return {
     type: 'lewis',
     structure: {
       center: s.center,
-      centerCharge: formalCharge(s),
+      centerCharge: showCharge ? formalCharge(s) : 0,
       centerLonePairs: s.lonePairs,
       ligands: Array.from({ length: s.bonds }, () => ({ symbol: 'H', bond: 1, lonePairs: 0 })),
     },
@@ -55,11 +57,13 @@ export function generateFormalCharge(seed) {
     id: `fc-${seed % SPECIES.length}`,
     topic: 'formal-charge',
     kind: 'numeric',
-    prompt: `What is the formal charge on the central ${s.center} atom in ${s.formula}?`,
+    // The formula itself carries the charge (NH₄⁺), so the question is
+    // posed from the drawn structure instead.
+    prompt: `A ${s.center} atom is drawn with ${s.bonds} bond${s.bonds === 1 ? '' : 's'} and ${s.lonePairs} lone pair${s.lonePairs === 1 ? '' : 's'}. What is its formal charge?`,
     answer: fc,
-    explanation: `${s.center}: ${s.valence} valence − ${2 * s.lonePairs} nonbonding − ${s.bonds} (half of ${2 * s.bonds} bonding) = ${fc}.`,
+    explanation: `${s.center}: ${s.valence} valence − ${2 * s.lonePairs} nonbonding − ${s.bonds} (half of ${2 * s.bonds} bonding) = ${fc}. That makes it ${s.formula}.`,
     teach: FC_FORMULA,
-    visual: lewisVisual(s),
+    visual: lewisVisual(s, { showCharge: false }),
   }
 }
 

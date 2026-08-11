@@ -69,13 +69,16 @@ export default function StudySessionView({ mode, title, bank, sessionSize = 15 }
 
   if (session.isDone) {
     const missed = session.reviewItems.filter((r) => !r.correct)
-    const pct = Math.round((session.correctCount / session.total) * 100)
+    // Score against questions actually answered, not the session length —
+    // discarded mistaps would otherwise count against a perfect run.
+    const answered = session.results.length
+    const pct = answered ? Math.round((session.correctCount / answered) * 100) : 0
     return (
       <div>
         <div className="card">
           <h2 className="section-title">{title} complete</h2>
           <p className="score">
-            {session.correctCount} / {session.total} <span className="muted">({pct}%)</span>
+            {session.correctCount} / {answered} <span className="muted">({pct}%)</span>
           </p>
           <p className="muted">
             {streak.current}-day streak · {streak.answeredToday} answered today

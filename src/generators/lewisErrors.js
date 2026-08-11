@@ -52,10 +52,16 @@ export function generateSpotError(seed) {
   let explanation
 
   if (fault === 'lonePairs') {
-    lonePairs = s.lonePairs > 0 && rng() < 0.5 ? s.lonePairs - 1 : s.lonePairs + 1
+    const delta = s.lonePairs > 0 && rng() < 0.5 ? -1 : 1
+    lonePairs = s.lonePairs + delta * (rng() < 0.25 ? 2 : 1)
+    if (lonePairs < 0) lonePairs = s.lonePairs + 1
     explanation = `${s.formula} should have ${s.lonePairs} lone pair${s.lonePairs === 1 ? '' : 's'} on ${s.center}, but ${lonePairs} ${lonePairs === 1 ? 'is' : 'are'} drawn. The charge label is consistent with what is drawn — it is the electron count that is wrong for ${s.formula}.`
   } else if (fault === 'bonds') {
-    bonds = s.bonds + 1
+    // Vary the direction so different seeds on the same species give
+    // different questions. Never exceed four bonds on a second-row atom.
+    const canRemove = s.bonds > 1
+    const canAdd = s.bonds < 4
+    bonds = canAdd && (!canRemove || rng() < 0.5) ? s.bonds + 1 : s.bonds - 1
     explanation = `${s.center} is drawn with ${bonds} bond${bonds === 1 ? '' : 's'}; ${s.formula} has ${s.bonds}. The charge label matches the drawing, so the fault is the bond count.`
   } else if (fault === 'charge') {
     explanation = `The structure as drawn (${bonds} bond${bonds === 1 ? '' : 's'}, ${lonePairs} lone pair${lonePairs === 1 ? '' : 's'}) has a formal charge of ${trueCharge}: ${s.valence} − ${2 * lonePairs} − ${bonds} = ${trueCharge}. A different charge is shown.`

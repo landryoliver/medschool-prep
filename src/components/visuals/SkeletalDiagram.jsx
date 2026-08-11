@@ -89,15 +89,18 @@ export default function SkeletalDiagram({
     if (!subs.length) continue
     const dir = outwardDir(pts, molecule, i)
     subs.forEach((sub, k) => {
-      // Fan multiple substituents on one carbon apart so they stay readable.
-      const spread = (k - (subs.length - 1) / 2) * 0.7
+      // Two labels on one carbon (gem-dimethyl and the like) need to clear
+      // each other: a wide fan alone still overlaps at this font size, so
+      // alternating bond lengths separates them radially too.
+      const spread = (k - (subs.length - 1) / 2) * 1.25
       const cos = Math.cos(spread)
       const sin = Math.sin(spread)
       const rx = dir.x * cos - dir.y * sin
       const ry = dir.x * sin + dir.y * cos
+      const reach = SUB_BOND * (subs.length > 1 && k % 2 === 1 ? 1.5 : 1)
       labels.push({
         from: pts[i],
-        to: { x: pts[i].x + rx * SUB_BOND, y: pts[i].y + ry * SUB_BOND },
+        to: { x: pts[i].x + rx * reach, y: pts[i].y + ry * reach },
         text: sub.label,
         order: sub.bond ?? 1,
       })
@@ -177,11 +180,16 @@ export default function SkeletalDiagram({
       {showVertexNumbers &&
         pts.map((p, i) => {
           const dir = outwardDir(pts, molecule, i)
+          // At a chain end, "inward" points straight down the only bond, so
+          // the number would sit on the line. Push those outward instead.
+          const terminal = molecule.shape === 'chain' && (i === 0 || i === molecule.size - 1)
+          const hasSub = substituentsAt(molecule, i).length > 0
+          const sign = terminal && !hasSub ? 1 : -1
           return (
             <text
               key={`n-${i}`}
-              x={p.x - dir.x * 15}
-              y={p.y - dir.y * 15}
+              x={p.x + sign * dir.x * 15}
+              y={p.y + sign * dir.y * 15}
               fill="#64748b"
               fontSize="11"
               textAnchor="middle"

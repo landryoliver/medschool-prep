@@ -189,5 +189,107 @@
     "correctIndex": 0,
     "explanation": "The double-headed arrow ↔ specifically means resonance. Equilibrium arrows ⇌ would wrongly imply two real, separate species.",
     "teach": "Curved arrows go INSIDE a structure to show which electrons move; the double-headed arrow sits BETWEEN the two drawings."
+  },
+  {
+    "id": "res-15",
+    "topic": "resonance",
+    "prompt": "A benzylic carbocation (a positive carbon attached directly to a benzene ring) is unusually stable because:",
+    "choices": [
+      "The ring's pi system delocalizes the positive charge over several carbons",
+      "Benzene donates a full electron to the carbon",
+      "The carbon becomes sp3 hybridized",
+      "Benzene rings are electron-poor"
+    ],
+    "correctIndex": 0,
+    "explanation": "The empty p orbital overlaps with the ring's pi system, spreading the positive charge onto the ortho and para ring positions.",
+    "teach": "Benzylic and allylic positions are stabilized by resonance — worth spotting immediately when ranking intermediates."
+  },
+  {
+    "id": "res-16",
+    "topic": "resonance",
+    "prompt": "Which pair of structures are resonance forms of each other?",
+    "choices": [
+      "Two drawings differing only in which oxygen of a carboxylate holds the double bond",
+      "An aldehyde and its corresponding ketone",
+      "Butane and 2-methylpropane",
+      "cis- and trans-but-2-ene"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only the carboxylate pair moves electrons alone. The others move atoms, making them constitutional isomers or stereoisomers.",
+    "teach": "Isomers have atoms in different places and are different compounds. Resonance forms are one compound drawn two ways."
+  },
+  {
+    "id": "res-17",
+    "topic": "resonance",
+    "prompt": "In the resonance hybrid of the nitrate ion (NO₃⁻), what charge does each oxygen carry?",
+    "choices": ["−⅓ each", "−1 each", "0 on two and −1 on one", "+1 each"],
+    "correctIndex": 0,
+    "explanation": "Three equivalent resonance structures spread one negative charge evenly over three oxygens, giving −⅓ each.",
+    "teach": "In a hybrid, divide the delocalized charge by the number of equivalent positions it reaches."
+  },
+  {
+    "id": "res-18",
+    "topic": "resonance",
+    "prompt": "Which curved arrow correctly generates a resonance structure?",
+    "choices": [
+      "A lone pair on an atom adjacent to a positive carbon moving in to form a pi bond",
+      "A hydrogen shifting from one carbon to the next",
+      "A carbon-carbon sigma bond breaking",
+      "A whole methyl group migrating"
+    ],
+    "correctIndex": 0,
+    "explanation": "Pushing an adjacent lone pair into an empty orbital creates a new pi bond and shifts the positive charge — a textbook resonance move.",
+    "teach": "Resonance arrows come in a few patterns: lone pair → adjacent cation, pi bond → adjacent cation, and pi bond → adjacent atom."
+  },
+  {
+    "id": "res-19",
+    "topic": "resonance",
+    "prompt": "Compared with any single resonance structure, the real molecule (the hybrid) is:",
+    "choices": [
+      "Lower in energy — more stable than any one contributor",
+      "Higher in energy",
+      "Exactly the energy of the major contributor",
+      "Unrelated in energy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delocalization lowers energy, so the hybrid is more stable than the best individual structure. That extra stability is called resonance energy.",
+    "teach": "Resonance stabilization is why benzene resists addition reactions that ordinary alkenes undergo readily."
+  },
+  {
+    "id": "res-20",
+    "topic": "resonance",
+    "prompt": "An amide (RCONH₂) nitrogen is much less basic than an ordinary amine nitrogen because:",
+    "choices": [
+      "Its lone pair is delocalized into the carbonyl and is not freely available",
+      "Nitrogen becomes more electronegative in an amide",
+      "The amide nitrogen has no lone pair at all",
+      "Amides carry a positive charge"
+    ],
+    "correctIndex": 0,
+    "explanation": "A lone pair tied up in resonance cannot readily grab a proton, so amides are far weaker bases than amines.",
+    "teach": "Delocalization changes reactivity, not just stability — a shared lone pair is a less available lone pair."
+  },
+  {
+    "id": "res-21",
+    "topic": "resonance",
+    "prompt": "Which structure would be the BEST resonance contributor?",
+    "choices": [
+      "All atoms have full octets and there are no formal charges",
+      "All atoms have full octets, with +1 and −1 charges on adjacent atoms",
+      "One carbon has only six electrons",
+      "Positive charge sits on oxygen and negative on carbon"
+    ],
+    "correctIndex": 0,
+    "explanation": "Full octets plus no formal charge is the most stable arrangement available, so that structure dominates the hybrid.",
+    "teach": "Rank in order: full octets first, then fewest charges, then charges on sensible atoms."
+  },
+  {
+    "id": "res-22",
+    "topic": "resonance",
+    "prompt": "How many resonance structures can be drawn for an allylic carbocation, CH₂=CH–CH₂⁺?",
+    "choices": ["2", "1", "3", "4"],
+    "correctIndex": 0,
+    "explanation": "The pi bond shifts to the other side, moving the positive charge from C3 to C1. The two structures are equivalent, so each carbon carries +½.",
+    "teach": "Equivalent contributors share the charge equally — here the two end carbons are identical by symmetry."
   }
 ]

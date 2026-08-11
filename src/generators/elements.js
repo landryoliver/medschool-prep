@@ -327,7 +327,7 @@ export function generatePolarityClass(seed) {
   // Right on a band boundary the "correct" label is arbitrary.
   if (Math.abs(delta - 0.4) < 0.08 || Math.abs(delta - 1.7) < 0.08) return null
   const correct = classifyBond(delta)
-  const choices = ['Nonpolar covalent', 'Polar covalent', 'Ionic']
+  const choices = shuffleWith(rng, ['Nonpolar covalent', 'Polar covalent', 'Ionic'])
 
   return {
     id: `polclass-${seed}`,

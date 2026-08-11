@@ -18,7 +18,7 @@
       "scene": {
         "viewBox": "0 0 240 150",
         "atoms": [
-          { "x": 40, "y": 80, "label": "HO", "charge": -1, "lonePairs": 2, "lonePairAngle": 60 },
+          { "x": 40, "y": 80, "label": "HO", "charge": -1, "lonePairs": 3, "lonePairAngle": 60 },
           { "x": 140, "y": 80, "label": "C" },
           { "x": 210, "y": 80, "label": "Br" }
         ],
@@ -155,7 +155,7 @@
         "viewBox": "0 0 240 150",
         "atoms": [
           { "x": 70, "y": 80, "label": "C", "charge": 1 },
-          { "x": 180, "y": 80, "label": "OH", "charge": -1, "lonePairs": 2, "lonePairAngle": 120 }
+          { "x": 180, "y": 80, "label": "OH", "charge": -1, "lonePairs": 3, "lonePairAngle": 120 }
         ],
         "bonds": [],
         "arrows": [{ "fromX": 88, "fromY": 68, "toX": 158, "toY": 62, "bow": -18 }]
@@ -176,5 +176,120 @@
     "correctIndex": 0,
     "explanation": "Homolysis splits a bond evenly — one electron to each fragment — so each electron needs its own fishhook arrow, producing two radicals.",
     "teach": "Heterolytic cleavage (one full arrow) gives ions; homolytic cleavage (two fishhooks) gives radicals."
+  },
+  {
+    "id": "arrow-9",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "An arrow ends pointing at the space BETWEEN two atoms. What does that mean?",
+    "choices": [
+      "A new bond is forming between those two atoms",
+      "A bond between them is breaking",
+      "Those atoms are becoming radicals",
+      "The two atoms are swapping places"
+    ],
+    "correctIndex": 0,
+    "explanation": "An arrowhead landing between two atoms places the electrons in a new bond there.",
+    "teach": "Head between two atoms = bond forming. Head on a single atom = that atom keeps the electrons as a lone pair."
+  },
+  {
+    "id": "arrow-10",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "Which species is the NUCLEOPHILE in a reaction between hydroxide (HO⁻) and a carbon bearing a bromine?",
+    "choices": [
+      "Hydroxide — it is electron-rich and donates a pair",
+      "The carbon — it is attacked",
+      "Bromine — it leaves",
+      "Neither is a nucleophile"
+    ],
+    "correctIndex": 0,
+    "explanation": "Hydroxide carries lone pairs and a negative charge, so it donates electrons to the electron-poor carbon.",
+    "teach": "Nucleophile = electron-rich attacker. Electrophile = electron-poor target. Arrows always run nucleophile → electrophile."
+  },
+  {
+    "id": "arrow-11",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "Why is a carbon bonded to bromine electrophilic?",
+    "choices": [
+      "Bromine is more electronegative, pulling electron density away and leaving the carbon partially positive",
+      "Bromine donates electrons to the carbon",
+      "Carbon always carries a full positive charge",
+      "Bromine makes the carbon a radical"
+    ],
+    "correctIndex": 0,
+    "explanation": "The polar C–Br bond leaves carbon with a δ+, which is exactly where a nucleophile attacks.",
+    "teach": "Bond polarity tells you where the reaction happens: nucleophiles go for the δ+ atom."
+  },
+  {
+    "id": "arrow-12",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "How many arrows does a single-step nucleophilic substitution (nucleophile attacks, leaving group departs) require?",
+    "choices": [
+      "Two — one for the attack, one for the leaving group",
+      "One — the attack alone",
+      "Three",
+      "None; substitutions use no arrows"
+    ],
+    "correctIndex": 0,
+    "explanation": "One arrow runs from the nucleophile's lone pair to the carbon; a second runs from the C–LG bond onto the leaving group.",
+    "teach": "Carbon can only hold four bonds, so any new bond to it must be paired with an arrow breaking an old one."
+  },
+  {
+    "id": "arrow-13",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "An arrow is drawn from a C–H bond onto the carbon, giving that carbon a lone pair and a negative charge. What happened?",
+    "choices": [
+      "The hydrogen left as H⁺ and the carbon kept both bonding electrons",
+      "The hydrogen left as a hydride, H⁻",
+      "The carbon formed a new bond to hydrogen",
+      "A radical was produced"
+    ],
+    "correctIndex": 0,
+    "explanation": "The carbon keeping both electrons means the hydrogen departs without any — that is, as a proton. The result is a carbanion.",
+    "teach": "Whoever keeps the electrons gains negative charge; the departing fragment leaves positive."
+  },
+  {
+    "id": "arrow-14",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "Which would be the BEST leaving group?",
+    "choices": ["I⁻ (conjugate base of HI, pKa −10)", "HO⁻ (conjugate base of water, pKa 15.7)", "H₂N⁻ (conjugate base of ammonia, pKa 38)", "CH₃⁻ (conjugate base of methane, pKa 50)"],
+    "correctIndex": 0,
+    "explanation": "The best leaving groups are the weakest bases, which come from the strongest acids. HI is by far the strongest acid listed, so iodide is the most stable anion.",
+    "teach": "Good leaving group = weak, stable base. Run down the pKa table: the lower the conjugate acid's pKa, the better the leaving group."
+  },
+  {
+    "id": "arrow-15",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "In a reaction arrow diagram, what does a carbocation intermediate tell you about the mechanism?",
+    "choices": [
+      "The leaving group departed BEFORE the nucleophile attacked (a stepwise pathway)",
+      "The nucleophile and leaving group moved at the same time",
+      "The reaction was a radical chain",
+      "No electrons moved at all"
+    ],
+    "correctIndex": 0,
+    "explanation": "A carbocation only exists if the C–LG bond broke first, on its own. A concerted mechanism never forms one.",
+    "teach": "Carbocation present = stepwise (SN1/E1). No intermediate = concerted (SN2/E2)."
+  },
+  {
+    "id": "arrow-16",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "Which is NOT a valid use of a curved arrow?",
+    "choices": [
+      "Drawing it from one atom to another to show the atoms trading places",
+      "Drawing it from a lone pair to an adjacent atom",
+      "Drawing it from a pi bond to an adjacent atom",
+      "Drawing it from a sigma bond to the atom that keeps the electrons"
+    ],
+    "correctIndex": 0,
+    "explanation": "Curved arrows only ever move electrons. Nothing in arrow notation can move an atom.",
+    "teach": "If your arrow would relocate a nucleus, you need a different drawing — that is a rearrangement, described by its own conventions."
   }
 ]

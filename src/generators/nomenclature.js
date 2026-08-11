@@ -1,4 +1,5 @@
 import { rngFor, pick, pickN, shuffleWith, makeChoices } from './util.js'
+import { canonicalKey } from '../lib/chem/molecule.js'
 
 /**
  * IUPAC naming for a deliberately narrow subset: straight-chain parents
@@ -179,7 +180,7 @@ export function generateStructureToName(seed) {
 export function generateNameToStructure(seed) {
   const rng = rngFor(seed * 7717 + 29)
   const size = 4 + Math.floor(rng() * 4)
-  const family = seed % 3
+  const family = seed % 4
 
   let mol
   let correct
@@ -200,8 +201,11 @@ export function generateNameToStructure(seed) {
     correct = nameAlkyne(size, bondIndex)
   }
 
-  // Wrong structures that would earn a different name.
+  // Wrong structures that would earn a different name. Deduped by
+  // canonical key, since a chain and its reversal are the same molecule
+  // and would otherwise be offered as two separate options.
   const alternatives = []
+  const seen = new Set([canonicalKey(mol)])
   let guard = 0
   while (alternatives.length < 3 && guard++ < 60) {
     const r = rngFor(seed * 131 + guard * 17)
@@ -222,6 +226,9 @@ export function generateNameToStructure(seed) {
       candidate = { shape: 'chain', size, doubleBondAt: [], tripleBondAt: [b], substituents: [] }
       if (nameAlkyne(size, b) === correct) continue
     }
+    const key = canonicalKey(candidate)
+    if (seen.has(key)) continue
+    seen.add(key)
     alternatives.push(candidate)
   }
   if (alternatives.length < 3) return null

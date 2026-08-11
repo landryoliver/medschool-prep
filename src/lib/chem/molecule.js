@@ -119,6 +119,40 @@ export function condensedFormula(mol) {
   return parts.join('')
 }
 
+/**
+ * Identity key that ignores which end of a chain you read from. A chain
+ * and its end-to-end reversal are the SAME molecule, so comparing
+ * formulas or vertex indices alone will happily treat one molecule as two
+ * — which is how a distractor ends up being a second correct answer.
+ */
+export function canonicalKey(mol) {
+  const describe = (reverse) => {
+    const v = (i) => (reverse ? mol.size - 1 - i : i)
+    const b = (i) => (reverse ? mol.size - 2 - i : i)
+    const subs = (mol.substituents ?? [])
+      .map((s) => `${v(s.vertexIndex)}:${s.label}:${substituentBondOrder(s)}`)
+      .sort()
+    const doubles = (mol.doubleBondAt ?? []).map(b).sort((x, y) => x - y)
+    const triples = (mol.tripleBondAt ?? []).map(b).sort((x, y) => x - y)
+    return JSON.stringify([mol.shape, mol.size, doubles, triples, subs])
+  }
+  // Rings have their own rotational symmetry; only chains get reversed here,
+  // which is all the generators produce for these comparisons.
+  if (mol.shape === 'ring') return describe(false)
+  const forward = describe(false)
+  const reversed = describe(true)
+  return forward < reversed ? forward : reversed
+}
+
+/** True when every carbon stays within four bonds. */
+export function isValidMolecule(mol) {
+  for (let i = 0; i < mol.size; i++) {
+    const subBonds = substituentsAt(mol, i).reduce((n, s) => n + substituentBondOrder(s), 0)
+    if (neighborCount(mol, i) + piBondsAt(mol, i) + subBonds > 4) return false
+  }
+  return true
+}
+
 /** Rings + pi bonds (backbone and substituent) — degrees of unsaturation. */
 export function degreesOfUnsaturation(mol) {
   const subPi = (mol.substituents ?? []).reduce((n, s) => n + (substituentBondOrder(s) - 1), 0)

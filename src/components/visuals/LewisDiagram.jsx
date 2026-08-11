@@ -55,12 +55,28 @@ export default function LewisDiagram({ structure, height = 190 }) {
     return { x: Math.cos(a) * BOND_LEN, y: -Math.sin(a) * BOND_LEN }
   })
 
+  // Put the lone pairs in the widest gap between bonds. Anchoring them at a
+  // fixed angle drops them on top of a bond line whenever a ligand happens
+  // to sit there, and these diagrams are used for counting lone pairs.
+  const gapCenter = (() => {
+    if (n === 0) return 90
+    const sorted = [...angles].map((a) => ((a % 360) + 360) % 360).sort((x, y) => x - y)
+    let best = { size: -1, mid: 90 }
+    for (let i = 0; i < sorted.length; i++) {
+      const from = sorted[i]
+      const to = sorted[(i + 1) % sorted.length] + (i === sorted.length - 1 ? 360 : 0)
+      const size = to - from
+      if (size > best.size) best = { size, mid: from + size / 2 }
+    }
+    return best.mid
+  })()
+
   const dots = []
   for (let i = 0; i < centerLonePairs; i++) {
-    // Fan the central lone pairs across the side left open by the bonds,
-    // spread wide enough that up to four pairs stay individually countable.
-    const spread = centerLonePairs > 1 ? 250 / centerLonePairs : 0
-    const angle = n === 0 ? 90 + i * 90 : 90 + (i - (centerLonePairs - 1) / 2) * spread
+    // Fan within the gap, never wider than the gap itself.
+    const gapWidth = n === 0 ? 300 : Math.min(300, 360 / Math.max(n, 1))
+    const spread = centerLonePairs > 1 ? Math.min(70, gapWidth / centerLonePairs) : 0
+    const angle = gapCenter + (i - (centerLonePairs - 1) / 2) * spread
     dots.push(...lonePairDots(0, 0, angle, 5, 18))
   }
   ligands.forEach((lig, i) => {

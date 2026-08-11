@@ -73,9 +73,15 @@ export default function AnswerInput({ question, phase, onSubmit }) {
     )
   }
 
-  const gridStyle = question.choiceVisuals
-    ? { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }
-    : undefined
+  // Skeletal structures stay full width: at half width a double bond's two
+  // lines sit ~4px apart and a triple bond reads as a solid bar, which is
+  // exactly the detail some of these questions turn on. Compact geometry
+  // diagrams are fine two-up.
+  const isSkeletalChoices = question.choiceVisuals?.[0]?.type === 'skeletal'
+  const gridStyle =
+    question.choiceVisuals && !isSkeletalChoices
+      ? { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }
+      : undefined
 
   return (
     <div style={gridStyle}>
