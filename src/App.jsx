@@ -4,6 +4,7 @@ import StudySessionView from './components/StudySessionView.jsx'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import ReferenceView from './components/ReferenceView.jsx'
+import StudyPlan from './components/StudyPlan.jsx'
 import UpdateCheck from './components/UpdateCheck.jsx'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank, getMissedBank } from './lib/topics.js'
 import { getAllProgress } from './lib/db.js'
@@ -54,6 +55,15 @@ export default function App() {
               setMissedBank(null)
               setView({ name: 'misses' })
             }}
+            onPlan={() => setView({ name: 'plan' })}
+          />
+        )}
+
+        {view.name === 'plan' && (
+          <StudyPlan
+            onPickTopic={(topicId) => setView({ name: 'session', topicId })}
+            onNotes={(topicId) => setView({ name: 'learn', topicId })}
+            
           />
         )}
 

@@ -17,7 +17,7 @@ function TopicStat({ stat }) {
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onReviewMisses }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onReviewMisses, onPlan }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -78,6 +78,11 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onRevi
         </div>
         {streak.answeredToday >= DAILY_GOAL && <p className="feedback good goal-hit">Daily goal hit</p>}
       </div>
+
+      <button className="ghost wide" onClick={onPlan}>
+        Where do I start? — suggested order
+      </button>
+      <p className="muted hint-line">A day-by-day path through the topics, in the order they build on each other.</p>
 
       <button className="primary wide" onClick={onMixed}>
         Mixed review — all topics
