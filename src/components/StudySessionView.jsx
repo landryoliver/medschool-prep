@@ -4,8 +4,12 @@ import { getStreak } from '../lib/streaks.js'
 import QuestionCard from './QuestionCard.jsx'
 import AnswerInput from './AnswerInput.jsx'
 import QuestionVisual from './visuals/QuestionVisual.jsx'
+import PeriodicSheet from './PeriodicSheet.jsx'
 
 const MODE_KEY = 'orgoprep.sessionMode'
+
+// Topics whose questions the element table answers directly.
+const TABLE_TOPICS = new Set(['element-recall', 'periodic-trends', 'polarity'])
 
 function SessionModeToggle({ value, onChange }) {
   return (
@@ -52,6 +56,7 @@ function ReviewList({ items }) {
 
 export default function StudySessionView({ mode, title, bank, sessionSize = 15 }) {
   const [sessionMode, setSessionMode] = useState(() => localStorage.getItem(MODE_KEY) ?? 'learn')
+  const [sheetOpen, setSheetOpen] = useState(false)
   const [streak, setStreak] = useState(getStreak)
   const session = useStudySession(mode, bank, { sessionSize, sessionMode })
 
@@ -105,6 +110,9 @@ export default function StudySessionView({ mode, title, bank, sessionSize = 15 }
   }
 
   const { current } = session
+  // Topics where the table states the answer outright. Opening it there is
+  // a hint; anywhere else it is just reference.
+  const tableAnswersIt = TABLE_TOPICS.has(current.topic)
 
   return (
     <div>
@@ -127,6 +135,19 @@ export default function StudySessionView({ mode, title, bank, sessionSize = 15 }
         onUseHint={session.useHint}
       />
       <AnswerInput key={`${current.id}-${session.index}`} question={current} phase={session.phase} onSubmit={session.submitAnswer} />
+
+      <button
+        className="table-btn"
+        onClick={() => {
+          // Mark before opening, so closing it again can't dodge the cost.
+          if (tableAnswersIt && session.phase === 'answering') session.useHint()
+          setSheetOpen(true)
+        }}
+      >
+        Periodic table{tableAnswersIt && session.phase === 'answering' && !session.hintUsed ? ' (counts as a hint)' : ''}
+      </button>
+
+      {sheetOpen && <PeriodicSheet counted={tableAnswersIt} onClose={() => setSheetOpen(false)} />}
 
       {session.phase === 'revealed' && (
         <>
