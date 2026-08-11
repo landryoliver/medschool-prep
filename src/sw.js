@@ -6,7 +6,7 @@ import { CacheFirst, NetworkOnly } from 'workbox-strategies'
 precacheAndRoute(self.__WB_MANIFEST)
 
 // Offline SPA navigation fallback.
-registerRoute(new NavigationRoute(createHandlerBoundToURL('/orgo-prep/index.html')))
+registerRoute(new NavigationRoute(createHandlerBoundToURL('/medschool-prep/index.html')))
 
 // RDKit WASM + glue JS: only ever fetched when Mode 1/2 dynamic-imports it.
 // Cache-first so the ~2-3MB download happens once, then serves instantly (incl. offline).

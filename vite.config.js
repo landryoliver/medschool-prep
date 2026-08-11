@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/orgo-prep/',
+  base: '/medschool-prep/',
   plugins: [
     react(),
     VitePWA({
@@ -20,8 +20,8 @@ export default defineConfig({
         name: 'Orgo Prep',
         short_name: 'OrgoPrep',
         description: 'Organic chemistry and gen-chem study drills',
-        start_url: '/orgo-prep/',
-        scope: '/orgo-prep/',
+        start_url: '/medschool-prep/',
+        scope: '/medschool-prep/',
         display: 'standalone',
         background_color: '#0f172a',
         theme_color: '#0f172a',
