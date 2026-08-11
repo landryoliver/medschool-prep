@@ -109,6 +109,8 @@ export const TOPICS = [
       ...buildBank(skeletal.generateCarbonCount, 35),
       ...buildBank(skeletal.generateDegreesUnsaturation, 30),
       ...buildBank(skeletal.generateSkeletalHybridization, 35),
+      ...buildBank(skeletal.generateCondensed, 35),
+      ...buildBank(skeletal.generateCondensedToSkeletal, 25),
     ],
   },
   {

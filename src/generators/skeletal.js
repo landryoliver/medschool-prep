@@ -1,6 +1,7 @@
 import { rngFor, pick, pickN, shuffleWith, makeChoices } from './util.js'
 import {
   molecularFormula,
+  condensedFormula,
   hydrogensAt,
   degreesOfUnsaturation,
   hybridizationAt,
@@ -151,6 +152,75 @@ export function generateDegreesUnsaturation(seed) {
     explanation: `${mol.shape === 'ring' ? '1 ring' : 'no rings'} + ${(mol.doubleBondAt ?? []).length} pi bond${(mol.doubleBondAt ?? []).length === 1 ? '' : 's'} = ${dou}.`,
     teach: 'Degrees of unsaturation = rings + pi bonds. A benzene ring is 4 (one ring plus three double bonds).',
     visual: { type: 'skeletal', molecule: mol },
+  }
+}
+
+/** Chain-only variant, so condensed-formula drills have something to write. */
+function randomChain(seed) {
+  const mol = randomMolecule(seed)
+  if (mol.shape === 'chain') return mol
+  return { shape: 'chain', size: mol.size, doubleBondAt: [], substituents: mol.substituents ?? [] }
+}
+
+/** Skeletal drawing → condensed structural formula. */
+export function generateCondensed(seed) {
+  const rng = rngFor(seed * 8191 + 23)
+  const mol = randomChain(seed)
+  const correct = condensedFormula(mol)
+
+  const distractors = new Set()
+  let guard = 0
+  while (distractors.size < 3 && guard++ < 40) {
+    const alt = randomChain(seed + guard * 37)
+    const candidate = condensedFormula(alt)
+    if (candidate && candidate !== correct) distractors.add(candidate)
+  }
+  if (distractors.size < 3) return null
+
+  const choices = shuffleWith(rng, [correct, ...distractors])
+
+  return {
+    id: `skcond-${seed}`,
+    topic: 'skeletal-fluency',
+    kind: 'mcq',
+    prompt: 'Which condensed structural formula matches this skeletal drawing?',
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `Reading left to right and filling in the hidden hydrogens on each carbon gives ${correct}.`,
+    teach: 'To expand a skeletal drawing, walk the chain one carbon at a time and write each carbon with the hydrogens needed to reach four bonds.',
+    visual: { type: 'skeletal', molecule: mol },
+  }
+}
+
+/** Condensed structural formula → skeletal drawing. */
+export function generateCondensedToSkeletal(seed) {
+  const rng = rngFor(seed * 3571 + 19)
+  const mol = randomChain(seed)
+  const correct = condensedFormula(mol)
+
+  const alternatives = []
+  let guard = 0
+  while (alternatives.length < 3 && guard++ < 40) {
+    const alt = randomChain(seed + guard * 53)
+    const candidate = condensedFormula(alt)
+    if (candidate && candidate !== correct && !alternatives.some((m) => condensedFormula(m) === candidate)) {
+      alternatives.push(alt)
+    }
+  }
+  if (alternatives.length < 3) return null
+
+  const molecules = shuffleWith(rng, [mol, ...alternatives])
+
+  return {
+    id: `skcond2s-${seed}`,
+    topic: 'skeletal-fluency',
+    kind: 'mcq',
+    prompt: `Which skeletal structure is ${correct}?`,
+    choices: molecules.map((_, i) => `Structure ${'ABCD'[i]}`),
+    choiceVisuals: molecules.map((m) => ({ type: 'skeletal', molecule: m })),
+    correctIndex: molecules.indexOf(mol),
+    explanation: `${correct} has ${mol.size} carbons in its chain${(mol.substituents ?? []).length ? `, with ${(mol.substituents ?? []).map((s) => s.label).join(' and ')} attached` : ''}.`,
+    teach: 'Going the other way, draw a zigzag with one vertex per carbon, then hang the non-hydrogen groups off the right positions.',
   }
 }
 

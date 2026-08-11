@@ -85,6 +85,29 @@ export function molecularFormula(mol) {
     .join('')
 }
 
+/**
+ * Condensed structural formula for a chain, e.g. CH3CH(Cl)CH2CH3.
+ * Chains only — condensed notation for rings is ambiguous without extra
+ * conventions, so ring structures are excluded from this drill.
+ */
+export function condensedFormula(mol) {
+  if (mol.shape !== 'chain') return null
+  const parts = []
+  for (let i = 0; i < mol.size; i++) {
+    const h = hydrogensAt(mol, i)
+    let seg = 'C'
+    if (h === 1) seg += 'H'
+    else if (h > 1) seg += `H${h}`
+    for (const sub of substituentsAt(mol, i)) {
+      seg += substituentBondOrder(sub) === 2 ? `(=${sub.label})` : `(${sub.label})`
+    }
+    parts.push(seg)
+    const isLast = i === mol.size - 1
+    if (!isLast) parts.push((mol.doubleBondAt ?? []).includes(i) ? '=' : '')
+  }
+  return parts.join('')
+}
+
 /** Rings + pi bonds (backbone and substituent) — degrees of unsaturation. */
 export function degreesOfUnsaturation(mol) {
   const subPi = (mol.substituents ?? []).reduce((n, s) => n + (substituentBondOrder(s) - 1), 0)

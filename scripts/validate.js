@@ -1,5 +1,5 @@
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/topics.js'
-import { molecularFormula, hydrogensAt } from '../src/lib/chem/molecule.js'
+import { molecularFormula, condensedFormula, hydrogensAt } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene } from '../src/generators/nomenclature.js'
 import { lookupGeometry } from '../src/lib/chem/vsepr.js'
 
@@ -108,6 +108,16 @@ check(
 check('hexane C1 H count', hydrogensAt({ shape: 'chain', size: 6, doubleBondAt: [], substituents: [] }, 0), 3)
 check('hexane C2 H count', hydrogensAt({ shape: 'chain', size: 6, doubleBondAt: [], substituents: [] }, 1), 2)
 check('benzene CH count', hydrogensAt({ shape: 'ring', size: 6, doubleBondAt: [0, 2, 4], substituents: [] }, 0), 1)
+
+// Condensed structural formulas
+check('condensed butane', condensedFormula({ shape: 'chain', size: 4, doubleBondAt: [], substituents: [] }), 'CH3CH2CH2CH3')
+check(
+  'condensed 2-chlorobutane',
+  condensedFormula({ shape: 'chain', size: 4, doubleBondAt: [], substituents: [{ vertexIndex: 1, label: 'Cl' }] }),
+  'CH3CH(Cl)CH2CH3',
+)
+check('condensed but-1-ene', condensedFormula({ shape: 'chain', size: 4, doubleBondAt: [0], substituents: [] }), 'CH2=CHCH2CH3')
+check('condensed ring returns null', condensedFormula({ shape: 'ring', size: 6, doubleBondAt: [], substituents: [] }), 'null')
 
 // Nomenclature
 check('2-bromobutane', nameHaloalkane(4, [{ vertexIndex: 1, label: 'Br' }]), '2-bromobutane')
