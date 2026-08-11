@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import SkeletalDiagram from './visuals/SkeletalDiagram.jsx'
+import QuestionVisual from './visuals/QuestionVisual.jsx'
 
 function ChoiceBody({ label, visual }) {
   if (!visual) return <span>{label}</span>
   return (
-    <span style={{ display: 'block' }}>
-      <SkeletalDiagram molecule={visual.molecule} height={92} />
-      <span style={{ display: 'block', textAlign: 'center', color: 'var(--muted)', fontSize: '0.8rem' }}>{label}</span>
+    <span className="choice-visual">
+      <QuestionVisual visual={visual} />
+      <span className="choice-visual-label">{label}</span>
     </span>
   )
 }

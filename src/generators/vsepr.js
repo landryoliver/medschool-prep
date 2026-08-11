@@ -1,4 +1,4 @@
-import { rngFor, pick, shuffleWith, makeChoices } from './util.js'
+import { rngFor, pick, pickN, shuffleWith, makeChoices } from './util.js'
 import {
   ORGO_GEOMETRIES,
   GEOMETRIES,
@@ -214,6 +214,72 @@ export function generateMoleculeHybridization(seed) {
     teach: GROUP_RULE,
     visual: geometryVisual(geo, mol.center, mol.ligand),
     visualAfter: true,
+  }
+}
+
+/**
+ * Visual drills: the geometry diagram IS the question, rather than a
+ * reward shown after answering. Reading a shape off a drawing is a
+ * different skill from deriving one from group counts.
+ */
+export function generateShapeFromDiagram(seed) {
+  const rng = rngFor(seed * 3299 + 13)
+  const geo = pick(rng, ORGO_GEOMETRIES)
+  const { choices, correctIndex } = makeChoices(rng, geo.shape, ALL_SHAPES)
+
+  return {
+    id: `vseeshape-${seed}`,
+    topic: 'vsepr',
+    kind: 'mcq',
+    prompt: 'What is the molecular shape shown here?',
+    choices,
+    correctIndex,
+    explanation: `${geo.bonding} bonded atom${geo.bonding === 1 ? '' : 's'} and ${geo.lone} lone pair${geo.lone === 1 ? '' : 's'} → ${geo.shape}, ${geo.angle}.`,
+    teach: 'Lone pairs are drawn as dot pairs. Count only the ATOMS to name the molecular shape.',
+    visual: geometryVisual(geo),
+  }
+}
+
+/** Read a bond angle off a drawn geometry. */
+export function generateAngleFromDiagram(seed) {
+  const rng = rngFor(seed * 5417 + 29)
+  const geo = pick(rng, ORGO_GEOMETRIES)
+  const keyDeg = ANGLE_DEGREES[geo.angle]
+  const distinct = ALL_ANGLES.filter((a) => Math.abs(ANGLE_DEGREES[a] - keyDeg) >= MIN_ANGLE_GAP)
+  const { choices, correctIndex } = makeChoices(rng, geo.angle, distinct)
+
+  return {
+    id: `vseeangle-${seed}`,
+    topic: 'vsepr',
+    kind: 'mcq',
+    prompt: 'What is the approximate bond angle in the geometry shown?',
+    choices,
+    correctIndex,
+    explanation: `This is ${geo.shape} (${geo.bonding} bonded, ${geo.lone} lone pair${geo.lone === 1 ? '' : 's'}) → ${geo.angle}.`,
+    teach: 'Each lone pair pushes the bonding pairs slightly closer together, dropping the angle a few degrees below ideal.',
+    visual: geometryVisual(geo),
+  }
+}
+
+/** Name → pick the matching geometry diagram. */
+export function generateDiagramFromShape(seed) {
+  const rng = rngFor(seed * 6091 + 37)
+  const geo = pick(rng, ORGO_GEOMETRIES)
+  const others = ORGO_GEOMETRIES.filter((g) => g.shape !== geo.shape)
+  if (others.length < 3) return null
+
+  const options = shuffleWith(rng, [geo, ...pickN(rng, others, 3)])
+
+  return {
+    id: `vseepick-${seed}`,
+    topic: 'vsepr',
+    kind: 'mcq',
+    prompt: `Which diagram shows a ${geo.shape} molecule?`,
+    choices: options.map((_, i) => `Option ${'ABCD'[i]}`),
+    choiceVisuals: options.map((g) => geometryVisual(g)),
+    correctIndex: options.indexOf(geo),
+    explanation: `${geo.shape} comes from ${geo.bonding} bonded atom${geo.bonding === 1 ? '' : 's'} and ${geo.lone} lone pair${geo.lone === 1 ? '' : 's'} (${geo.electronGeometry} electron geometry).`,
+    teach: 'Wedges point toward you and hashed lines point away — together they show a 3-D shape on a flat page.',
   }
 }
 

@@ -377,6 +377,21 @@ button.wide {
   font-size: 0.9rem;
 }
 
+.choice-visual {
+  display: block;
+}
+
+.choice-visual svg {
+  max-height: 96px;
+}
+
+.choice-visual-label {
+  display: block;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 .hint-btn {
   background: transparent;
   border: 1px dashed var(--line);
