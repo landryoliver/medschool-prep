@@ -2,6 +2,9 @@ import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/top
 import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
 import { lookupGeometry } from '../src/lib/chem/vsepr.js'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server.browser'
+import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
 
 let errors = 0
 const fail = (msg) => {
@@ -16,10 +19,30 @@ for (const topic of TOPICS) {
   const bank = getTopicBank(topic.id)
   console.log(`${topic.label.padEnd(26)} ${String(bank.length).padStart(4)} questions`)
 
+  // Answer position must not be predictable. Curated banks are authored
+  // with the correct answer first, so this catches a missing shuffle.
+  const positions = new Map()
+  let mcqCount = 0
+  for (const q of bank) {
+    if (q.kind !== 'mcq') continue
+    mcqCount++
+    positions.set(q.correctIndex, (positions.get(q.correctIndex) ?? 0) + 1)
+  }
+  // Only meaningful on a decent sample; a 10-question bank can land
+  // lopsided by chance without anything being wrong.
+  if (mcqCount >= 25) {
+    for (const [pos, count] of positions) {
+      if (count / mcqCount > 0.55) {
+        fail(`${topic.id}: ${Math.round((count / mcqCount) * 100)}% of answers sit at position ${pos} — choices are probably not being shuffled`)
+      }
+    }
+  }
+
   for (const q of bank) {
     if (!q.id) fail(`${topic.id}: question with no id`)
-    if (seenIds.has(q.id) && seenIds.get(q.id) !== topic.id) {
-      fail(`duplicate id "${q.id}" across topics ${seenIds.get(q.id)} and ${topic.id}`)
+    // Any repeat is a duplicate: each question belongs to exactly one topic.
+    if (seenIds.has(q.id)) {
+      fail(`duplicate id "${q.id}" (${seenIds.get(q.id)} and ${topic.id}) — two questions would share one progress record`)
     }
     seenIds.set(q.id, topic.id)
 
@@ -53,6 +76,28 @@ for (const topic of TOPICS) {
     }
   }
 }
+
+// Render every diagram. Catches crashes, and catches NaN coordinates that
+// would silently produce an invisible or mangled SVG in the browser.
+console.log('\n=== Rendering visuals ===')
+let rendered = 0
+for (const q of getMixedBank()) {
+  const visuals = [q.visual, ...(q.choiceVisuals ?? [])].filter(Boolean)
+  for (const visual of visuals) {
+    try {
+      const html = renderToStaticMarkup(createElement(QuestionVisual, { visual, revealed: true }))
+      if (!html) fail(`${q.id}: visual rendered empty`)
+      if (html.includes('NaN')) fail(`${q.id}: visual contains NaN coordinates`)
+      if (/(cx|cy|x1|y1|x2|y2|d)="[^"]*(Infinity|undefined)/.test(html)) {
+        fail(`${q.id}: visual contains a non-finite coordinate`)
+      }
+      rendered++
+    } catch (e) {
+      fail(`${q.id}: visual threw during render — ${e.message}`)
+    }
+  }
+}
+console.log(`${rendered} diagrams rendered`)
 
 console.log(`\nMixed bank: ${getMixedBank().length}`)
 for (const t of TOPICS.filter((t) => t.speedRound)) {

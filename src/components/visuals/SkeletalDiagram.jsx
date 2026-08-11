@@ -73,7 +73,13 @@ function perpendicular(a, b, amount) {
   return { x: (-dy / len) * amount, y: (dx / len) * amount }
 }
 
-export default function SkeletalDiagram({ molecule, highlightVertex = null, showVertexNumbers = false, height = 150 }) {
+export default function SkeletalDiagram({
+  molecule,
+  highlightVertex = null,
+  showVertexNumbers = false,
+  numberFromRight = false,
+  height = 150,
+}) {
   const pts = layout(molecule)
   const pairs = bondPairs(molecule)
 
@@ -181,7 +187,7 @@ export default function SkeletalDiagram({ molecule, highlightVertex = null, show
               textAnchor="middle"
               dominantBaseline="middle"
             >
-              {i + 1}
+              {numberFromRight ? molecule.size - i : i + 1}
             </text>
           )
         })}

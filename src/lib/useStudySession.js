@@ -33,6 +33,7 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
   const [phase, setPhase] = useState('answering') // 'answering' | 'retry' | 'revealed'
   const [lastCorrect, setLastCorrect] = useState(null)
   const [results, setResults] = useState([])
+  const [hintUsed, setHintUsed] = useState(false)
 
   const bankById = useMemo(() => new Map(bank.map((q) => [q.id, q])), [bank])
 
@@ -42,7 +43,7 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
       if (cancelled) return
       const map = new Map(rows.map((r) => [r.id, r]))
       setProgressById(map)
-      setSessionIds(selectSessionQuestions(bank.map((q) => q.id), map, sessionSize))
+      setSessionIds(selectSessionQuestions(bank, map, sessionSize))
     })
     return () => {
       cancelled = true
@@ -55,9 +56,11 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
   const correctCount = results.filter((r) => r.correct).length
 
   const commitResult = useCallback(
-    async (question, correct) => {
+    async (question, correct, hinted) => {
       const prev = progressById.get(question.id)
-      const updated = nextProgressState(prev, question.id, mode, question.topic, correct)
+      const updated = nextProgressState(prev, question.id, mode, question.topic, correct, Date.now(), {
+        promote: !hinted,
+      })
       progressById.set(question.id, updated)
       await putProgress(updated)
       await logSession({ timestamp: Date.now(), mode, topic: question.topic, correct })
@@ -73,8 +76,8 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
       const isFirstAttempt = phase === 'answering'
 
       if (isFirstAttempt) {
-        setResults((r) => [...r, { id: current.id, correct, response }])
-        await commitResult(current, correct)
+        setResults((r) => [...r, { id: current.id, correct, response, hinted: hintUsed }])
+        await commitResult(current, correct, hintUsed)
       }
 
       if (sessionMode === 'test') {
@@ -87,14 +90,17 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
       // One retry on a first miss, then reveal the answer.
       setPhase(correct || !isFirstAttempt ? 'revealed' : 'retry')
     },
-    [current, phase, sessionMode, commitResult],
+    [current, phase, sessionMode, commitResult, hintUsed],
   )
 
   const next = useCallback(() => {
     setPhase('answering')
     setLastCorrect(null)
+    setHintUsed(false)
     setIndex((i) => i + 1)
   }, [])
+
+  const useHint = useCallback(() => setHintUsed(true), [])
 
   const reveal = useCallback(() => setPhase('revealed'), [])
 
@@ -102,8 +108,9 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
     setIndex(0)
     setPhase('answering')
     setLastCorrect(null)
+    setHintUsed(false)
     setResults([])
-    setSessionIds(selectSessionQuestions(bank.map((q) => q.id), progressById ?? new Map(), sessionSize))
+    setSessionIds(selectSessionQuestions(bank, progressById ?? new Map(), sessionSize))
   }, [bank, progressById, sessionSize])
 
   return {
@@ -117,10 +124,12 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
     lastCorrect,
     correctCount,
     results,
+    hintUsed,
     reviewItems: results.map((r) => ({ ...r, question: bankById.get(r.id) })),
     submitAnswer,
     next,
     reveal,
+    useHint,
     restart,
   }
 }

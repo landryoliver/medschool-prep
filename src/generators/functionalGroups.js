@@ -128,33 +128,36 @@ export function generateGroupId(seed) {
   }
 }
 
+/**
+ * Groups that can be dropped onto a single interior carbon without
+ * changing identity. A ketone must keep carbons on both sides — placing
+ * one at a chain end would silently draw an aldehyde instead.
+ */
+const PLACEABLE = [
+  { group: 'Alcohol', at: (v) => ({ vertexIndex: v, label: 'OH' }) },
+  { group: 'Alkyl halide', at: (v, rng) => ({ vertexIndex: v, label: pick(rng, ['Cl', 'Br', 'I', 'F']) }) },
+  { group: 'Amine', at: (v) => ({ vertexIndex: v, label: 'NH2' }) },
+  { group: 'Thiol', at: (v) => ({ vertexIndex: v, label: 'SH' }) },
+  { group: 'Ether', at: (v) => ({ vertexIndex: v, label: 'OCH3' }) },
+  { group: 'Ketone', at: (v) => ({ vertexIndex: v, label: 'O', bond: 2 }) },
+]
+
 /** Select every functional group present when two are combined. */
 export function generateMultiGroupId(seed) {
   const rng = rngFor(seed * 977 + 41)
-  const combinable = TEMPLATES.filter((t) => ['Alcohol', 'Alkyl halide', 'Amine', 'Thiol', 'Ether', 'Ketone', 'Alkene'].includes(t.group))
-  const first = combinable[seed % combinable.length]
-  const second = pick(rng, combinable.filter((t) => t.group !== first.group))
+  const first = PLACEABLE[seed % PLACEABLE.length]
+  const second = pick(rng, PLACEABLE.filter((t) => t.group !== first.group))
 
+  // Both anchors are interior carbons and never collide, so each group
+  // keeps the identity its label claims.
   const size = 6 + Math.floor(rng() * 2)
-  const a = { doubleBondAt: [], substituents: [], ...first.build(rng, size) }
-  const b = { doubleBondAt: [], substituents: [], ...second.build(rng, size) }
-
-  // Merge the two templates onto one backbone, keeping their groups apart.
   const merged = {
     shape: 'chain',
     size,
-    doubleBondAt: [...new Set([...(a.doubleBondAt ?? []), ...(b.doubleBondAt ?? [])])],
-    substituents: [
-      ...(a.substituents ?? []).map((s) => ({ ...s, vertexIndex: 0 + (s.bond === 2 ? 1 : 0) })),
-      ...(b.substituents ?? []).map((s) => ({ ...s, vertexIndex: size - 1 })),
-    ],
+    doubleBondAt: [],
+    tripleBondAt: [],
+    substituents: [first.at(1, rng), second.at(size - 2, rng)],
   }
-
-  // A double bond into a carbonyl carbon would be invalid; drop conflicts.
-  const conflicted = merged.doubleBondAt.some((bond) =>
-    merged.substituents.some((s) => s.bond === 2 && (s.vertexIndex === bond || s.vertexIndex === bond + 1)),
-  )
-  if (conflicted) merged.doubleBondAt = []
 
   const correctGroups = [first.group, second.group]
   const distractors = shuffleWith(rng, ALL_GROUPS.filter((g) => !correctGroups.includes(g))).slice(0, 3)

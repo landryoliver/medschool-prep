@@ -3,8 +3,15 @@ const DAY_MS = 24 * 60 * 60 * 1000
 // box index -> ms until next due after a correct answer at that box
 export const BOX_INTERVALS_MS = [0, DAY_MS, 3 * DAY_MS, 7 * DAY_MS, 21 * DAY_MS]
 
-export function nextProgressState(prev, id, mode, topic, correct, now = Date.now()) {
-  const box = correct ? Math.min((prev?.box ?? -1) + 1, 4) : 0
+/**
+ * `promote: false` records the attempt without advancing the Leitner box.
+ * Used when the answer was reached with a hint, or under speed-round time
+ * pressure — neither is evidence of recall, and counting them as mastery
+ * would push the question out to a 3-week interval it hasn't earned.
+ * A wrong answer always resets the box regardless.
+ */
+export function nextProgressState(prev, id, mode, topic, correct, now = Date.now(), { promote = true } = {}) {
+  const box = correct ? (promote ? Math.min((prev?.box ?? -1) + 1, 4) : (prev?.box ?? 0)) : 0
   return {
     id,
     mode,
@@ -81,12 +88,17 @@ function weightedSample(items, count) {
  * Deliberately probabilistic rather than a strict due-date queue so
  * repeated sessions in one sitting don't replay an identical list.
  */
-export function selectSessionQuestions(bankIds, progressById, count, now = Date.now()) {
+export function selectSessionQuestions(questions, progressById, count, now = Date.now()) {
   const accuracyByTopic = topicAccuracy([...progressById.values()])
 
-  const weighted = bankIds.map((id) => {
+  const weighted = questions.map((question) => {
+    const id = question.id
     const p = progressById.get(id)
-    const topic = p?.topic
+    // Read the topic from the question itself, not from stored progress:
+    // most of the bank is unseen, and an unseen question with no progress
+    // row would otherwise get a flat default weight, which is exactly the
+    // new material a weak topic most needs to surface.
+    const topic = question.topic
     // 1.0 for a perfect topic, up to 2.5 for a topic being missed constantly
     const topicWeight = topic ? 1 + 1.5 * (1 - (accuracyByTopic.get(topic) ?? 0.5)) : 1.25
 
@@ -106,5 +118,5 @@ export function selectSessionQuestions(bankIds, progressById, count, now = Date.
     return { id, weight: baseWeight * topicWeight * missBoost }
   })
 
-  return shuffle(weightedSample(weighted, Math.min(count, bankIds.length)))
+  return shuffle(weightedSample(weighted, Math.min(count, questions.length)))
 }

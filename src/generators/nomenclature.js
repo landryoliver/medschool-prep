@@ -52,30 +52,49 @@ function buildPrefixes(numbered) {
     .join('-')
 }
 
+/**
+ * Each namer also reports whether numbering ran right-to-left, so the
+ * diagram can label its carbons in the SAME direction the name used.
+ * Numbering the drawing left-to-right regardless would contradict the
+ * answer and teach the user to ignore the lowest-locant rule.
+ */
+
 /** Names a haloalkane: halogens on a straight-chain parent. */
-export function nameHaloalkane(size, substituents) {
+export function nameHaloalkaneNumbered(size, substituents) {
   const withPrefix = substituents.map((s) => ({ ...s, prefix: HALOGEN_PREFIX[s.label] }))
   const numbered = numberChain(size, withPrefix)
-  return `${buildPrefixes(numbered)}${alkaneName(size)}`
+  const reversed = numbered.some((s) => s.locant === size - s.vertexIndex && s.locant !== s.vertexIndex + 1)
+  return { name: `${buildPrefixes(numbered)}${alkaneName(size)}`, reversed }
 }
+
+export const nameHaloalkane = (size, substituents) => nameHaloalkaneNumbered(size, substituents).name
 
 /** Names a straight-chain alcohol, e.g. pentan-2-ol. */
-export function nameAlkanol(size, vertexIndex) {
+export function nameAlkanolNumbered(size, vertexIndex) {
+  const reversed = size - vertexIndex < vertexIndex + 1
   const locant = Math.min(vertexIndex + 1, size - vertexIndex)
-  return `${STEMS[size - 1]}an-${locant}-ol`
+  return { name: `${STEMS[size - 1]}an-${locant}-ol`, reversed }
 }
+
+export const nameAlkanol = (size, vertexIndex) => nameAlkanolNumbered(size, vertexIndex).name
 
 /** Names a straight-chain alkene, e.g. hex-2-ene. */
-export function nameAlkene(size, bondIndex) {
+export function nameAlkeneNumbered(size, bondIndex) {
+  const reversed = size - 1 - bondIndex < bondIndex + 1
   const locant = Math.min(bondIndex + 1, size - 1 - bondIndex)
-  return `${STEMS[size - 1]}-${locant}-ene`
+  return { name: `${STEMS[size - 1]}-${locant}-ene`, reversed }
 }
 
+export const nameAlkene = (size, bondIndex) => nameAlkeneNumbered(size, bondIndex).name
+
 /** Names a straight-chain alkyne, e.g. hex-2-yne. */
-export function nameAlkyne(size, bondIndex) {
+export function nameAlkyneNumbered(size, bondIndex) {
+  const reversed = size - 1 - bondIndex < bondIndex + 1
   const locant = Math.min(bondIndex + 1, size - 1 - bondIndex)
-  return `${STEMS[size - 1]}-${locant}-yne`
+  return { name: `${STEMS[size - 1]}-${locant}-yne`, reversed }
 }
+
+export const nameAlkyne = (size, bondIndex) => nameAlkyneNumbered(size, bondIndex).name
 
 function haloalkaneMolecule(rng, size) {
   const count = rng() < 0.55 ? 1 : 2
@@ -100,29 +119,31 @@ export function generateStructureToName(seed) {
   const family = seed % 4
 
   let mol
-  let correct
+  let named
   let teach
 
   if (family === 0) {
     mol = haloalkaneMolecule(rng, size)
-    correct = nameHaloalkane(size, mol.substituents)
+    named = nameHaloalkaneNumbered(size, mol.substituents)
     teach = 'Number the chain from the end that gives the substituents the lowest locants, then list prefixes alphabetically (ignoring di/tri when alphabetizing).'
   } else if (family === 1) {
     const vertexIndex = Math.floor(rng() * size)
     mol = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex, label: 'OH' }] }
-    correct = nameAlkanol(size, vertexIndex)
+    named = nameAlkanolNumbered(size, vertexIndex)
     teach = 'An –OH is a suffix (-ol) and outranks halogens, so it always gets the lowest possible number.'
   } else if (family === 2) {
     const bondIndex = Math.floor(rng() * (size - 1))
     mol = { shape: 'chain', size, doubleBondAt: [bondIndex], substituents: [] }
-    correct = nameAlkene(size, bondIndex)
+    named = nameAlkeneNumbered(size, bondIndex)
     teach = 'A double bond is numbered by its FIRST carbon, counting from whichever end gives the lower number.'
   } else {
     const bondIndex = Math.floor(rng() * (size - 1))
     mol = { shape: 'chain', size, doubleBondAt: [], tripleBondAt: [bondIndex], substituents: [] }
-    correct = nameAlkyne(size, bondIndex)
+    named = nameAlkyneNumbered(size, bondIndex)
     teach = 'Triple bonds take the -yne suffix and are numbered exactly like double bonds, by their first carbon.'
   }
+
+  const correct = named.name
 
   // Distractors: same family, different locants or chain length.
   const distractors = new Set()
@@ -148,9 +169,9 @@ export function generateStructureToName(seed) {
     prompt: 'What is the IUPAC name of this structure?',
     choices,
     correctIndex: choices.indexOf(correct),
-    explanation: `${correct}. Parent chain: ${alkaneName(size)} (${size} carbons).`,
+    explanation: `${correct}. Parent chain: ${alkaneName(size)} (${size} carbons), numbered from the ${named.reversed ? 'right' : 'left'} to give the lowest locant.`,
     teach,
-    visual: { type: 'skeletal', molecule: mol, showVertexNumbers: true },
+    visual: { type: 'skeletal', molecule: mol, showVertexNumbers: true, numberFromRight: named.reversed },
   }
 }
 
@@ -232,7 +253,7 @@ export function generateStemRecall(seed) {
     : makeChoices(rng, alkaneName(n), STEMS.map((_, i) => alkaneName(i + 1)))
 
   return {
-    id: `stem-${n}-${nameToCount ? 'n' : 'c'}`,
+    id: `stem-${seed}`,
     topic: 'nomenclature',
     kind: 'mcq',
     prompt: nameToCount ? `How many carbons are in ${alkaneName(n)}?` : `What is the name of the straight-chain alkane with ${n} carbon${n === 1 ? '' : 's'}?`,

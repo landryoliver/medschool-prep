@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "validate": "esbuild scripts/validate.js --bundle --platform=node --format=esm --outfile=node_modules/.cache/validate.mjs --log-level=error && node node_modules/.cache/validate.mjs"
+    "validate": "esbuild scripts/validate.js --bundle --platform=node --format=esm --jsx=automatic --outfile=node_modules/.cache/validate.mjs --log-level=error && node node_modules/.cache/validate.mjs"
   },
   "dependencies": {
     "idb": "^8.0.0",

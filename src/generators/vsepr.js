@@ -100,11 +100,31 @@ export function generateHybridization(seed) {
   }
 }
 
+// Representative degrees for each angle string, so distractors can be kept
+// far enough from the key to be genuinely distinguishable. Offering ~107°
+// against 109.5° is not a real question when the prompt says "approximate".
+const ANGLE_DEGREES = {
+  '180°': 180,
+  '120°': 120,
+  '~118°': 118,
+  '109.5°': 109.5,
+  '~107°': 107,
+  '~104.5°': 104.5,
+  '90°': 90,
+  '~90°': 90,
+  '90° and 120°': 105,
+  '~90° and ~120°': 105,
+}
+
+const MIN_ANGLE_GAP = 8
+
 /** Bond angle from group counts. */
 export function generateBondAngle(seed) {
   const rng = rngFor(seed)
   const geo = pick(rng, ORGO_GEOMETRIES)
-  const { choices, correctIndex } = makeChoices(rng, geo.angle, ALL_ANGLES)
+  const keyDeg = ANGLE_DEGREES[geo.angle]
+  const distinct = ALL_ANGLES.filter((a) => Math.abs(ANGLE_DEGREES[a] - keyDeg) >= MIN_ANGLE_GAP)
+  const { choices, correctIndex } = makeChoices(rng, geo.angle, distinct)
 
   return {
     id: `vang-${seed}`,

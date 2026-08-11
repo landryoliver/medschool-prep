@@ -3,6 +3,20 @@ import { rngFor, pick, pickN, shuffleWith, makeChoices } from './util.js'
 
 const ORGO = periodicTable.filter((e) => e.orgoCore)
 const NAMED = periodicTable.filter((e) => e.electronegativity != null)
+
+// Bonds a student will actually meet. Without this, the polarity drills
+// happily ask about Na–Mg, which is not a covalent bond in any meaningful
+// sense and has no delta-minus atom to identify.
+const METALS = new Set(['Li', 'Na', 'K', 'Mg', 'Ca', 'Al', 'Be'])
+const BONDABLE = periodicTable.filter((e) => e.electronegativity != null && e.typicalBonds > 0)
+const NONMETALS = BONDABLE.filter((e) => !METALS.has(e.symbol))
+
+/** A realistic pair: at least one nonmetal, never metal-metal. */
+function pickBondPair(rng) {
+  const a = pick(rng, BONDABLE)
+  const partners = METALS.has(a.symbol) ? NONMETALS : BONDABLE.filter((e) => e.symbol !== a.symbol)
+  return [a, pick(rng, partners)]
+}
 const ALL_NAMES = periodicTable.map((e) => e.name)
 const ALL_SYMBOLS = periodicTable.map((e) => e.symbol)
 
@@ -81,7 +95,13 @@ export function generateBondCount(seed) {
     prompt: `How many covalent bonds does neutral ${el.name} (${el.symbol}) typically form?`,
     choices: ['1', '2', '3', '4'],
     correctIndex: el.typicalBonds - 1,
-    explanation: `${el.symbol} normally forms ${el.typicalBonds} bond${el.typicalBonds === 1 ? '' : 's'} (it needs ${8 - el.valenceElectrons === 4 ? 4 : 8 - el.valenceElectrons} more electron${8 - el.valenceElectrons === 1 ? '' : 's'} to complete its octet).`,
+    explanation: `${el.symbol} normally forms ${el.typicalBonds} bond${el.typicalBonds === 1 ? '' : 's'}. ${
+      el.symbol === 'H'
+        ? 'Hydrogen needs just one more electron to reach a duet (2), not an octet.'
+        : el.symbol === 'B'
+          ? 'Boron is an octet exception — it is stable with only 6 electrons.'
+          : `Sharing ${el.typicalBonds} electron pair${el.typicalBonds === 1 ? '' : 's'} brings it to a full octet of 8.`
+    }`,
     teach: 'Neutral-atom bonding pattern for orgo: C = 4, N = 3, O = 2, halogens and H = 1.',
   }
 }
@@ -129,16 +149,37 @@ const PROPERTIES = [
   },
 ]
 
+// Minimum separation for a comparison to be a real question rather than a
+// coin flip on textbook rounding.
+const MIN_GAP = { electronegativity: 0.25, atomicRadiusPm: 12, ionizationEnergyKJ: 90 }
+
+/**
+ * Pairs where the simple "up and to the right" rule gives the wrong
+ * answer. Half-filled and filled subshells create genuine exceptions, so
+ * these need their own explanation rather than the generic trend line.
+ */
+const IE_EXCEPTIONS = {
+  'N-O': 'Nitrogen has a half-filled 2p subshell, which is unusually stable, so it holds its electrons more tightly than oxygen despite being further left.',
+  'Be-B': 'Beryllium has a filled 2s subshell, making it harder to ionize than boron even though boron is further right.',
+  'Mg-Al': 'Magnesium has a filled 3s subshell, so it resists ionization more than aluminum.',
+  'P-S': 'Phosphorus has a half-filled 3p subshell, making it harder to ionize than sulfur.',
+}
+
 /** Two-element property comparison. */
 export function generateTrendCompare(seed) {
   const rng = rngFor(seed)
   const property = pick(rng, PROPERTIES)
   const pool = periodicTable.filter((e) => e[property.key] != null)
   const [a, b] = pickN(rng, pool, 2)
-  if (a[property.key] === b[property.key]) return null
+  const gap = Math.abs(a[property.key] - b[property.key])
+  if (gap < MIN_GAP[property.key]) return null
 
   const winner = a[property.key] > b[property.key] ? a : b
+  const loser = winner === a ? b : a
   const choices = [`${a.name} (${a.symbol})`, `${b.name} (${b.symbol})`]
+
+  const key = [a.symbol, b.symbol].sort().join('-')
+  const exception = property.key === 'ionizationEnergyKJ' ? IE_EXCEPTIONS[key] : null
 
   return {
     id: `trend-${seed}`,
@@ -147,8 +188,8 @@ export function generateTrendCompare(seed) {
     prompt: `Which has ${property.higher} ${property.label}: ${a.name} (${a.symbol}) or ${b.name} (${b.symbol})?`,
     choices,
     correctIndex: winner === a ? 0 : 1,
-    explanation: `${winner.symbol} (${winner[property.key]}) vs ${(winner === a ? b : a).symbol} (${(winner === a ? b : a)[property.key]}). ${property.why}`,
-    teach: property.why,
+    explanation: `${winner.symbol} (${winner[property.key]}) vs ${loser.symbol} (${loser[property.key]}). ${exception ?? property.why}`,
+    teach: exception ? 'Ionization energy generally rises up and to the right, but half-filled and filled subshells are stable enough to create exceptions.' : property.why,
   }
 }
 
@@ -156,9 +197,11 @@ export function generateTrendCompare(seed) {
 export function generateENRanking(seed) {
   const rng = rngFor(seed)
   const chosen = pickN(rng, NAMED, 4)
-  if (new Set(chosen.map((e) => e.electronegativity)).size !== 4) return null
-
   const sorted = [...chosen].sort((x, y) => y.electronegativity - x.electronegativity)
+  // Adjacent values must be far enough apart that the ordering is real.
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (sorted[i].electronegativity - sorted[i + 1].electronegativity < 0.25) return null
+  }
   const correct = sorted.map((e) => e.symbol).join(' > ')
 
   const distractors = new Set()
@@ -247,14 +290,18 @@ function classifyBond(delta) {
 /** Which atom carries delta-minus in a given bond. */
 export function generatePolarityDirection(seed) {
   const rng = rngFor(seed)
-  const pool = periodicTable.filter((e) => e.electronegativity != null && e.typicalBonds > 0)
-  const [a, b] = pickN(rng, pool, 2)
-  if (a.electronegativity === b.electronegativity) return null
+  const [a, b] = pickBondPair(rng)
+  if (a.symbol === b.symbol) return null
+  const gap = Math.abs(a.electronegativity - b.electronegativity)
+  // Above ~1.7 the bond is ionic, where "partial negative" is the wrong
+  // framing — that range belongs to generatePolarityClass instead.
+  if (gap > 1.7) return null
 
   const negative = a.electronegativity > b.electronegativity ? a : b
-  const delta = Math.abs(a.electronegativity - b.electronegativity).toFixed(2)
-  const choices = [`${a.symbol}`, `${b.symbol}`, 'Neither — the bond is nonpolar']
-  const isNonpolar = Number(delta) < 0.4
+  const delta = gap.toFixed(2)
+  const isNonpolar = gap < 0.4
+  // Shuffled so the "neither" option isn't permanently the last button.
+  const choices = shuffleWith(rng, [`${a.symbol}`, `${b.symbol}`, 'Neither — the bond is nonpolar'])
 
   return {
     id: `poldir-${seed}`,
@@ -262,7 +309,7 @@ export function generatePolarityDirection(seed) {
     kind: 'mcq',
     prompt: `In a ${a.symbol}–${b.symbol} bond, which atom carries the partial negative charge (δ−)?`,
     choices,
-    correctIndex: isNonpolar ? 2 : choices.indexOf(negative.symbol),
+    correctIndex: isNonpolar ? choices.indexOf('Neither — the bond is nonpolar') : choices.indexOf(negative.symbol),
     explanation: isNonpolar
       ? `ΔEN = ${delta}, below ~0.4, so this bond is essentially nonpolar.`
       : `${negative.symbol} is more electronegative (${negative.electronegativity} vs ${(negative === a ? b : a).electronegativity}), so it pulls electron density toward itself. ΔEN = ${delta}.`,
@@ -274,9 +321,11 @@ export function generatePolarityDirection(seed) {
 /** Classify a bond as nonpolar covalent / polar covalent / ionic. */
 export function generatePolarityClass(seed) {
   const rng = rngFor(seed)
-  const pool = periodicTable.filter((e) => e.electronegativity != null && e.typicalBonds > 0)
-  const [a, b] = pickN(rng, pool, 2)
+  const [a, b] = pickBondPair(rng)
+  if (a.symbol === b.symbol) return null
   const delta = Math.abs(a.electronegativity - b.electronegativity)
+  // Right on a band boundary the "correct" label is arbitrary.
+  if (Math.abs(delta - 0.4) < 0.08 || Math.abs(delta - 1.7) < 0.08) return null
   const correct = classifyBond(delta)
   const choices = ['Nonpolar covalent', 'Polar covalent', 'Ionic']
 
@@ -295,11 +344,13 @@ export function generatePolarityClass(seed) {
 /** Which of two bonds is more polar. */
 export function generateMorePolarBond(seed) {
   const rng = rngFor(seed)
-  const pool = periodicTable.filter((e) => e.electronegativity != null && e.typicalBonds > 0)
-  const [a1, b1, a2, b2] = pickN(rng, pool, 4)
+  const [a1, b1] = pickBondPair(rng)
+  const [a2, b2] = pickBondPair(rng)
+  if (a1.symbol === b1.symbol || a2.symbol === b2.symbol) return null
+  if (`${a1.symbol}${b1.symbol}` === `${a2.symbol}${b2.symbol}`) return null
   const d1 = Math.abs(a1.electronegativity - b1.electronegativity)
   const d2 = Math.abs(a2.electronegativity - b2.electronegativity)
-  if (Math.abs(d1 - d2) < 0.05) return null
+  if (Math.abs(d1 - d2) < 0.3) return null
 
   const choices = [`${a1.symbol}–${b1.symbol}`, `${a2.symbol}–${b2.symbol}`]
 

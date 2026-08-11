@@ -1,4 +1,5 @@
 import { buildBank } from '../generators/util.js'
+import { mulberry32 } from './prng.js'
 import * as elements from '../generators/elements.js'
 import * as formalCharge from '../generators/formalCharge.js'
 import * as lewisErrors from '../generators/lewisErrors.js'
@@ -18,7 +19,34 @@ import pkaComparisons from '../data/curated/pkaComparisons.json'
 import mechanismConcepts from '../data/curated/mechanismConcepts.json'
 import snsE from '../data/curated/snsE.json'
 
-const withKind = (rows) => rows.map((q) => ({ kind: 'mcq', ...q }))
+function hashId(str) {
+  let h = 2166136261
+  for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619)
+  return h >>> 0
+}
+
+/**
+ * Curated JSON is authored with the correct answer first, which would
+ * make "pick the top option" a winning strategy. Shuffle deterministically
+ * from the question id so the order is stable across reloads (and so a
+ * question's spaced-repetition history still lines up with what it shows).
+ */
+function shuffleChoices(q) {
+  if (!Array.isArray(q.choices) || q.choices.length < 2) return q
+  const rng = mulberry32(hashId(q.id))
+  const order = q.choices.map((_, i) => i)
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1))
+    ;[order[i], order[j]] = [order[j], order[i]]
+  }
+  const next = { ...q, choices: order.map((i) => q.choices[i]) }
+  if (q.choiceVisuals) next.choiceVisuals = order.map((i) => q.choiceVisuals[i])
+  if (typeof q.correctIndex === 'number') next.correctIndex = order.indexOf(q.correctIndex)
+  if (Array.isArray(q.correctIndices)) next.correctIndices = q.correctIndices.map((i) => order.indexOf(i))
+  return next
+}
+
+const withKind = (rows) => rows.map((q) => shuffleChoices({ kind: 'mcq', ...q }))
 
 /**
  * Study topics for the pre-organic prep track. Banks are built once on

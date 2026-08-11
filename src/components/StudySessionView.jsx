@@ -119,7 +119,9 @@ export default function StudySessionView({ mode, title, bank, sessionSize = 15 }
         question={current}
         phase={session.phase}
         lastCorrect={session.lastCorrect}
-        showTeach={sessionMode === 'learn'}
+        hintsAvailable={sessionMode === 'learn'}
+        hintUsed={session.hintUsed}
+        onUseHint={session.useHint}
       />
       <AnswerInput key={`${current.id}-${session.index}`} question={current} phase={session.phase} onSubmit={session.submitAnswer} />
 

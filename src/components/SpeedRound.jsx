@@ -31,6 +31,7 @@ export default function SpeedRound({ drillId, mode, title, bank, onExit }) {
   const [remaining, setRemaining] = useState(DURATION_MS)
   const [flash, setFlash] = useState(null)
   const [result, setResult] = useState(null)
+  const [misses, setMisses] = useState([])
 
   const startedAt = useRef(0)
   const best = useMemo(() => getBestTime(drillId), [drillId, state])
@@ -69,6 +70,7 @@ export default function SpeedRound({ drillId, mode, title, bank, onExit }) {
     setBestStreak(0)
     setRemaining(DURATION_MS)
     setResult(null)
+    setMisses([])
     startedAt.current = Date.now()
     setState('running')
   }
@@ -90,8 +92,12 @@ export default function SpeedRound({ drillId, mode, title, bank, onExit }) {
     }
     setIndex((i) => i + 1)
 
+    if (!correct) setMisses((m) => (m.some((q) => q.id === question.id) ? m : [...m, question]))
+
+    // Never promote on a timed answer: a fast correct guess is not the same
+    // evidence of recall as a considered one. Misses still reset the box.
     const prev = await getProgress(question.id)
-    await putProgress(nextProgressState(prev, question.id, mode, question.topic, correct))
+    await putProgress(nextProgressState(prev, question.id, mode, question.topic, correct, Date.now(), { promote: false }))
     await logSession({ timestamp: Date.now(), mode, topic: question.topic, correct })
     recordAnswer()
   }
@@ -120,21 +126,37 @@ export default function SpeedRound({ drillId, mode, title, bank, onExit }) {
 
   if (state === 'done') {
     return (
-      <div className="card">
-        <h2 className="section-title">Time!</h2>
-        <p className="score">{score} correct</p>
-        <p className="muted">Best streak this round: {bestStreak}</p>
-        {result?.isNewBest ? (
-          <p className="feedback good">New personal best</p>
-        ) : (
-          <p className="muted">Personal best: {result?.best?.score ?? score}</p>
+      <div>
+        <div className="card">
+          <h2 className="section-title">Time!</h2>
+          <p className="score">{score} correct</p>
+          <p className="muted">Best streak this round: {bestStreak}</p>
+          {result?.isNewBest ? (
+            <p className="feedback good">New personal best</p>
+          ) : (
+            <p className="muted">Personal best: {result?.best?.score ?? score}</p>
+          )}
+          <button className="primary" onClick={start}>
+            Go again
+          </button>{' '}
+          <button className="ghost" onClick={onExit}>
+            Back
+          </button>
+        </div>
+
+        {misses.length > 0 && (
+          <>
+            <h3 className="section-title">What you missed</h3>
+            {misses.map((q) => (
+              <div key={q.id} className="card review-item">
+                {q.visual && <QuestionVisual visual={q.visual} revealed />}
+                <p className="prompt">{q.prompt}</p>
+                <p className="muted">Answer: {q.choices[q.correctIndex]}</p>
+                {q.explanation && <p className="explanation">{q.explanation}</p>}
+              </div>
+            ))}
+          </>
         )}
-        <button className="primary" onClick={start}>
-          Go again
-        </button>{' '}
-        <button className="ghost" onClick={onExit}>
-          Back
-        </button>
       </div>
     )
   }

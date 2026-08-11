@@ -12,7 +12,8 @@ function fmt(entry) {
 export function generateStrongerAcid(seed) {
   const rng = rngFor(seed)
   const [a, b] = pickN(rng, pkaTable, 2)
-  if (a.pKa === b.pKa) return null
+  // A 0.5-unit gap is within the noise of textbook pKa tables.
+  if (Math.abs(a.pKa - b.pKa) < 1) return null
 
   const stronger = a.pKa < b.pKa ? a : b
   const choices = [fmt(a), fmt(b)]
@@ -33,7 +34,7 @@ export function generateStrongerAcid(seed) {
 export function generateStrongerBase(seed) {
   const rng = rngFor(seed)
   const [a, b] = pickN(rng, pkaTable, 2)
-  if (a.pKa === b.pKa) return null
+  if (Math.abs(a.pKa - b.pKa) < 1) return null
 
   // The stronger base comes from the WEAKER acid (higher pKa).
   const stronger = a.pKa > b.pKa ? a : b
@@ -148,11 +149,16 @@ export function generateAcidRanking(seed) {
   }
 }
 
-/** Recall the approximate pKa of a common orgo acid class. */
+/**
+ * Recall the approximate pKa of a common orgo acid class. Distractors are
+ * kept a couple of log units away — "approximately" makes 10.5 vs 10.6 an
+ * unanswerable question, not a hard one.
+ */
 export function generatePkaRecall(seed) {
   const rng = rngFor(seed)
   const entry = pkaTable[seed % pkaTable.length]
-  const { choices, correctIndex } = makeChoices(rng, entry.pKa, pkaTable.map((e) => e.pKa))
+  const spread = pkaTable.map((e) => e.pKa).filter((p) => Math.abs(p - entry.pKa) >= 2)
+  const { choices, correctIndex } = makeChoices(rng, entry.pKa, spread)
 
   return {
     id: `pkarecall-${seed % pkaTable.length}`,

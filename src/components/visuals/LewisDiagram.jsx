@@ -44,9 +44,11 @@ function Atom({ x, y, symbol, charge }) {
 export default function LewisDiagram({ structure, height = 190 }) {
   const { center, centerCharge = 0, centerLonePairs = 0, ligands = [] } = structure
   const n = ligands.length
-  // Start at the top and space ligands evenly; 2 ligands read best horizontally.
-  const startAngle = n === 2 ? 0 : 90
-  const angles = ligands.map((_, i) => startAngle + (i * 360) / Math.max(n, 1))
+  // Two ligands sit low and splayed (like water) rather than straight
+  // across, which leaves the top clear for the lone pairs. Placing them at
+  // 0/180 would run the bond lines straight through the lone-pair dots.
+  const angles =
+    n === 2 ? [215, 325] : ligands.map((_, i) => 90 + (i * 360) / Math.max(n, 1))
 
   const positions = angles.map((deg) => {
     const a = (deg * Math.PI) / 180
@@ -55,9 +57,11 @@ export default function LewisDiagram({ structure, height = 190 }) {
 
   const dots = []
   for (let i = 0; i < centerLonePairs; i++) {
-    // Tuck the central lone pairs into the gaps between bonds.
-    const angle = n ? angles[0] + 180 + (i - (centerLonePairs - 1) / 2) * 40 : 90 + i * 90
-    dots.push(...lonePairDots(0, 0, angle, 5, 16))
+    // Fan the central lone pairs across the side left open by the bonds,
+    // spread wide enough that up to four pairs stay individually countable.
+    const spread = centerLonePairs > 1 ? 250 / centerLonePairs : 0
+    const angle = n === 0 ? 90 + i * 90 : 90 + (i - (centerLonePairs - 1) / 2) * spread
+    dots.push(...lonePairDots(0, 0, angle, 5, 18))
   }
   ligands.forEach((lig, i) => {
     const p = positions[i]

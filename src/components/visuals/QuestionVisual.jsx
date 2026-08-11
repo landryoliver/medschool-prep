@@ -16,6 +16,7 @@ export default function QuestionVisual({ visual, revealed = false }) {
           molecule={visual.molecule}
           highlightVertex={visual.highlightVertex ?? null}
           showVertexNumbers={visual.showVertexNumbers ?? false}
+          numberFromRight={visual.numberFromRight ?? false}
         />
       )
     case 'lewis':
