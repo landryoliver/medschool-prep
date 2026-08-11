@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getProgressByMode, putProgress, logSession, deleteProgress, deleteSessionLog } from './db.js'
 import { nextProgressState, selectSessionQuestions } from './srs.js'
-import { recordAnswer } from './streaks.js'
+import { recordAnswer, unrecordAnswer } from './streaks.js'
 
 export function checkAnswer(question, response) {
   if (question.kind === 'numeric') {
@@ -92,6 +92,7 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
       await deleteProgress(write.questionId)
     }
     if (write.logId != null) await deleteSessionLog(write.logId)
+    unrecordAnswer()
 
     setResults((r) => r.slice(0, -1))
     setPhase('answering')

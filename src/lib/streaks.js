@@ -55,6 +55,19 @@ export function recordAnswer() {
   return next
 }
 
+/**
+ * Roll back one answer from today's count, for a discarded mistap. The
+ * streak day itself stands — you did study today, whatever happened to
+ * that one question.
+ */
+export function unrecordAnswer() {
+  const s = read()
+  if (!s.lastDay || s.lastDay !== todayStamp()) return
+  const next = { ...s, answeredToday: Math.max(0, (s.answeredToday ?? 1) - 1) }
+  localStorage.setItem(KEY, JSON.stringify(next))
+  return next
+}
+
 const BEST_TIME_KEY = 'orgoprep.bestTimes'
 
 export function getBestTime(drillId) {
