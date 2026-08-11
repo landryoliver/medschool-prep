@@ -13,13 +13,15 @@ function TopicStat({ stat }) {
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onReviewMisses }) {
   const [stats, setStats] = useState(null)
+  const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
 
   useEffect(() => {
     getAllProgress().then((rows) => {
       const byId = new Map(rows.map((r) => [r.id, r]))
+      setMissedCount(rows.filter((r) => r.lastResult === false).length)
       const next = {}
       for (const topic of TOPICS) {
         const bank = getTopicBank(topic.id)
@@ -60,6 +62,15 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn }) {
         Mixed review — all topics
       </button>
       <p className="muted hint-line">Blends every topic and leans toward whatever you have been missing.</p>
+
+      {missedCount > 0 && (
+        <>
+          <button className="ghost wide" onClick={onReviewMisses}>
+            Review your misses ({missedCount})
+          </button>
+          <p className="muted hint-line">Only the questions you got wrong on your last attempt.</p>
+        </>
+      )}
 
       {TOPICS.map((topic) => {
         const stat = stats?.[topic.id]

@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TopicPicker from './components/TopicPicker.jsx'
 import StudySessionView from './components/StudySessionView.jsx'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import ReferenceView from './components/ReferenceView.jsx'
-import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from './lib/topics.js'
+import { TOPICS, getTopicBank, getMixedBank, getSpeedBank, getMissedBank } from './lib/topics.js'
+import { getAllProgress } from './lib/db.js'
 
 // One shared progress namespace: question ids are globally unique, so a
 // question answered in mixed review and in its own topic session share
@@ -13,8 +14,15 @@ const PROGRESS_MODE = 'prep'
 
 export default function App() {
   const [view, setView] = useState({ name: 'topics' })
+  const [missedBank, setMissedBank] = useState(null)
 
   const label = view.topicId ? TOPICS.find((t) => t.id === view.topicId)?.label : null
+
+  // The missed set changes every session, so rebuild it when one is requested.
+  useEffect(() => {
+    if (view.name !== 'misses') return
+    getAllProgress().then((rows) => setMissedBank(getMissedBank(rows)))
+  }, [view.name])
 
   return (
     <div className="app-shell">
@@ -41,8 +49,24 @@ export default function App() {
             onSpeed={(topicId) => setView({ name: 'speed', topicId })}
             onMixed={() => setView({ name: 'session', topicId: null })}
             onLearn={(topicId) => setView({ name: 'learn', topicId })}
+            onReviewMisses={() => {
+              setMissedBank(null)
+              setView({ name: 'misses' })
+            }}
           />
         )}
+
+        {view.name === 'misses' &&
+          (missedBank ? (
+            <StudySessionView
+              mode={PROGRESS_MODE}
+              title="Your misses"
+              bank={missedBank}
+              sessionSize={Math.min(20, missedBank.length)}
+            />
+          ) : (
+            <p>Loading…</p>
+          ))}
 
         {view.name === 'learn' && (
           <ReferenceView

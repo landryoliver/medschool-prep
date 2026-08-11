@@ -174,6 +174,12 @@ export function getMixedBank() {
   return cache.get('__mixed')
 }
 
+/** Questions whose most recent attempt was wrong, newest miss first. */
+export function getMissedBank(progressRows) {
+  const missed = new Set(progressRows.filter((p) => p.lastResult === false).map((p) => p.id))
+  return getMixedBank().filter((q) => missed.has(q.id))
+}
+
 /** Only the fast, mechanical topics work well against a clock. */
 export function getSpeedBank(topicId) {
   return getTopicBank(topicId).filter((q) => q.kind === 'mcq' && !q.choiceVisuals && q.choices?.length <= 4)
