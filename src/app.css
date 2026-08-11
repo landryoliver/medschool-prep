@@ -325,6 +325,12 @@ button.wide {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.goal-hit {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
 }
 
 .hero-streak {

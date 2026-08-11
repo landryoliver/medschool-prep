@@ -3,12 +3,16 @@ import { TOPICS, getTopicBank, getMixedBank } from '../lib/topics.js'
 import { getAllProgress } from '../lib/db.js'
 import { getStreak } from '../lib/streaks.js'
 
+// Two short sessions a day — enough to keep the spacing engine fed
+// without being the kind of target that gets abandoned on a busy day.
+const DAILY_GOAL = 30
+
 function TopicStat({ stat }) {
   if (!stat.seen) return <span className="muted">Not started</span>
   const pct = Math.round((stat.correct / stat.seen) * 100)
   return (
     <span className="muted">
-      {pct}% · {stat.studied}/{stat.total} seen
+      {pct}% · {stat.mastered} mastered
     </span>
   )
 }
@@ -28,14 +32,18 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onRevi
         let seen = 0
         let correct = 0
         let studied = 0
+        let mastered = 0
         for (const q of bank) {
           const p = byId.get(q.id)
           if (!p) continue
           studied += 1
           seen += p.timesSeen
           correct += p.timesCorrect
+          // Box 3 means it has survived three correct recalls and is now
+          // on a week-plus interval — a fairer bar for "known" than "seen".
+          if (p.box >= 3) mastered += 1
         }
-        next[topic.id] = { seen, correct, studied, total: bank.length }
+        next[topic.id] = { seen, correct, studied, mastered, total: bank.length }
       }
       setStats(next)
     })
@@ -45,17 +53,30 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onRevi
 
   return (
     <div>
-      <div className="card hero">
-        <div>
-          <div className="hero-streak">{streak.current}</div>
-          <div className="muted">day streak</div>
-        </div>
-        <div className="hero-side">
+      <div className="card">
+        <div className="hero">
           <div>
-            <strong>{streak.answeredToday}</strong> <span className="muted">answered today</span>
+            <div className="hero-streak">{streak.current}</div>
+            <div className="muted">day streak</div>
           </div>
-          <div className="muted">{totalQuestions} questions available</div>
+          <div className="hero-side">
+            <div>
+              <strong>{streak.answeredToday}</strong>
+              <span className="muted"> / {DAILY_GOAL} today</span>
+            </div>
+            <div className="muted">{totalQuestions} questions available</div>
+          </div>
         </div>
+        <div className="progress-track thin" style={{ marginBottom: 0 }}>
+          <div
+            className="progress-fill"
+            style={{
+              width: `${Math.min(100, (streak.answeredToday / DAILY_GOAL) * 100)}%`,
+              background: streak.answeredToday >= DAILY_GOAL ? 'var(--good)' : 'var(--accent)',
+            }}
+          />
+        </div>
+        {streak.answeredToday >= DAILY_GOAL && <p className="feedback good goal-hit">Daily goal hit</p>}
       </div>
 
       <button className="primary wide" onClick={onMixed}>
