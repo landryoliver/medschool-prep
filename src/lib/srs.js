@@ -27,44 +27,84 @@ function shuffle(arr) {
 }
 
 /**
- * Picks a session's worth of question ids, weighting toward due/overdue
- * items (~70%) with the remainder filled by never-seen items, falling
- * back to not-yet-due items if there isn't enough of either.
+ * Per-topic accuracy from stored progress. Topics with few attempts are
+ * pulled toward 0.5 so a single unlucky miss doesn't dominate weighting.
+ */
+export function topicAccuracy(progressValues) {
+  const byTopic = new Map()
+  for (const p of progressValues) {
+    const cur = byTopic.get(p.topic) || { seen: 0, correct: 0 }
+    cur.seen += p.timesSeen
+    cur.correct += p.timesCorrect
+    byTopic.set(p.topic, cur)
+  }
+  const out = new Map()
+  const PRIOR = 4
+  for (const [topic, { seen, correct }] of byTopic) {
+    out.set(topic, (correct + 0.5 * PRIOR) / (seen + PRIOR))
+  }
+  return out
+}
+
+/**
+ * Weighted sample without replacement. Weight is the relative chance of
+ * being drawn; higher-weight items surface more often but nothing is
+ * ever fully excluded, which keeps sessions varied.
+ */
+function weightedSample(items, count) {
+  const pool = [...items]
+  const picked = []
+  while (picked.length < count && pool.length) {
+    let total = 0
+    for (const it of pool) total += it.weight
+    let r = Math.random() * total
+    let idx = pool.length - 1
+    for (let i = 0; i < pool.length; i++) {
+      r -= pool[i].weight
+      if (r <= 0) {
+        idx = i
+        break
+      }
+    }
+    picked.push(pool[idx].id)
+    pool.splice(idx, 1)
+  }
+  return picked
+}
+
+/**
+ * Builds a session, blending three signals:
+ *   1. SRS due-date (overdue items weigh most, per Leitner box)
+ *   2. Never-seen items (steady supply of new material)
+ *   3. Weak-topic bias (topics with low accuracy resurface more often)
+ *
+ * Deliberately probabilistic rather than a strict due-date queue so
+ * repeated sessions in one sitting don't replay an identical list.
  */
 export function selectSessionQuestions(bankIds, progressById, count, now = Date.now()) {
-  const due = []
-  const fresh = []
-  const notDue = []
+  const accuracyByTopic = topicAccuracy([...progressById.values()])
 
-  for (const id of bankIds) {
+  const weighted = bankIds.map((id) => {
     const p = progressById.get(id)
-    if (!p) fresh.push(id)
-    else if (p.nextDueAt <= now) due.push(id)
-    else notDue.push(id)
-  }
+    const topic = p?.topic
+    // 1.0 for a perfect topic, up to 2.5 for a topic being missed constantly
+    const topicWeight = topic ? 1 + 1.5 * (1 - (accuracyByTopic.get(topic) ?? 0.5)) : 1.25
 
-  shuffle(due)
-  shuffle(fresh)
-  shuffle(notDue)
+    let baseWeight
+    if (!p) {
+      baseWeight = 3 // unseen material
+    } else if (p.nextDueAt <= now) {
+      const overdueDays = (now - p.nextDueAt) / DAY_MS
+      baseWeight = 4 + Math.min(overdueDays, 5) // due, more so the longer it waits
+    } else {
+      baseWeight = 0.4 // not due yet, small chance of an early review
+    }
 
-  const result = []
-  const dueTarget = Math.min(due.length, Math.ceil(count * 0.7))
-  result.push(...due.slice(0, dueTarget))
+    // A question missed on its last attempt gets an extra push regardless of box.
+    const missBoost = p && p.lastResult === false ? 2 : 1
 
-  let remaining = count - result.length
-  const freshTake = Math.min(fresh.length, remaining)
-  result.push(...fresh.slice(0, freshTake))
+    return { id, weight: baseWeight * topicWeight * missBoost }
+  })
 
-  remaining = count - result.length
-  if (remaining > 0) {
-    const extraDue = due.slice(dueTarget, dueTarget + remaining)
-    result.push(...extraDue)
-  }
-
-  remaining = count - result.length
-  if (remaining > 0) {
-    result.push(...notDue.slice(0, remaining))
-  }
-
-  return shuffle(result)
+  return shuffle(weightedSample(weighted, Math.min(count, bankIds.length)))
 }

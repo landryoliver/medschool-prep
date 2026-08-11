@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate": "esbuild scripts/validate.js --bundle --platform=node --format=esm --outfile=node_modules/.cache/validate.mjs --log-level=error && node node_modules/.cache/validate.mjs"
   },
   "dependencies": {
     "idb": "^8.0.0",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.28.2",
     "vite": "^5.4.11",
     "vite-plugin-pwa": "^0.21.1",
     "workbox-core": "^7.3.0",

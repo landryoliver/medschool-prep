@@ -1,19 +1,30 @@
 import { useEffect, useState } from 'react'
 import { getAllSessionLog } from '../lib/db.js'
-import { accuracyByTopic, accuracyByMode, overallAccuracy } from '../lib/scoring.js'
+import { accuracyByTopic, overallAccuracy } from '../lib/scoring.js'
+import { getStreak } from '../lib/streaks.js'
 import TopicAccuracyBars from './TopicAccuracyBars.jsx'
 
-const MODE_LABELS = {
-  'mode0-genchem': 'Gen-Chem Prep',
-  'mode3-formalcharge': 'Formal Charge',
-  'mode4-skeletal': 'Skeletal Fluency',
-  'mode5-curated': 'Curated Bank',
-  'mode2-functionalgroups': 'Functional Groups',
-  'mode1-nomenclature': 'Nomenclature',
+const TOPIC_LABELS = {
+  'element-recall': 'Element recall',
+  'periodic-trends': 'Periodic trends',
+  'bond-polarity': 'Bond polarity',
+  'lewis-structures': 'Lewis structures',
+  'formal-charge': 'Formal charge',
+  vsepr: 'VSEPR geometry',
+  hybridization: 'Hybridization',
+  'acid-base': 'Acids & bases',
+  pka: 'pKa comparisons',
+  'skeletal-fluency': 'Skeletal structures',
+  'functional-groups': 'Functional groups',
+  nomenclature: 'Nomenclature',
+  'curved-arrows': 'Curved arrows',
+  mechanism: 'Mechanism concepts',
+  'sn-e': 'SN1/SN2/E1/E2',
 }
 
 export default function ProgressView() {
   const [log, setLog] = useState(null)
+  const streak = getStreak()
 
   useEffect(() => {
     getAllSessionLog().then(setLog)
@@ -21,24 +32,35 @@ export default function ProgressView() {
 
   if (!log) return <p>Loading…</p>
 
+  if (!log.length) {
+    return (
+      <div className="card">
+        <h2 className="section-title">No data yet</h2>
+        <p className="muted">Finish a session and your accuracy by topic will show up here.</p>
+      </div>
+    )
+  }
+
   const byTopic = accuracyByTopic(log)
-  const byMode = accuracyByMode(log).map((r) => ({ ...r, key: MODE_LABELS[r.key] ?? r.key }))
+    .map((r) => ({ ...r, key: TOPIC_LABELS[r.key] ?? r.key }))
+    .sort((a, b) => a.accuracy - b.accuracy)
   const overall = overallAccuracy(log)
 
   return (
     <div>
       <div className="card">
-        <h2 style={{ marginTop: 0 }}>Overall</h2>
-        <p>
-          {log.length} questions answered · {Math.round(overall * 100)}% accuracy
+        <h2 className="section-title">Overall</h2>
+        <p className="score">
+          {Math.round(overall * 100)}% <span className="muted">across {log.length} answers</span>
+        </p>
+        <p className="muted">
+          {streak.current}-day streak (best {streak.best}) · {streak.answeredToday} answered today
         </p>
       </div>
+
       <div className="card">
-        <h3 style={{ marginTop: 0 }}>By mode</h3>
-        <TopicAccuracyBars rows={byMode} />
-      </div>
-      <div className="card">
-        <h3 style={{ marginTop: 0 }}>By topic</h3>
+        <h3 className="section-title">By topic — weakest first</h3>
+        <p className="muted hint-line">Sessions automatically pull more questions from the topics near the top.</p>
         <TopicAccuracyBars rows={byTopic} />
       </div>
     </div>

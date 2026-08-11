@@ -1,23 +1,38 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getProgressByMode, putProgress, logSession } from './db.js'
 import { nextProgressState, selectSessionQuestions } from './srs.js'
+import { recordAnswer } from './streaks.js'
+
+export function checkAnswer(question, response) {
+  if (question.kind === 'numeric') {
+    const tolerance = question.tolerance ?? 0
+    return Math.abs(Number(response) - question.answer) <= tolerance
+  }
+  if (question.kind === 'multi') {
+    const expected = new Set(question.correctIndices)
+    const got = new Set(response)
+    return expected.size === got.size && [...expected].every((i) => got.has(i))
+  }
+  return response === question.correctIndex
+}
 
 /**
- * Generic quiz-session runner shared by every curated/generated MCQ or
- * numeric-answer mode (Mode 0, 3, 4, 5). Handles SRS-weighted question
- * selection, progress persistence, and session scoring identically for
- * all of them so each mode only needs to supply its question bank.
+ * Shared session runner for every question-bank mode.
  *
- * Question shape: { id, topic, kind: 'mcq'|'numeric', prompt, choices?,
- * correctIndex?, answer?, tolerance?, explanation? }
+ * Two session modes, per the study-app brief:
+ *   learn — immediate feedback, one retry on a miss, explanation revealed
+ *   test  — no feedback until the end, then a full review list
+ *
+ * SRS/progress is always credited from the FIRST attempt so that using
+ * learn mode's retry doesn't inflate recorded accuracy.
  */
-export function useStudySession(mode, bank, sessionSize = 15) {
+export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'learn' } = {}) {
   const [progressById, setProgressById] = useState(null)
   const [sessionIds, setSessionIds] = useState(null)
   const [index, setIndex] = useState(0)
-  const [answered, setAnswered] = useState(false)
+  const [phase, setPhase] = useState('answering') // 'answering' | 'retry' | 'revealed'
   const [lastCorrect, setLastCorrect] = useState(null)
-  const [correctCount, setCorrectCount] = useState(0)
+  const [results, setResults] = useState([])
 
   const bankById = useMemo(() => new Map(bank.map((q) => [q.id, q])), [bank])
 
@@ -27,65 +42,69 @@ export function useStudySession(mode, bank, sessionSize = 15) {
       if (cancelled) return
       const map = new Map(rows.map((r) => [r.id, r]))
       setProgressById(map)
-      setSessionIds(
-        selectSessionQuestions(
-          bank.map((q) => q.id),
-          map,
-          Math.min(sessionSize, bank.length),
-        ),
-      )
+      setSessionIds(selectSessionQuestions(bank.map((q) => q.id), map, sessionSize))
     })
     return () => {
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, bank])
+  }, [mode, bank, sessionSize])
 
   const current = sessionIds ? bankById.get(sessionIds[index]) : null
   const total = sessionIds?.length ?? 0
   const isDone = sessionIds != null && index >= total
+  const correctCount = results.filter((r) => r.correct).length
 
-  function checkAnswer(question, response) {
-    if (question.kind === 'numeric') {
-      const tolerance = question.tolerance ?? 0
-      return Math.abs(Number(response) - question.answer) <= tolerance
-    }
-    return response === question.correctIndex
-  }
+  const commitResult = useCallback(
+    async (question, correct) => {
+      const prev = progressById.get(question.id)
+      const updated = nextProgressState(prev, question.id, mode, question.topic, correct)
+      progressById.set(question.id, updated)
+      await putProgress(updated)
+      await logSession({ timestamp: Date.now(), mode, topic: question.topic, correct })
+      recordAnswer()
+    },
+    [mode, progressById],
+  )
 
-  async function submitAnswer(response) {
-    if (!current || answered) return
-    const correct = checkAnswer(current, response)
-    setAnswered(true)
-    setLastCorrect(correct)
-    if (correct) setCorrectCount((c) => c + 1)
+  const submitAnswer = useCallback(
+    async (response) => {
+      if (!current || phase === 'revealed') return
+      const correct = checkAnswer(current, response)
+      const isFirstAttempt = phase === 'answering'
 
-    const prev = progressById.get(current.id)
-    const updated = nextProgressState(prev, current.id, mode, current.topic, correct)
-    progressById.set(current.id, updated)
-    await putProgress(updated)
-    await logSession({ timestamp: Date.now(), mode, topic: current.topic, correct })
-  }
+      if (isFirstAttempt) {
+        setResults((r) => [...r, { id: current.id, correct, response }])
+        await commitResult(current, correct)
+      }
 
-  function next() {
-    setAnswered(false)
+      if (sessionMode === 'test') {
+        setIndex((i) => i + 1)
+        setPhase('answering')
+        return
+      }
+
+      setLastCorrect(correct)
+      // One retry on a first miss, then reveal the answer.
+      setPhase(correct || !isFirstAttempt ? 'revealed' : 'retry')
+    },
+    [current, phase, sessionMode, commitResult],
+  )
+
+  const next = useCallback(() => {
+    setPhase('answering')
     setLastCorrect(null)
     setIndex((i) => i + 1)
-  }
+  }, [])
 
-  function restart() {
+  const reveal = useCallback(() => setPhase('revealed'), [])
+
+  const restart = useCallback(() => {
     setIndex(0)
-    setAnswered(false)
+    setPhase('answering')
     setLastCorrect(null)
-    setCorrectCount(0)
-    setSessionIds(
-      selectSessionQuestions(
-        bank.map((q) => q.id),
-        progressById ?? new Map(),
-        Math.min(sessionSize, bank.length),
-      ),
-    )
-  }
+    setResults([])
+    setSessionIds(selectSessionQuestions(bank.map((q) => q.id), progressById ?? new Map(), sessionSize))
+  }, [bank, progressById, sessionSize])
 
   return {
     loading: sessionIds == null,
@@ -93,11 +112,15 @@ export function useStudySession(mode, bank, sessionSize = 15) {
     index,
     total,
     isDone,
-    answered,
+    phase,
+    answered: phase !== 'answering',
     lastCorrect,
     correctCount,
+    results,
+    reviewItems: results.map((r) => ({ ...r, question: bankById.get(r.id) })),
     submitAnswer,
     next,
+    reveal,
     restart,
   }
 }

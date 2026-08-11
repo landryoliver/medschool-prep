@@ -1,0 +1,180 @@
+[
+  {
+    "id": "arrow-1",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "What does this curved arrow represent?",
+    "choices": [
+      "A lone pair attacking a carbon to form a new bond",
+      "A bond breaking to release a leaving group",
+      "A proton being transferred",
+      "Two radicals combining"
+    ],
+    "correctIndex": 0,
+    "explanation": "The arrow starts on the hydroxide's lone pair and points at the carbon, so a new O–C bond is forming. This is nucleophilic attack.",
+    "teach": "An arrow starting on a LONE PAIR and ending between two atoms always means a new bond is forming.",
+    "visual": {
+      "type": "curvedArrow",
+      "scene": {
+        "viewBox": "0 0 240 150",
+        "atoms": [
+          { "x": 40, "y": 80, "label": "HO", "charge": -1, "lonePairs": 2, "lonePairAngle": 60 },
+          { "x": 140, "y": 80, "label": "C" },
+          { "x": 210, "y": 80, "label": "Br" }
+        ],
+        "bonds": [{ "from": 1, "to": 2, "order": 1 }],
+        "arrows": [{ "fromX": 55, "fromY": 58, "toX": 128, "toY": 70, "bow": -18 }]
+      }
+    }
+  },
+  {
+    "id": "arrow-2",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "What does this curved arrow represent?",
+    "choices": [
+      "A C–Br bond breaking, with both electrons going to bromine",
+      "A new C–Br bond forming",
+      "Bromine donating a lone pair to carbon",
+      "A hydride shift"
+    ],
+    "correctIndex": 0,
+    "explanation": "The arrow starts on the C–Br BOND and points at Br, so both bonding electrons leave with bromine — it departs as Br⁻.",
+    "teach": "An arrow starting on a BOND and ending on an atom means that bond breaks heterolytically, and the atom keeps both electrons.",
+    "visual": {
+      "type": "curvedArrow",
+      "scene": {
+        "viewBox": "0 0 240 150",
+        "atoms": [
+          { "x": 70, "y": 80, "label": "C" },
+          { "x": 170, "y": 80, "label": "Br", "lonePairs": 3, "lonePairAngle": 0 }
+        ],
+        "bonds": [{ "from": 0, "to": 1, "order": 1 }],
+        "arrows": [{ "fromX": 118, "fromY": 70, "toX": 165, "toY": 55, "bow": -16 }]
+      }
+    }
+  },
+  {
+    "id": "arrow-3",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "What does this curved arrow represent?",
+    "choices": [
+      "A base removing a proton (deprotonation)",
+      "A proton attacking a base",
+      "A carbon-carbon bond forming",
+      "A radical abstraction"
+    ],
+    "correctIndex": 0,
+    "explanation": "The arrow runs from the base's lone pair to the hydrogen, forming a new base–H bond. A second arrow would show the C–H bond electrons collapsing onto carbon.",
+    "teach": "Deprotonation always needs TWO arrows: base lone pair → H, and the C–H bond → the carbon that keeps the electrons.",
+    "visual": {
+      "type": "curvedArrow",
+      "scene": {
+        "viewBox": "0 0 240 150",
+        "atoms": [
+          { "x": 45, "y": 85, "label": "B", "charge": -1, "lonePairs": 1, "lonePairAngle": 70 },
+          { "x": 135, "y": 85, "label": "H" },
+          { "x": 200, "y": 85, "label": "C" }
+        ],
+        "bonds": [{ "from": 1, "to": 2, "order": 1 }],
+        "arrows": [{ "fromX": 58, "fromY": 66, "toX": 124, "toY": 76, "bow": -16 }]
+      }
+    }
+  },
+  {
+    "id": "arrow-4",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "In arrow-pushing notation, where must the TAIL of a curved arrow always start?",
+    "choices": [
+      "On an electron source — a lone pair or a bond",
+      "On the atom symbol itself",
+      "On a positive charge",
+      "Anywhere, as long as the head is correct"
+    ],
+    "correctIndex": 0,
+    "explanation": "Arrows track electrons, so the tail must sit where the electrons actually are: on a lone pair or on a bond.",
+    "teach": "Electrons move from electron-RICH to electron-POOR. The tail marks the source, the head marks the destination."
+  },
+  {
+    "id": "arrow-5",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "A double-barbed (full-headed) curved arrow shows the movement of:",
+    "choices": ["Two electrons (a pair)", "One electron", "A proton", "An entire atom"],
+    "correctIndex": 0,
+    "explanation": "Full arrowheads move electron PAIRS. Single-barbed 'fishhook' arrows move one electron each and appear in radical mechanisms.",
+    "teach": "Full head = 2 electrons (polar mechanisms). Fishhook = 1 electron (radical mechanisms)."
+  },
+  {
+    "id": "arrow-6",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "What does this curved arrow represent?",
+    "choices": [
+      "A pi bond attacking an electrophile",
+      "A pi bond breaking to form a radical pair",
+      "A lone pair moving onto carbon",
+      "A sigma bond rotating"
+    ],
+    "correctIndex": 0,
+    "explanation": "The arrow starts on the C=C pi bond and points at H⁺, so the alkene's pi electrons form a new C–H bond. This is the first step of electrophilic addition.",
+    "teach": "Alkenes are nucleophiles: their pi electrons are loosely held and readily attack electrophiles.",
+    "visual": {
+      "type": "curvedArrow",
+      "scene": {
+        "viewBox": "0 0 240 150",
+        "atoms": [
+          { "x": 60, "y": 95, "label": "C" },
+          { "x": 150, "y": 95, "label": "C" },
+          { "x": 175, "y": 30, "label": "H", "charge": 1 }
+        ],
+        "bonds": [{ "from": 0, "to": 1, "order": 2 }],
+        "arrows": [{ "fromX": 105, "fromY": 80, "toX": 168, "toY": 45, "bow": -14 }]
+      }
+    }
+  },
+  {
+    "id": "arrow-7",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "Does this arrow make chemical sense?",
+    "choices": [
+      "No — it points from an electron-poor atom toward an electron-rich one",
+      "Yes — it correctly shows nucleophilic attack",
+      "Yes — it shows a leaving group departing",
+      "No — arrows can never connect two different atoms"
+    ],
+    "correctIndex": 0,
+    "explanation": "The arrow starts at the carbocation (electron POOR) and points at the hydroxide (electron RICH). Electrons flow the other way: the nucleophile's lone pair must attack the cation.",
+    "teach": "Electrons always flow from rich to poor. If an arrow starts at a positive charge or an empty orbital, it is drawn backwards.",
+    "visual": {
+      "type": "curvedArrow",
+      "scene": {
+        "viewBox": "0 0 240 150",
+        "atoms": [
+          { "x": 70, "y": 80, "label": "C", "charge": 1 },
+          { "x": 180, "y": 80, "label": "OH", "charge": -1, "lonePairs": 2, "lonePairAngle": 120 }
+        ],
+        "bonds": [],
+        "arrows": [{ "fromX": 88, "fromY": 68, "toX": 158, "toY": 62, "bow": -18 }]
+      }
+    }
+  },
+  {
+    "id": "arrow-8",
+    "topic": "curved-arrows",
+    "kind": "mcq",
+    "prompt": "Homolytic bond cleavage is drawn with which kind of arrows?",
+    "choices": [
+      "Two single-barbed 'fishhook' arrows",
+      "One double-barbed arrow",
+      "A double-headed resonance arrow",
+      "No arrows are used"
+    ],
+    "correctIndex": 0,
+    "explanation": "Homolysis splits a bond evenly — one electron to each fragment — so each electron needs its own fishhook arrow, producing two radicals.",
+    "teach": "Heterolytic cleavage (one full arrow) gives ions; homolytic cleavage (two fishhooks) gives radicals."
+  }
+]

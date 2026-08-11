@@ -1,0 +1,224 @@
+import { rngFor, pick, pickN, shuffleWith, makeChoices } from './util.js'
+
+/**
+ * IUPAC naming for a deliberately narrow subset: straight-chain parents
+ * carrying only groups that CANNOT extend or become the parent chain
+ * (halogens, one –OH, one C=C).
+ *
+ * Alkyl branches are excluded on purpose — choosing the parent chain when
+ * branches are present needs a real longest-chain search, and a subtly
+ * wrong generated name would teach the wrong thing. Branched naming is
+ * covered by hand-checked questions instead.
+ */
+const STEMS = ['meth', 'eth', 'prop', 'but', 'pent', 'hex', 'hept', 'oct', 'non', 'dec']
+const MULTIPLIERS = { 1: '', 2: 'di', 3: 'tri', 4: 'tetra' }
+const HALOGEN_PREFIX = { F: 'fluoro', Cl: 'chloro', Br: 'bromo', I: 'iodo' }
+
+export const alkaneName = (n) => `${STEMS[n - 1]}ane`
+
+/**
+ * Picks the numbering direction giving the lowest locant set, breaking a
+ * tie in favour of the alphabetically first substituent.
+ */
+function numberChain(size, substituents) {
+  const forward = substituents.map((s) => ({ ...s, locant: s.vertexIndex + 1 }))
+  const reverse = substituents.map((s) => ({ ...s, locant: size - s.vertexIndex }))
+
+  const setOf = (list) => list.map((s) => s.locant).sort((a, b) => a - b)
+  const f = setOf(forward)
+  const r = setOf(reverse)
+
+  for (let i = 0; i < f.length; i++) {
+    if (f[i] !== r[i]) return f[i] < r[i] ? forward : reverse
+  }
+
+  const firstAlpha = (list) => {
+    const sorted = [...list].sort((a, b) => a.prefix.localeCompare(b.prefix) || a.locant - b.locant)
+    return sorted[0].locant
+  }
+  return firstAlpha(forward) <= firstAlpha(reverse) ? forward : reverse
+}
+
+function buildPrefixes(numbered) {
+  const byPrefix = new Map()
+  for (const s of numbered) {
+    const list = byPrefix.get(s.prefix) ?? []
+    list.push(s.locant)
+    byPrefix.set(s.prefix, list)
+  }
+  return [...byPrefix.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([prefix, locants]) => `${locants.sort((a, b) => a - b).join(',')}-${MULTIPLIERS[locants.length]}${prefix}`)
+    .join('-')
+}
+
+/** Names a haloalkane: halogens on a straight-chain parent. */
+export function nameHaloalkane(size, substituents) {
+  const withPrefix = substituents.map((s) => ({ ...s, prefix: HALOGEN_PREFIX[s.label] }))
+  const numbered = numberChain(size, withPrefix)
+  return `${buildPrefixes(numbered)}${alkaneName(size)}`
+}
+
+/** Names a straight-chain alcohol, e.g. pentan-2-ol. */
+export function nameAlkanol(size, vertexIndex) {
+  const locant = Math.min(vertexIndex + 1, size - vertexIndex)
+  return `${STEMS[size - 1]}an-${locant}-ol`
+}
+
+/** Names a straight-chain alkene, e.g. hex-2-ene. */
+export function nameAlkene(size, bondIndex) {
+  const locant = Math.min(bondIndex + 1, size - 1 - bondIndex)
+  return `${STEMS[size - 1]}-${locant}-ene`
+}
+
+function haloalkaneMolecule(rng, size) {
+  const count = rng() < 0.55 ? 1 : 2
+  const vertices = pickN(rng, Array.from({ length: size }, (_, i) => i), count)
+  const sameHalogen = rng() < 0.4
+  const halogen = pick(rng, ['Cl', 'Br', 'F', 'I'])
+  return {
+    shape: 'chain',
+    size,
+    doubleBondAt: [],
+    substituents: vertices.map((vertexIndex) => ({
+      vertexIndex,
+      label: sameHalogen ? halogen : pick(rng, ['Cl', 'Br', 'F', 'I']),
+    })),
+  }
+}
+
+/** Structure → name, across the three safe families. */
+export function generateStructureToName(seed) {
+  const rng = rngFor(seed)
+  const size = 4 + Math.floor(rng() * 5)
+  const family = seed % 3
+
+  let mol
+  let correct
+  let teach
+
+  if (family === 0) {
+    mol = haloalkaneMolecule(rng, size)
+    correct = nameHaloalkane(size, mol.substituents)
+    teach = 'Number the chain from the end that gives the substituents the lowest locants, then list prefixes alphabetically (ignoring di/tri when alphabetizing).'
+  } else if (family === 1) {
+    const vertexIndex = Math.floor(rng() * size)
+    mol = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex, label: 'OH' }] }
+    correct = nameAlkanol(size, vertexIndex)
+    teach = 'An –OH is a suffix (-ol) and outranks halogens, so it always gets the lowest possible number.'
+  } else {
+    const bondIndex = Math.floor(rng() * (size - 1))
+    mol = { shape: 'chain', size, doubleBondAt: [bondIndex], substituents: [] }
+    correct = nameAlkene(size, bondIndex)
+    teach = 'A double bond is numbered by its FIRST carbon, counting from whichever end gives the lower number.'
+  }
+
+  // Distractors: same family, different locants or chain length.
+  const distractors = new Set()
+  let guard = 0
+  while (distractors.size < 3 && guard++ < 60) {
+    const altSeed = rngFor(seed * 31 + guard)
+    const altSize = Math.max(3, Math.min(9, size + (altSeed() < 0.4 ? (altSeed() < 0.5 ? -1 : 1) : 0)))
+    let candidate
+    if (family === 0) candidate = nameHaloalkane(altSize, haloalkaneMolecule(altSeed, altSize).substituents)
+    else if (family === 1) candidate = nameAlkanol(altSize, Math.floor(altSeed() * altSize))
+    else candidate = nameAlkene(altSize, Math.floor(altSeed() * (altSize - 1)))
+    if (candidate !== correct) distractors.add(candidate)
+  }
+  if (distractors.size < 3) return null
+
+  const choices = shuffleWith(rng, [correct, ...distractors])
+
+  return {
+    id: `nom-${seed}`,
+    topic: 'nomenclature',
+    kind: 'mcq',
+    prompt: 'What is the IUPAC name of this structure?',
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${correct}. Parent chain: ${alkaneName(size)} (${size} carbons).`,
+    teach,
+    visual: { type: 'skeletal', molecule: mol, showVertexNumbers: true },
+  }
+}
+
+/** Name → structure: pick the drawing that matches the given name. */
+export function generateNameToStructure(seed) {
+  const rng = rngFor(seed * 7717 + 29)
+  const size = 4 + Math.floor(rng() * 4)
+  const family = seed % 3
+
+  let mol
+  let correct
+  if (family === 0) {
+    mol = haloalkaneMolecule(rng, size)
+    correct = nameHaloalkane(size, mol.substituents)
+  } else if (family === 1) {
+    const vertexIndex = Math.floor(rng() * size)
+    mol = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex, label: 'OH' }] }
+    correct = nameAlkanol(size, vertexIndex)
+  } else {
+    const bondIndex = Math.floor(rng() * (size - 1))
+    mol = { shape: 'chain', size, doubleBondAt: [bondIndex], substituents: [] }
+    correct = nameAlkene(size, bondIndex)
+  }
+
+  // Wrong structures that would earn a different name.
+  const alternatives = []
+  let guard = 0
+  while (alternatives.length < 3 && guard++ < 60) {
+    const r = rngFor(seed * 131 + guard * 17)
+    let candidate
+    if (family === 0) {
+      candidate = haloalkaneMolecule(r, size)
+      if (nameHaloalkane(size, candidate.substituents) === correct) continue
+    } else if (family === 1) {
+      const v = Math.floor(r() * size)
+      candidate = { shape: 'chain', size, doubleBondAt: [], substituents: [{ vertexIndex: v, label: 'OH' }] }
+      if (nameAlkanol(size, v) === correct) continue
+    } else {
+      const b = Math.floor(r() * (size - 1))
+      candidate = { shape: 'chain', size, doubleBondAt: [b], substituents: [] }
+      if (nameAlkene(size, b) === correct) continue
+    }
+    alternatives.push(candidate)
+  }
+  if (alternatives.length < 3) return null
+
+  const molecules = shuffleWith(rng, [mol, ...alternatives])
+  const correctIndex = molecules.indexOf(mol)
+
+  return {
+    id: `nom2s-${seed}`,
+    topic: 'nomenclature',
+    kind: 'mcq',
+    prompt: `Which structure is ${correct}?`,
+    choices: molecules.map((_, i) => `Structure ${'ABCD'[i]}`),
+    choiceVisuals: molecules.map((m) => ({ type: 'skeletal', molecule: m })),
+    correctIndex,
+    explanation: `${correct} needs the substituent position(s) implied by its locants on a ${alkaneName(size)} backbone.`,
+    teach: 'Work name → structure by drawing the parent chain first, numbering it, then attaching each group at its stated locant.',
+  }
+}
+
+/** Parent-chain naming: how many carbons does a stem imply. */
+export function generateStemRecall(seed) {
+  const rng = rngFor(seed * 51 + 3)
+  const n = 1 + (seed % 10)
+  const nameToCount = rng() < 0.5
+
+  const { choices, correctIndex } = nameToCount
+    ? makeChoices(rng, n, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    : makeChoices(rng, alkaneName(n), STEMS.map((_, i) => alkaneName(i + 1)))
+
+  return {
+    id: `stem-${n}-${nameToCount ? 'n' : 'c'}`,
+    topic: 'nomenclature',
+    kind: 'mcq',
+    prompt: nameToCount ? `How many carbons are in ${alkaneName(n)}?` : `What is the name of the straight-chain alkane with ${n} carbon${n === 1 ? '' : 's'}?`,
+    choices,
+    correctIndex,
+    explanation: `${alkaneName(n)} has ${n} carbon${n === 1 ? '' : 's'}.`,
+    teach: 'Stems 1-10: meth, eth, prop, but, pent, hex, hept, oct, non, dec.',
+  }
+}

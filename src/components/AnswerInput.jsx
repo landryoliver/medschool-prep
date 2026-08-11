@@ -1,8 +1,23 @@
 import { useState } from 'react'
+import SkeletalDiagram from './visuals/SkeletalDiagram.jsx'
 
-export default function AnswerInput({ question, answered, onSubmit }) {
+function ChoiceBody({ label, visual }) {
+  if (!visual) return <span>{label}</span>
+  return (
+    <span style={{ display: 'block' }}>
+      <SkeletalDiagram molecule={visual.molecule} height={92} />
+      <span style={{ display: 'block', textAlign: 'center', color: 'var(--muted)', fontSize: '0.8rem' }}>{label}</span>
+    </span>
+  )
+}
+
+export default function AnswerInput({ question, phase, onSubmit }) {
+  const [tried, setTried] = useState([])
+  const [multiSelected, setMultiSelected] = useState([])
   const [numericValue, setNumericValue] = useState('')
-  const [selected, setSelected] = useState(null)
+
+  const revealed = phase === 'revealed'
+  const locked = revealed
 
   if (question.kind === 'numeric') {
     return (
@@ -15,52 +30,74 @@ export default function AnswerInput({ question, answered, onSubmit }) {
       >
         <input
           type="number"
-          inputMode="numeric"
+          inputMode="text"
           value={numericValue}
-          disabled={answered}
+          disabled={locked}
           onChange={(e) => setNumericValue(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.6rem',
-            borderRadius: '0.5rem',
-            border: '1px solid #334155',
-            background: 'var(--panel)',
-            color: 'var(--text)',
-            marginBottom: '0.5rem',
-          }}
-          placeholder="Enter formal charge (e.g. -1, 0, 1)"
+          className="text-input"
+          placeholder="e.g. -1, 0, +1"
         />
-        {!answered && (
+        {!locked && (
           <button className="primary" type="submit">
-            Submit
+            {phase === 'retry' ? 'Try again' : 'Submit'}
           </button>
         )}
-        {answered && (
-          <p style={{ color: 'var(--muted)' }}>Correct answer: {question.answer}</p>
-        )}
+        {revealed && <p className="muted">Correct answer: {question.answer}</p>}
       </form>
     )
   }
 
+  if (question.kind === 'multi') {
+    const toggle = (i) => setMultiSelected((s) => (s.includes(i) ? s.filter((x) => x !== i) : [...s, i]))
+    return (
+      <div>
+        {question.choices.map((choice, i) => {
+          const selected = multiSelected.includes(i)
+          const isCorrect = question.correctIndices.includes(i)
+          let cls = 'choice-btn'
+          if (revealed && isCorrect) cls += ' correct'
+          else if (revealed && selected && !isCorrect) cls += ' incorrect'
+          else if (selected) cls += ' selected'
+          return (
+            <button key={i} className={cls} disabled={locked} onClick={() => toggle(i)}>
+              <span className="checkbox">{selected ? '✓' : ''}</span> {choice}
+            </button>
+          )
+        })}
+        {!locked && (
+          <button className="primary" onClick={() => onSubmit(multiSelected)} disabled={!multiSelected.length}>
+            {phase === 'retry' ? 'Try again' : 'Submit'}
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  const gridStyle = question.choiceVisuals
+    ? { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }
+    : undefined
+
   return (
-    <div>
+    <div style={gridStyle}>
       {question.choices.map((choice, i) => {
         let cls = 'choice-btn'
-        if (answered) {
+        if (revealed) {
           if (i === question.correctIndex) cls += ' correct'
-          else if (i === selected) cls += ' incorrect'
+          else if (tried.includes(i)) cls += ' incorrect'
+        } else if (tried.includes(i)) {
+          cls += ' incorrect'
         }
         return (
           <button
             key={i}
             className={cls}
-            disabled={answered}
+            disabled={locked || tried.includes(i)}
             onClick={() => {
-              setSelected(i)
+              setTried((t) => [...t, i])
               onSubmit(i)
             }}
           >
-            {choice}
+            <ChoiceBody label={choice} visual={question.choiceVisuals?.[i]} />
           </button>
         )
       })}

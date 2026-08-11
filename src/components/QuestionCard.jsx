@@ -1,23 +1,34 @@
-import SkeletalDiagram from './SkeletalDiagram.jsx'
+import QuestionVisual from './visuals/QuestionVisual.jsx'
 
-export default function QuestionCard({ question, answered, lastCorrect }) {
+export default function QuestionCard({ question, phase, lastCorrect, showTeach }) {
+  const revealed = phase === 'revealed'
+  const showVisual = question.visual && (!question.visualAfter || revealed)
+
   return (
     <div className="card">
-      {question.molecule && <p style={{ color: 'var(--muted)', marginTop: 0 }}>{question.molecule}</p>}
-      {question.shape && (
-        <SkeletalDiagram
-          shape={question.shape}
-          size={question.size}
-          doubleBondAt={question.doubleBondAt}
-          substituent={question.substituent}
-        />
-      )}
-      <p style={{ fontSize: '1.05rem' }}>{question.prompt}</p>
-      {answered && (
-        <p style={{ color: lastCorrect ? 'var(--good)' : 'var(--bad)', fontWeight: 600 }}>
-          {lastCorrect ? 'Correct' : 'Incorrect'}
-          {question.explanation ? ` — ${question.explanation}` : ''}
+      {showVisual && <QuestionVisual visual={question.visual} revealed={revealed} />}
+      <p className="prompt">{question.prompt}</p>
+
+      {showTeach && question.teach && phase === 'answering' && (
+        <p className="teach">
+          <strong>Hint</strong> {question.teach}
         </p>
+      )}
+
+      {phase === 'retry' && (
+        <p className="feedback bad">Not quite — take one more look before the answer is revealed.</p>
+      )}
+
+      {revealed && (
+        <>
+          <p className={`feedback ${lastCorrect ? 'good' : 'bad'}`}>{lastCorrect ? 'Correct' : 'Incorrect'}</p>
+          {question.explanation && <p className="explanation">{question.explanation}</p>}
+          {question.teach && (
+            <p className="teach">
+              <strong>Remember</strong> {question.teach}
+            </p>
+          )}
+        </>
       )}
     </div>
   )
