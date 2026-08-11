@@ -126,9 +126,14 @@ export default function StudySessionView({ mode, title, bank, sessionSize = 15 }
       <AnswerInput key={`${current.id}-${session.index}`} question={current} phase={session.phase} onSubmit={session.submitAnswer} />
 
       {session.phase === 'revealed' && (
-        <button className="primary next-btn" onClick={session.next}>
-          Next
-        </button>
+        <>
+          <button className="primary next-btn" onClick={session.next}>
+            Next
+          </button>
+          <button className="discard-btn" onClick={session.discardLast}>
+            Mistapped? Skip without recording
+          </button>
+        </>
       )}
       {session.phase === 'retry' && (
         <button className="ghost next-btn" onClick={session.reveal}>

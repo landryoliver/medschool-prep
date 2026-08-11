@@ -383,6 +383,17 @@ button.wide {
   font-size: 0.9rem;
 }
 
+.discard-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 0.6rem;
+  margin-top: 0.2rem;
+}
+
 .choice-visual {
   display: block;
 }

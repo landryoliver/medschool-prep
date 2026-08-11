@@ -47,9 +47,19 @@ export async function getProgressByMode(mode) {
   return db.getAllFromIndex('progress', 'by-mode', mode)
 }
 
+export async function deleteProgress(id) {
+  const db = await getDb()
+  return db.delete('progress', id)
+}
+
 export async function logSession(entry) {
   const db = await getDb()
   return db.add('sessionLog', entry)
+}
+
+export async function deleteSessionLog(id) {
+  const db = await getDb()
+  return db.delete('sessionLog', id)
 }
 
 export async function getAllSessionLog() {

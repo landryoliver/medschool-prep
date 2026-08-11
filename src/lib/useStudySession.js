@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getProgressByMode, putProgress, logSession } from './db.js'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getProgressByMode, putProgress, logSession, deleteProgress, deleteSessionLog } from './db.js'
 import { nextProgressState, selectSessionQuestions } from './srs.js'
 import { recordAnswer } from './streaks.js'
 
@@ -55,6 +55,9 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
   const isDone = sessionIds != null && index >= total
   const correctCount = results.filter((r) => r.correct).length
 
+  // Enough state to undo the most recent answer if it was a mistap.
+  const lastWrite = useRef(null)
+
   const commitResult = useCallback(
     async (question, correct, hinted) => {
       const prev = progressById.get(question.id)
@@ -63,11 +66,39 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
       })
       progressById.set(question.id, updated)
       await putProgress(updated)
-      await logSession({ timestamp: Date.now(), mode, topic: question.topic, correct })
+      const logId = await logSession({ timestamp: Date.now(), mode, topic: question.topic, correct })
       recordAnswer()
+      lastWrite.current = { questionId: question.id, prev, logId }
     },
     [mode, progressById],
   )
+
+  /**
+   * Undo the last recorded answer — for a mistap on a phone, which would
+   * otherwise reset the question's Leitner box and count against the topic
+   * permanently. Restores the previous progress row rather than writing a
+   * corrected one, so the attempt leaves no trace either way.
+   */
+  const discardLast = useCallback(async () => {
+    const write = lastWrite.current
+    if (!write) return
+    lastWrite.current = null
+
+    if (write.prev) {
+      progressById.set(write.questionId, write.prev)
+      await putProgress(write.prev)
+    } else {
+      progressById.delete(write.questionId)
+      await deleteProgress(write.questionId)
+    }
+    if (write.logId != null) await deleteSessionLog(write.logId)
+
+    setResults((r) => r.slice(0, -1))
+    setPhase('answering')
+    setLastCorrect(null)
+    setHintUsed(false)
+    setIndex((i) => i + 1)
+  }, [progressById])
 
   const submitAnswer = useCallback(
     async (response) => {
@@ -130,6 +161,7 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
     next,
     reveal,
     useHint,
+    discardLast,
     restart,
   }
 }
