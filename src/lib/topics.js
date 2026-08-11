@@ -3,6 +3,7 @@ import { mulberry32 } from './prng.js'
 import * as elements from '../generators/elements.js'
 import * as formalCharge from '../generators/formalCharge.js'
 import * as lewisErrors from '../generators/lewisErrors.js'
+import * as lewisBuilder from '../generators/lewisBuilder.js'
 import * as vsepr from '../generators/vsepr.js'
 import * as acidBase from '../generators/acidBase.js'
 import * as skeletal from '../generators/skeletal.js'
@@ -18,6 +19,7 @@ import branchedNomenclature from '../data/curated/branchedNomenclature.json'
 import pkaComparisons from '../data/curated/pkaComparisons.json'
 import mechanismConcepts from '../data/curated/mechanismConcepts.json'
 import snsE from '../data/curated/snsE.json'
+import imf from '../data/curated/imf.json'
 
 function hashId(str) {
   let h = 2166136261
@@ -85,13 +87,14 @@ export const TOPICS = [
   {
     id: 'lewis',
     label: 'Lewis & Formal Charge',
-    blurb: 'Lone pairs, octets, formal charge, and spotting a broken structure.',
+    blurb: 'Build structures dot by dot, count lone pairs, compute formal charge, spot broken drawings.',
     build: () => [
       ...buildBank(formalCharge.generateFormalCharge, 20),
       ...buildBank(formalCharge.generateLonePairCount, 20),
       ...buildBank(formalCharge.generateOctetCheck, 20),
       ...buildBank(formalCharge.generateChargeIdentify, 20),
       ...buildBank(lewisErrors.generateSpotError, 48),
+      ...buildBank(lewisBuilder.generateBuilder, 12),
       ...withKind(lewisStructures),
     ],
   },
@@ -131,6 +134,12 @@ export const TOPICS = [
       ...withKind(acidBaseCurated),
       ...withKind(pkaComparisons),
     ],
+  },
+  {
+    id: 'imf',
+    label: 'Intermolecular Forces',
+    blurb: 'H-bonding, dipoles, dispersion — what sets boiling points and solubility.',
+    build: () => withKind(imf),
   },
   {
     id: 'skeletal',

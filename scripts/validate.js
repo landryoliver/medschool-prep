@@ -62,6 +62,17 @@ for (const topic of TOPICS) {
       }
     } else if (q.kind === 'numeric') {
       if (typeof q.answer !== 'number') fail(`${q.id}: numeric answer not a number`)
+    } else if (q.kind === 'lewisBuilder') {
+      if (typeof q.answer?.bond !== 'number' || q.answer.lonePairs?.length !== 2) {
+        fail(`${q.id}: builder answer malformed`)
+      } else {
+        // The accepted structure must use exactly the electron budget the
+        // question states — otherwise the drill grades an impossible answer.
+        const used = 2 * (q.answer.bond + q.answer.lonePairs[0] + q.answer.lonePairs[1])
+        if (used !== q.build.totalElectrons) {
+          fail(`${q.id}: accepted structure places ${used} electrons but the budget is ${q.build.totalElectrons}`)
+        }
+      }
     } else {
       fail(`${q.id}: unknown kind "${q.kind}"`)
     }

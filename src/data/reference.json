@@ -142,6 +142,43 @@
       ]
     }
   ],
+  "imf": [
+    {
+      "heading": "The three forces, strongest to weakest (at similar size)",
+      "points": [
+        "Hydrogen bonding: needs H bonded to N, O, or F. Strongest per-contact force between neutral molecules.",
+        "Dipole-dipole: any polar molecule. The δ+ of one molecule attracts the δ− of the next.",
+        "London dispersion: every molecule has it, from momentary electron fluctuations. Scales with size and surface area — in big molecules it dominates everything.",
+        "These act BETWEEN molecules. Covalent bonds act WITHIN them and are ~10-100× stronger. Boiling breaks IMFs, never bonds."
+      ]
+    },
+    {
+      "heading": "Hydrogen bonding, precisely",
+      "points": [
+        "Donor: an H attached to N, O, or F. C–H hydrogens never donate.",
+        "Acceptor: a lone pair on N, O, or F.",
+        "Alcohols donate AND accept. Ethers and carbonyls only accept — which is why butan-1-ol boils at 118 °C while its isomer diethyl ether boils at 35 °C.",
+        "Carboxylic acids pair into doubly hydrogen-bonded dimers, boiling even higher."
+      ]
+    },
+    {
+      "heading": "Predicting boiling points",
+      "points": [
+        "First compare size (dispersion), then the strongest force available.",
+        "Same size, add H-bonding → much higher bp: butane 0 °C vs butan-1-ol 118 °C.",
+        "Same formula, more branching → lower bp: pentane 36 °C vs neopentane 10 °C (less surface contact).",
+        "Bigger halogen, stronger dispersion: F₂ gas → Cl₂ gas → Br₂ liquid → I₂ solid."
+      ]
+    },
+    {
+      "heading": "Solubility: like dissolves like",
+      "points": [
+        "Polar/H-bonding dissolves polar; nonpolar dissolves nonpolar. Hexane and water do not mix.",
+        "Small alcohols (≤4-5 carbons) are water-miscible; beyond that the hydrocarbon tail wins.",
+        "Every extraction and recrystallization decision in orgo lab is this rule applied."
+      ]
+    }
+  ],
   "skeletal": [
     {
       "heading": "Reading line-angle drawings",

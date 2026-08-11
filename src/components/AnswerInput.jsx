@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import QuestionVisual from './visuals/QuestionVisual.jsx'
+import LewisBuilderInput from './LewisBuilderInput.jsx'
 
 function ChoiceBody({ label, visual }) {
   if (!visual) return <span>{label}</span>
@@ -18,6 +19,10 @@ export default function AnswerInput({ question, phase, onSubmit }) {
 
   const revealed = phase === 'revealed'
   const locked = revealed
+
+  if (question.kind === 'lewisBuilder') {
+    return <LewisBuilderInput question={question} phase={phase} onSubmit={onSubmit} />
+  }
 
   if (question.kind === 'numeric') {
     return (

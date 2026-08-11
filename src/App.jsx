@@ -4,6 +4,7 @@ import StudySessionView from './components/StudySessionView.jsx'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import ReferenceView from './components/ReferenceView.jsx'
+import UpdateCheck from './components/UpdateCheck.jsx'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank, getMissedBank } from './lib/topics.js'
 import { getAllProgress } from './lib/db.js'
 
@@ -98,6 +99,7 @@ export default function App() {
 
         {view.name === 'progress' && <ProgressView />}
       </main>
+      {view.name === 'topics' && <UpdateCheck />}
     </div>
   )
 }

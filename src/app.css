@@ -383,6 +383,90 @@ button.wide {
   font-size: 0.9rem;
 }
 
+.builder-preview {
+  padding: 0.75rem;
+}
+
+.builder-readout {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  margin-top: 0.4rem;
+}
+
+.builder-readout .good {
+  color: var(--good);
+}
+
+.builder-readout .bad {
+  color: var(--bad);
+}
+
+.builder-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.stepper-label {
+  font-size: 0.9rem;
+}
+
+.stepper-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stepper-controls button {
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.25rem;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+
+.stepper-controls button:disabled {
+  opacity: 0.35;
+}
+
+.stepper-value {
+  min-width: 1.8rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+.app-footer {
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+.app-footer button {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 0.78rem;
+  padding: 0.2rem 0.4rem;
+}
+
 .discard-btn {
   display: block;
   width: 100%;

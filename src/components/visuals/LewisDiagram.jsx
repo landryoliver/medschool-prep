@@ -44,11 +44,11 @@ function Atom({ x, y, symbol, charge }) {
 export default function LewisDiagram({ structure, height = 190 }) {
   const { center, centerCharge = 0, centerLonePairs = 0, ligands = [] } = structure
   const n = ligands.length
-  // Two ligands sit low and splayed (like water) rather than straight
-  // across, which leaves the top clear for the lone pairs. Placing them at
-  // 0/180 would run the bond lines straight through the lone-pair dots.
+  // One ligand reads best horizontally (diatomics); two sit low and
+  // splayed (like water) so the top stays clear for lone pairs. Placing
+  // them at 0/180 would run bond lines through the lone-pair dots.
   const angles =
-    n === 2 ? [215, 325] : ligands.map((_, i) => 90 + (i * 360) / Math.max(n, 1))
+    n === 1 ? [0] : n === 2 ? [215, 325] : ligands.map((_, i) => 90 + (i * 360) / Math.max(n, 1))
 
   const positions = angles.map((deg) => {
     const a = (deg * Math.PI) / 180

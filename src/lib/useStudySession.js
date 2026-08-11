@@ -8,6 +8,13 @@ export function checkAnswer(question, response) {
     const tolerance = question.tolerance ?? 0
     return Math.abs(Number(response) - question.answer) <= tolerance
   }
+  if (question.kind === 'lewisBuilder') {
+    return (
+      response.bond === question.answer.bond &&
+      response.lonePairs[0] === question.answer.lonePairs[0] &&
+      response.lonePairs[1] === question.answer.lonePairs[1]
+    )
+  }
   if (question.kind === 'multi') {
     const expected = new Set(question.correctIndices)
     const got = new Set(response)

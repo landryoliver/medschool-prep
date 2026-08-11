@@ -27,6 +27,13 @@ function SessionModeToggle({ value, onChange }) {
   )
 }
 
+function correctAnswerText(q) {
+  if (q.kind === 'numeric') return q.answer
+  if (q.kind === 'multi') return q.correctIndices.map((n) => q.choices[n]).join(', ')
+  if (q.kind === 'lewisBuilder') return q.answerText
+  return q.choices[q.correctIndex]
+}
+
 function ReviewList({ items }) {
   return (
     <div>
@@ -35,14 +42,7 @@ function ReviewList({ items }) {
           <div className={`review-badge ${item.correct ? 'good' : 'bad'}`}>{item.correct ? 'Correct' : 'Missed'}</div>
           {item.question.visual && <QuestionVisual visual={item.question.visual} revealed />}
           <p className="prompt">{item.question.prompt}</p>
-          <p className="muted">
-            Answer:{' '}
-            {item.question.kind === 'numeric'
-              ? item.question.answer
-              : item.question.kind === 'multi'
-                ? item.question.correctIndices.map((n) => item.question.choices[n]).join(', ')
-                : item.question.choices[item.question.correctIndex]}
-          </p>
+          <p className="muted">Answer: {correctAnswerText(item.question)}</p>
           {item.question.explanation && <p className="explanation">{item.question.explanation}</p>}
         </div>
       ))}

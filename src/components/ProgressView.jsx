@@ -13,6 +13,7 @@ const TOPIC_LABELS = {
   vsepr: 'VSEPR geometry',
   hybridization: 'Hybridization',
   'acid-base': 'Acids & bases',
+  imf: 'Intermolecular forces',
   pka: 'pKa comparisons',
   'skeletal-fluency': 'Skeletal structures',
   'functional-groups': 'Functional groups',

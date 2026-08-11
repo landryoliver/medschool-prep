@@ -1,0 +1,183 @@
+[
+  {
+    "id": "imf-1",
+    "topic": "imf",
+    "prompt": "What is the STRONGEST intermolecular force between water molecules?",
+    "choices": ["Hydrogen bonding", "London dispersion only", "Ionic bonding", "Covalent bonding"],
+    "correctIndex": 0,
+    "explanation": "Each water molecule has O–H bonds (donors) and oxygen lone pairs (acceptors), giving an extensive hydrogen-bonding network — the reason water's boiling point is so anomalously high.",
+    "teach": "Intermolecular forces act BETWEEN molecules; covalent bonds act WITHIN them. Boiling breaks the forces, never the bonds."
+  },
+  {
+    "id": "imf-2",
+    "topic": "imf",
+    "prompt": "For a molecule to DONATE a hydrogen bond, it must have:",
+    "choices": [
+      "A hydrogen bonded directly to N, O, or F",
+      "Any hydrogen at all",
+      "A negative charge",
+      "A double bond"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only H attached to a strongly electronegative atom (N, O, F) is positive enough to hydrogen-bond. C–H hydrogens don't count.",
+    "teach": "H-bond donor = H on N/O/F. H-bond acceptor = a lone pair on N, O, or F. A molecule can be one, both, or neither."
+  },
+  {
+    "id": "imf-3",
+    "topic": "imf",
+    "prompt": "Which intermolecular force is present in EVERY molecule, polar or not?",
+    "choices": ["London dispersion forces", "Hydrogen bonding", "Dipole-dipole attraction", "Ion-dipole attraction"],
+    "correctIndex": 0,
+    "explanation": "Dispersion arises from momentary electron fluctuations, which every molecule has. In large molecules it can outweigh everything else.",
+    "teach": "Dispersion scales with size and surface area — bigger molecules and longer chains stick together more."
+  },
+  {
+    "id": "imf-4",
+    "topic": "imf",
+    "prompt": "Butane (C₄H₁₀) boils at 0 °C while butan-1-ol (C₄H₉OH) boils at 118 °C. Why the huge difference?",
+    "choices": [
+      "The alcohol's O–H group hydrogen-bonds between molecules; butane has only dispersion",
+      "The alcohol is much heavier",
+      "Butane's C–H bonds are weaker",
+      "The alcohol is ionic"
+    ],
+    "correctIndex": 0,
+    "explanation": "Nearly identical size, so dispersion is similar — the ~118 degree gap is almost entirely hydrogen bonding.",
+    "teach": "When comparing boiling points, match sizes first, then look for the strongest force each molecule can use."
+  },
+  {
+    "id": "imf-5",
+    "topic": "imf",
+    "prompt": "Pentane boils at 36 °C but its branched isomer neopentane (2,2-dimethylpropane) boils at 10 °C. Why?",
+    "choices": [
+      "Branching makes the molecule more compact, reducing the surface contact available for dispersion forces",
+      "Branching adds hydrogen bonding to pentane",
+      "Neopentane is lighter",
+      "Branched molecules are always gases"
+    ],
+    "correctIndex": 0,
+    "explanation": "Same formula, same weight — but the sphere-like branched isomer touches its neighbours over less area than the extended chain.",
+    "teach": "For the same formula: more branching → less surface contact → weaker dispersion → lower boiling point."
+  },
+  {
+    "id": "imf-6",
+    "topic": "imf",
+    "prompt": "Hexane will NOT dissolve in water because:",
+    "choices": [
+      "Hexane is nonpolar and cannot replace the hydrogen bonds water molecules would have to give up",
+      "Hexane is too heavy to dissolve",
+      "Hexane reacts with water",
+      "Hexane is ionic and water is not"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mixing would break water-water hydrogen bonds and pay back only weak dispersion — energetically a bad trade.",
+    "teach": "Like dissolves like: polar/H-bonding solvents dissolve polar solutes; nonpolar dissolves nonpolar."
+  },
+  {
+    "id": "imf-7",
+    "topic": "imf",
+    "prompt": "Methanol and ethanol mix with water in any proportion, but octan-1-ol barely dissolves. Why?",
+    "choices": [
+      "The long nonpolar carbon chain outweighs the one polar OH group",
+      "Octan-1-ol has no OH group",
+      "Larger molecules never dissolve",
+      "Octanol's OH cannot hydrogen bond"
+    ],
+    "correctIndex": 0,
+    "explanation": "Solubility is a tug-of-war between the H-bonding head and the hydrophobic tail. By eight carbons, the tail wins.",
+    "teach": "Rule of thumb: alcohols with up to ~4-5 carbons are water-miscible; beyond that the hydrocarbon part dominates."
+  },
+  {
+    "id": "imf-8",
+    "topic": "imf",
+    "prompt": "Which molecule exhibits dipole-dipole attraction but NOT hydrogen bonding?",
+    "choices": ["Acetone (CH₃COCH₃)", "Water", "Methanol (CH₃OH)", "Methane (CH₄)"],
+    "correctIndex": 0,
+    "explanation": "Acetone's C=O makes it polar, but every hydrogen sits on carbon, so it cannot donate a hydrogen bond. (It CAN accept one — which is why it mixes with water.)",
+    "teach": "Check for polarity first (dipole-dipole), then specifically for H on N/O/F (hydrogen bonding)."
+  },
+  {
+    "id": "imf-9",
+    "topic": "imf",
+    "prompt": "An ether (R–O–R) can accept hydrogen bonds but cannot donate them because:",
+    "choices": [
+      "Its oxygen has lone pairs, but no hydrogen is attached to the oxygen",
+      "Ethers have no oxygen lone pairs",
+      "Ethers are nonpolar",
+      "Ether oxygens carry a positive charge"
+    ],
+    "correctIndex": 0,
+    "explanation": "The lone pairs accept; donation would need an O–H, which an ether lacks. This is why ethers boil far below their isomeric alcohols.",
+    "teach": "Diethyl ether boils at 35 °C; its isomer butan-1-ol boils at 118 °C. Donor ability is worth a lot of boiling point."
+  },
+  {
+    "id": "imf-10",
+    "topic": "imf",
+    "prompt": "Carboxylic acids often boil even higher than alcohols of similar size because:",
+    "choices": [
+      "Two molecules pair up into a doubly hydrogen-bonded dimer",
+      "They are ionic compounds",
+      "Their C=O bonds are unusually strong",
+      "They have no dispersion forces to weaken them"
+    ],
+    "correctIndex": 0,
+    "explanation": "The C=O of one molecule accepts from the O–H of the other, and vice versa — two simultaneous hydrogen bonds per pair.",
+    "teach": "Acetic acid literally travels as a dimer in the gas phase. Two H-bonds beat one."
+  },
+  {
+    "id": "imf-11",
+    "topic": "imf",
+    "prompt": "Rank these attractions from STRONGEST to weakest, for molecules of similar size:",
+    "choices": [
+      "Hydrogen bonding > dipole-dipole > London dispersion",
+      "London dispersion > dipole-dipole > hydrogen bonding",
+      "Dipole-dipole > hydrogen bonding > dispersion",
+      "They are always equal"
+    ],
+    "correctIndex": 0,
+    "explanation": "At comparable size, H-bonding (a particularly strong dipole interaction) beats ordinary dipole-dipole, which beats dispersion.",
+    "teach": "The size caveat matters: a big enough nonpolar molecule (wax) out-sticks a small H-bonder (methanol) on dispersion alone."
+  },
+  {
+    "id": "imf-12",
+    "topic": "imf",
+    "prompt": "When water boils, what actually breaks?",
+    "choices": [
+      "The hydrogen bonds BETWEEN water molecules",
+      "The O–H covalent bonds inside each molecule",
+      "Both the covalent bonds and the hydrogen bonds",
+      "Nothing breaks; the molecules just speed up"
+    ],
+    "correctIndex": 0,
+    "explanation": "Boiling separates molecules from each other; each H₂O molecule leaves intact. Breaking O–H bonds would be a chemical reaction, not a phase change.",
+    "teach": "Phase changes are about INTERmolecular forces. If covalent bonds broke on boiling, steam would be hydrogen and oxygen gas."
+  },
+  {
+    "id": "imf-13",
+    "topic": "imf",
+    "prompt": "Why do intermolecular forces matter so much in organic chemistry?",
+    "choices": [
+      "They control boiling points, solubility, and which solvent a reaction needs — questions orgo asks constantly",
+      "They determine the number of bonds carbon forms",
+      "They change molecular formulas",
+      "They only matter for inorganic salts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Purifications (distillation, extraction, recrystallization) and solvent choices are all IMF reasoning in disguise.",
+    "teach": "Every 'which boils higher / which dissolves' exam question is really asking you to rank IMFs."
+  },
+  {
+    "id": "imf-14",
+    "topic": "imf",
+    "prompt": "I₂ (iodine) is a solid at room temperature while F₂ is a gas, even though both are nonpolar halogens. Why?",
+    "choices": [
+      "Iodine's much larger electron cloud gives far stronger London dispersion forces",
+      "Iodine forms hydrogen bonds",
+      "Iodine is polar",
+      "Fluorine's bonds are weaker"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bigger, more polarizable electron clouds fluctuate more strongly. Dispersion grows down the group: F₂ gas, Cl₂ gas, Br₂ liquid, I₂ solid.",
+    "teach": "Dispersion strength tracks polarizability, which tracks size. The halogen series is the textbook demonstration."
+  }
+]
