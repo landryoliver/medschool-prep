@@ -1,0 +1,100 @@
+[
+  {
+    "id": "skel-1",
+    "topic": "skeletal-fluency",
+    "shape": "chain",
+    "size": 6,
+    "prompt": "What is the molecular formula of this skeletal structure (hexane)?",
+    "choices": ["C6H14", "C6H12", "C5H12", "C6H10"],
+    "correctIndex": 0
+  },
+  {
+    "id": "skel-2",
+    "topic": "skeletal-fluency",
+    "shape": "chain",
+    "size": 6,
+    "doubleBondAt": [2],
+    "prompt": "What is the molecular formula of this skeletal structure (hex-3-ene)?",
+    "choices": ["C6H14", "C6H12", "C6H10", "C6H8"],
+    "correctIndex": 1
+  },
+  {
+    "id": "skel-3",
+    "topic": "skeletal-fluency",
+    "shape": "chain",
+    "size": 2,
+    "doubleBondAt": [0],
+    "prompt": "What is the molecular formula of this skeletal structure (ethene)?",
+    "choices": ["C2H6", "C2H4", "C2H2", "CH4"],
+    "correctIndex": 1
+  },
+  {
+    "id": "skel-4",
+    "topic": "skeletal-fluency",
+    "shape": "ring",
+    "size": 6,
+    "prompt": "What is the molecular formula of this skeletal structure (cyclohexane)?",
+    "choices": ["C6H14", "C6H12", "C6H10", "C6H6"],
+    "correctIndex": 1
+  },
+  {
+    "id": "skel-5",
+    "topic": "skeletal-fluency",
+    "shape": "ring",
+    "size": 6,
+    "doubleBondAt": [0],
+    "prompt": "What is the molecular formula of this skeletal structure (cyclohexene)?",
+    "choices": ["C6H12", "C6H10", "C6H8", "C6H14"],
+    "correctIndex": 1
+  },
+  {
+    "id": "skel-6",
+    "topic": "skeletal-fluency",
+    "shape": "ring",
+    "size": 6,
+    "doubleBondAt": [0, 2, 4],
+    "prompt": "What is the molecular formula of this skeletal structure (benzene)?",
+    "choices": ["C6H12", "C6H8", "C6H6", "C6H10"],
+    "correctIndex": 2
+  },
+  {
+    "id": "skel-7",
+    "topic": "skeletal-fluency",
+    "shape": "ring",
+    "size": 5,
+    "doubleBondAt": [0],
+    "prompt": "What is the molecular formula of this skeletal structure (cyclopentene)?",
+    "choices": ["C5H10", "C5H8", "C5H6", "C4H8"],
+    "correctIndex": 1
+  },
+  {
+    "id": "skel-8",
+    "topic": "skeletal-fluency",
+    "shape": "chain",
+    "size": 3,
+    "substituent": { "vertexIndex": 2, "label": "OH" },
+    "prompt": "What is the molecular formula of this skeletal structure (propan-1-ol)?",
+    "choices": ["C3H8O", "C3H6O", "C3H8", "C3H10O"],
+    "correctIndex": 0
+  },
+  {
+    "id": "skel-9",
+    "topic": "skeletal-fluency",
+    "shape": "chain",
+    "size": 4,
+    "substituent": { "vertexIndex": 3, "label": "Cl" },
+    "prompt": "What is the molecular formula of this skeletal structure (1-chlorobutane)?",
+    "choices": ["C4H10Cl", "C4H9Cl", "C4H8Cl", "C4H9Cl2"],
+    "correctIndex": 1
+  },
+  {
+    "id": "skel-10",
+    "topic": "skeletal-fluency",
+    "shape": "chain",
+    "size": 3,
+    "substituent": { "vertexIndex": 2, "label": "NH2" },
+    "prompt": "What is the molecular formula of this skeletal structure (1-aminopropane)?",
+    "choices": ["C3H9N", "C3H7N", "C3H9", "C3H11N"],
+    "correctIndex": 0
+  }
+]
