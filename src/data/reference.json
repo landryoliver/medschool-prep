@@ -1,0 +1,290 @@
+{
+  "periodic": [
+    {
+      "heading": "The ten elements that matter for orgo",
+      "points": [
+        "C (4 bonds), N (3), O (2), H and the halogens F/Cl/Br/I (1 each). S behaves like O (2), P like N (3).",
+        "Bonds formed = 8 − group electrons, except carbon, which shares all four.",
+        "Valence electrons: group 1-2 → 1-2. Groups 13-18 → group number minus 10.",
+        "B is the odd one out: it forms 3 bonds and is stable with only 6 electrons."
+      ]
+    },
+    {
+      "heading": "Two master trends",
+      "points": [
+        "Electronegativity and ionization energy both increase UP and to the RIGHT.",
+        "Atomic radius increases DOWN and to the LEFT — the exact opposite.",
+        "Why: across a period, more protons pull the same shell tighter. Down a group, you add whole new shells."
+      ]
+    },
+    {
+      "heading": "Electronegativity ordering worth memorizing",
+      "points": [
+        "F (3.98) > O (3.44) > N (3.04) ≈ Cl (3.16) > Br (2.96) > I (2.66) ≈ S (2.58) ≈ C (2.55) > H (2.20)",
+        "The one that matters most: O and N are much more electronegative than C, which is why C–O and C–N bonds are polar and reactive."
+      ]
+    }
+  ],
+  "polarity": [
+    {
+      "heading": "Reading a polar bond",
+      "points": [
+        "The more electronegative atom takes the electron density and gets δ−. Its partner gets δ+.",
+        "The dipole arrow points TOWARD the δ− atom (toward the electronegative end).",
+        "δ+ carbons are electrophilic — that is where nucleophiles attack. This is the whole basis of orgo reactivity."
+      ]
+    },
+    {
+      "heading": "Classifying by ΔEN",
+      "points": [
+        "ΔEN < 0.4 → nonpolar covalent (C–H at 0.35 counts as effectively nonpolar).",
+        "ΔEN 0.4 – 1.7 → polar covalent (C–O, C–N, C–Cl).",
+        "ΔEN > 1.7 → ionic (Na–Cl).",
+        "These are soft boundaries, not hard rules — the ranking matters more than the exact number."
+      ]
+    }
+  ],
+  "lewis": [
+    {
+      "heading": "Building a Lewis structure",
+      "points": [
+        "Count total valence electrons (add one per negative charge, subtract one per positive charge).",
+        "Connect the atoms with single bonds, then distribute remaining electrons as lone pairs to the outer atoms first.",
+        "If the central atom is short of an octet, convert lone pairs into double or triple bonds.",
+        "Check every atom's formal charge at the end."
+      ]
+    },
+    {
+      "heading": "Formal charge",
+      "points": [
+        "FC = valence electrons − nonbonding electrons − ½(bonding electrons).",
+        "Equivalently: FC = valence − lone pair electrons − number of bonds.",
+        "Neutral patterns: C with 4 bonds, N with 3 bonds + 1 lone pair, O with 2 bonds + 2 lone pairs.",
+        "N with 4 bonds → +1. O with 3 bonds → +1. O with 1 bond + 3 lone pairs → −1. C with 3 bonds and no lone pair → +1."
+      ]
+    },
+    {
+      "heading": "Octet exceptions to expect",
+      "points": [
+        "B and Al are commonly stable with 6 electrons (BF₃, AlCl₃) — they are strong Lewis acids because of it.",
+        "Third-row elements and below (S, P, Cl) can expand past 8 (SF₆, PCl₅).",
+        "Radicals have an odd electron and cannot satisfy every octet."
+      ]
+    }
+  ],
+  "vsepr": [
+    {
+      "heading": "Count GROUPS, not bonds",
+      "points": [
+        "An electron group is any attached atom OR any lone pair.",
+        "A double or triple bond counts as ONE group, not two or three. This is the most common mistake.",
+        "CO₂ has two groups on carbon (two double bonds) and is therefore linear."
+      ]
+    },
+    {
+      "heading": "Groups → geometry → hybridization",
+      "points": [
+        "2 groups → linear, 180°, sp",
+        "3 groups → trigonal planar, 120°, sp²",
+        "4 groups → tetrahedral, 109.5°, sp³",
+        "Hybridization follows the group count directly — no lone pair bookkeeping needed."
+      ]
+    },
+    {
+      "heading": "Electron geometry vs molecular shape",
+      "points": [
+        "Electron geometry counts everything, lone pairs included.",
+        "Molecular shape describes only where the ATOMS are.",
+        "4 groups, 0 lone pairs → tetrahedral. 4 groups, 1 lone pair → trigonal pyramidal (NH₃). 4 groups, 2 lone pairs → bent (H₂O).",
+        "Lone pairs repel harder than bonds, so each one squeezes the bond angle a few degrees below ideal."
+      ]
+    },
+    {
+      "heading": "Sigma vs pi",
+      "points": [
+        "Single bond = 1 sigma. Double = 1 sigma + 1 pi. Triple = 1 sigma + 2 pi.",
+        "Sigma bonds come from head-on overlap and allow free rotation.",
+        "Pi bonds come from sideways p-orbital overlap and LOCK rotation — this is why alkenes have cis/trans isomers."
+      ]
+    }
+  ],
+  "acidbase": [
+    {
+      "heading": "Definitions",
+      "points": [
+        "Bronsted-Lowry: acid donates a proton, base accepts one.",
+        "Lewis: acid accepts an electron pair, base donates one. This is the more useful definition for mechanisms.",
+        "Conjugate base = acid minus H⁺. Conjugate acid = base plus H⁺."
+      ]
+    },
+    {
+      "heading": "pKa is the whole game",
+      "points": [
+        "Lower pKa = stronger acid. A difference of 1 pKa unit is a factor of 10.",
+        "The weaker the acid, the STRONGER its conjugate base.",
+        "Equilibrium always favours the side with the weaker acid (higher pKa). This single rule predicts direction for any proton transfer."
+      ]
+    },
+    {
+      "heading": "Anchor pKa values",
+      "points": [
+        "HCl −7 · H₃O⁺ −1.7 · HF 3.2 · carboxylic acid 4.8 · ammonium 9-10 · phenol 10 · thiol 10.5",
+        "water 15.7 · alcohol 16 · ketone α-H 19 · terminal alkyne 25 · ammonia 38 · alkene 44 · alkane 50"
+      ]
+    },
+    {
+      "heading": "What makes an acid strong (stabilize the conjugate base)",
+      "points": [
+        "Resonance: spreading the negative charge over several atoms. Carboxylic acid vs alcohol is the classic case.",
+        "Electronegativity: negative charge is more stable on a more electronegative atom.",
+        "Size / polarizability: down a group, bonds weaken and the anion gets more stable — HI is far stronger than HF.",
+        "Induction: nearby electron-withdrawing groups pull charge away and stabilize it."
+      ]
+    }
+  ],
+  "skeletal": [
+    {
+      "heading": "Reading line-angle drawings",
+      "points": [
+        "Every vertex and every free line end is a carbon atom.",
+        "Carbons and their hydrogens are never drawn — each carbon silently carries whatever hydrogens it needs to reach 4 bonds.",
+        "Hydrogens on N, O, and other heteroatoms ARE drawn explicitly.",
+        "H count on a carbon = 4 − (bonds you can see). A double bond counts as two of those bonds."
+      ]
+    },
+    {
+      "heading": "Degrees of unsaturation",
+      "points": [
+        "Degrees of unsaturation = rings + pi bonds.",
+        "From a formula: DoU = (2C + 2 + N − H − X) / 2",
+        "A benzene ring is 4 degrees: one ring plus three double bonds."
+      ]
+    }
+  ],
+  "functional": [
+    {
+      "heading": "The carbonyl family — all differ by what is on the C=O carbon",
+      "points": [
+        "Nothing else (just H or C) → aldehyde (at a chain end) or ketone (in the middle).",
+        "–OH → carboxylic acid.  –OR → ester.  –NR₂ → amide.  –Cl → acyl chloride.",
+        "This one pattern accounts for most of the functional groups you will meet."
+      ]
+    },
+    {
+      "heading": "The rest",
+      "points": [
+        "Alcohol (–OH), thiol (–SH), amine (–NH₂), ether (C–O–C), alkyl halide (C–X).",
+        "Alkene (C=C), alkyne (C≡C), aromatic ring, nitrile (C≡N).",
+        "Ether vs alcohol: an ether oxygen has carbon on BOTH sides."
+      ]
+    }
+  ],
+  "nomenclature": [
+    {
+      "heading": "The four steps",
+      "points": [
+        "1. Find the LONGEST continuous carbon chain — it does not have to be drawn straight.",
+        "2. Number it from the end that gives the lowest locants (the suffix group wins first).",
+        "3. Name and number every substituent.",
+        "4. Assemble: locants-prefixes + parent + suffix, prefixes in alphabetical order."
+      ]
+    },
+    {
+      "heading": "Stems",
+      "points": [
+        "1 meth · 2 eth · 3 prop · 4 but · 5 pent · 6 hex · 7 hept · 8 oct · 9 non · 10 dec",
+        "Suffix -ane (all single bonds), -ene (double bond), -yne (triple bond), -ol (alcohol)."
+      ]
+    },
+    {
+      "heading": "Details that get marked wrong",
+      "points": [
+        "Alphabetize by the substituent's own name — di/tri/tetra do NOT count (ethyl comes before dimethyl).",
+        "Every substituent keeps its own number, even duplicates: 2,2-dimethyl, never 2-dimethyl.",
+        "A double bond is numbered by its FIRST carbon: hex-2-ene means the bond spans C2–C3.",
+        "An –OH outranks halogens and double bonds when choosing the numbering direction."
+      ]
+    }
+  ],
+  "resonance": [
+    {
+      "heading": "What resonance is",
+      "points": [
+        "One real molecule with delocalized electrons — NOT two species interconverting.",
+        "Use the double-headed arrow ↔ between structures. Equilibrium arrows ⇌ mean something completely different.",
+        "Only electrons move: pi bonds and lone pairs. If an atom moved, it is a different molecule."
+      ]
+    },
+    {
+      "heading": "Ranking contributors",
+      "points": [
+        "1. Maximize full octets — the strongest factor by far.",
+        "2. Minimize the number of formal charges.",
+        "3. Put negative charge on the most electronegative atom (and positive on the least).",
+        "4. Avoid like charges on adjacent atoms.",
+        "Equivalent structures contribute equally and give the most stabilization."
+      ]
+    },
+    {
+      "heading": "Why it matters",
+      "points": [
+        "Delocalization = stabilization. It explains carboxylate acidity, allylic cation stability, and benzene.",
+        "Requires conjugation: a continuous chain of parallel p orbitals. An sp³ carbon breaks it."
+      ]
+    }
+  ],
+  "arrows": [
+    {
+      "heading": "Reading curved arrows",
+      "points": [
+        "Arrows track ELECTRONS, always drawn from electron-rich to electron-poor.",
+        "The TAIL sits on the electron source: a lone pair or a bond — never on an atom symbol or a positive charge.",
+        "The HEAD points to the destination: between two atoms (bond forming) or onto an atom (that atom keeps the electrons)."
+      ]
+    },
+    {
+      "heading": "Arrow types",
+      "points": [
+        "Full (double-barbed) arrow = a PAIR of electrons moves. Polar mechanisms.",
+        "Fishhook (single-barbed) arrow = ONE electron moves. Radical mechanisms, always in pairs.",
+        "Heterolytic cleavage (one full arrow) makes ions; homolytic cleavage (two fishhooks) makes radicals."
+      ]
+    },
+    {
+      "heading": "Vocabulary",
+      "points": [
+        "Nucleophile: electron-rich, donates a pair, attacks. Think 'nucleus-loving' — it seeks positive charge.",
+        "Electrophile: electron-poor, accepts a pair, gets attacked.",
+        "Leaving group: departs with both bonding electrons. Good leaving groups are weak bases (I⁻, Br⁻, tosylate)."
+      ]
+    }
+  ],
+  "orgopreview": [
+    {
+      "heading": "Substitution vs elimination at a glance",
+      "points": [
+        "SN2: strong nucleophile + unhindered (primary) carbon. One concerted step, backside attack, inversion.",
+        "SN1: weak nucleophile + tertiary carbon + polar protic solvent. Goes through a carbocation.",
+        "E2: strong or bulky base. One concerted step, needs the H and leaving group anti-periplanar.",
+        "E1: weak base + tertiary + polar protic. Shares the carbocation step with SN1."
+      ]
+    },
+    {
+      "heading": "What tips the balance",
+      "points": [
+        "Substrate: primary favours SN2, tertiary favours SN1/E1 or E2. Secondary gives mixtures.",
+        "Bulky base (KOtBu) → E2, because it cannot reach for backside attack.",
+        "Polar protic (water, alcohols) → SN1/E1. Polar aprotic (DMSO, acetone) → SN2.",
+        "Heat favours elimination (more particles, higher entropy)."
+      ]
+    },
+    {
+      "heading": "Carbocation stability",
+      "points": [
+        "3° > 2° > 1° > methyl, from hyperconjugation and alkyl donation.",
+        "Resonance beats that ranking: an allylic or benzylic primary cation can outdo a plain secondary one.",
+        "Carbocations rearrange (hydride and methyl shifts) to reach a more stable arrangement — watch for it in SN1/E1."
+      ]
+    }
+  ]
+}

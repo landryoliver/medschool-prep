@@ -13,7 +13,7 @@ function TopicStat({ stat }) {
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn }) {
   const [stats, setStats] = useState(null)
   const streak = getStreak()
 
@@ -80,12 +80,15 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed }) {
               </div>
             ) : null}
             <div className="topic-actions">
+              <button className="ghost" onClick={() => onLearn(topic.id)}>
+                Notes
+              </button>
               <button className="primary" onClick={() => onStudy(topic.id)}>
                 Study
               </button>
               {topic.speedRound && (
                 <button className="ghost" onClick={() => onSpeed(topic.id)}>
-                  Speed round
+                  Speed
                 </button>
               )}
             </div>

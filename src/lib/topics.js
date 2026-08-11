@@ -34,6 +34,7 @@ export const TOPICS = [
     speedRound: true,
     build: () => [
       ...buildBank(elements.generateSymbolName, 40),
+      ...buildBank(elements.generateAtomicNumber, 30),
       ...buildBank(elements.generateValence, 24),
       ...buildBank(elements.generateBondCount, 24),
       ...buildBank(elements.generateBondCompare, 30),

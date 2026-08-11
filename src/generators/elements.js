@@ -27,6 +27,30 @@ export function generateSymbolName(seed) {
   }
 }
 
+/** Atomic number recall, limited to the elements that actually appear in orgo. */
+export function generateAtomicNumber(seed) {
+  const rng = rngFor(seed * 89 + 5)
+  const el = pick(rng, ORGO)
+  const numberToSymbol = rng() < 0.5
+
+  const { choices, correctIndex } = numberToSymbol
+    ? makeChoices(rng, el.symbol, ORGO.map((e) => e.symbol))
+    : makeChoices(rng, el.atomicNumber, periodicTable.map((e) => e.atomicNumber))
+
+  return {
+    id: `atno-${seed}`,
+    topic: 'element-recall',
+    kind: 'mcq',
+    prompt: numberToSymbol
+      ? `Which element has atomic number ${el.atomicNumber}?`
+      : `What is the atomic number of ${el.name} (${el.symbol})?`,
+    choices,
+    correctIndex,
+    explanation: `${el.name} (${el.symbol}) has ${el.atomicNumber} proton${el.atomicNumber === 1 ? '' : 's'}, so its atomic number is ${el.atomicNumber}.`,
+    teach: 'Atomic number = number of protons = number of electrons in a neutral atom. The organic set: H 1, C 6, N 7, O 8, F 9, P 15, S 16, Cl 17, Br 35, I 53.',
+  }
+}
+
 /** Valence electron count — the number that drives everything else. */
 export function generateValence(seed) {
   const rng = rngFor(seed)

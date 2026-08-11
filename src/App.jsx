@@ -3,6 +3,7 @@ import TopicPicker from './components/TopicPicker.jsx'
 import StudySessionView from './components/StudySessionView.jsx'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
+import ReferenceView from './components/ReferenceView.jsx'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from './lib/topics.js'
 
 // One shared progress namespace: question ids are globally unique, so a
@@ -39,6 +40,15 @@ export default function App() {
             onStudy={(topicId) => setView({ name: 'session', topicId })}
             onSpeed={(topicId) => setView({ name: 'speed', topicId })}
             onMixed={() => setView({ name: 'session', topicId: null })}
+            onLearn={(topicId) => setView({ name: 'learn', topicId })}
+          />
+        )}
+
+        {view.name === 'learn' && (
+          <ReferenceView
+            topicId={view.topicId}
+            title={label}
+            onStudy={() => setView({ name: 'session', topicId: view.topicId })}
           />
         )}
 

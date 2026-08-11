@@ -377,6 +377,89 @@ button.wide {
   font-size: 0.9rem;
 }
 
+.el-intro {
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.el-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.5rem;
+}
+
+.el-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.55rem;
+}
+
+.el-top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.el-number {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.el-symbol {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.el-name {
+  font-size: 0.78rem;
+  margin-bottom: 0.35rem;
+}
+
+.el-facts {
+  margin: 0;
+  display: grid;
+  gap: 0.1rem;
+  font-size: 0.7rem;
+}
+
+.el-facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.el-facts dt {
+  color: var(--muted);
+}
+
+.el-facts dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ref-heading {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.ref-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.ref-list li {
+  margin-bottom: 0.45rem;
+}
+
+.ref-list li:last-child {
+  margin-bottom: 0;
+}
+
 .review-item {
   padding: 0.85rem 1rem;
 }
