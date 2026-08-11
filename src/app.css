@@ -1,0 +1,105 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --good: #4ade80;
+  --bad: #f87171;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app-header {
+  padding: env(safe-area-inset-top, 0) 1rem 0.75rem;
+  border-bottom: 1px solid #334155;
+}
+
+.app-header h1 {
+  font-size: 1.25rem;
+  margin: 0.75rem 0 0;
+}
+
+.app-main {
+  flex: 1;
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+}
+
+.nav-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #334155;
+}
+
+.nav-tabs button {
+  flex: none;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.nav-tabs button.active {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.card {
+  background: var(--panel);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #0f172a;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+}
+
+.choice-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.choice-btn.correct {
+  border-color: var(--good);
+  background: #14532d;
+}
+
+.choice-btn.incorrect {
+  border-color: var(--bad);
+  background: #7f1d1d;
+}
