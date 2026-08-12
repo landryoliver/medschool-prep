@@ -4,6 +4,7 @@ import StudySessionView from './components/StudySessionView.jsx'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import ReferenceView from './components/ReferenceView.jsx'
+import Walkthroughs from './components/Walkthroughs.jsx'
 import Progression from './components/Progression.jsx'
 import UpdateCheck from './components/UpdateCheck.jsx'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank, getMissedBank } from './lib/topics.js'
@@ -80,6 +81,15 @@ export default function App() {
 
         {view.name === 'learn' && (
           <ReferenceView
+            topicId={view.topicId}
+            title={label}
+            onStudy={() => setView({ name: 'session', topicId: view.topicId })}
+            onWalk={() => setView({ name: 'walk', topicId: view.topicId })}
+          />
+        )}
+
+        {view.name === 'walk' && (
+          <Walkthroughs
             topicId={view.topicId}
             title={label}
             onStudy={() => setView({ name: 'session', topicId: view.topicId })}

@@ -904,3 +904,121 @@ button.wide {
   border-color: var(--good);
   color: var(--good);
 }
+
+/* ---- Worked examples ---------------------------------------------- */
+
+.walk-intro {
+  font-size: 0.85rem;
+  margin: -0.25rem 0 0.85rem;
+}
+
+.walk-card {
+  border-left: 3px solid var(--accent);
+}
+
+.walk-title {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+}
+
+.walk-problem {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  background: #0f1b2e;
+  padding: 0.6rem 0.7rem;
+  border-radius: 0.5rem;
+}
+
+.walk-step {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+  animation: step-in 0.22s ease-out;
+}
+
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.walk-step-n {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #06121f;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.walk-step-label {
+  font-weight: 650;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+}
+
+.walk-step-detail {
+  font-size: 0.88rem;
+  color: #c3d2e6;
+}
+
+.walk-answer {
+  margin-top: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.5rem;
+  background: #12351f;
+  border: 1px solid var(--good);
+  font-size: 0.9rem;
+}
+
+.walk-answer strong {
+  display: block;
+  color: var(--good);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.walk-next {
+  margin-top: 0.35rem;
+}
+
+/* ---- Readability pass --------------------------------------------- */
+
+.ref-list {
+  padding-left: 1.1rem;
+  margin: 0;
+}
+
+.ref-list li {
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.ref-list li:last-child {
+  margin-bottom: 0;
+}
+
+.ref-heading {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.section-title {
+  letter-spacing: -0.01em;
+}
+
+.card {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.topic-card:active {
+  border-color: var(--accent);
+}

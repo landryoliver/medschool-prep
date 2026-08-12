@@ -1,9 +1,11 @@
 import reference from '../data/reference.json'
 import ElementReference from './ElementReference.jsx'
 import PeriodicTable from './PeriodicTable.jsx'
+import walkthroughs from '../data/walkthroughs.json'
 
 /** Read-first cheat sheet for a topic — the "learn" half of learn-and-drill. */
-export default function ReferenceView({ topicId, title, onStudy }) {
+export default function ReferenceView({ topicId, title, onStudy, onWalk }) {
+  const hasWalk = Boolean(walkthroughs[topicId]?.length)
   const sections = reference[topicId]
 
   if (!sections) return <p className="muted">No notes for this topic yet.</p>
@@ -27,7 +29,12 @@ export default function ReferenceView({ topicId, title, onStudy }) {
           </ul>
         </div>
       ))}
-      <button className="primary wide" onClick={onStudy}>
+      {hasWalk && (
+        <button className="primary wide" onClick={onWalk}>
+          See it worked through →
+        </button>
+      )}
+      <button className={`${hasWalk ? 'ghost' : 'primary'} wide`} onClick={onStudy}>
         Start drilling this
       </button>
     </div>
