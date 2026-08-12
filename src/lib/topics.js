@@ -22,6 +22,8 @@ import mechanismConcepts from '../data/curated/mechanismConcepts.json'
 import snsE from '../data/curated/snsE.json'
 import imf from '../data/curated/imf.json'
 import biomolecules from '../data/curated/biomolecules.json'
+import biomoleculesExtra from '../data/curated/biomoleculesExtra.json'
+import isomersExtra from '../data/curated/isomersExtra.json'
 import energyKinetics from '../data/curated/energyKinetics.json'
 import isomers from '../data/curated/isomers.json'
 import resonanceExtra from '../data/curated/resonanceExtra.json'
@@ -193,7 +195,7 @@ export const TOPICS = [
     id: 'biomolecules',
     label: 'Biomolecules',
     blurb: 'Proteins, carbs, lipids, nucleic acids — structure levels and bond types.',
-    build: () => withKind(biomolecules),
+    build: () => [...withKind(biomolecules), ...withKind(biomoleculesExtra)],
   },
   {
     id: 'energy',
@@ -213,7 +215,7 @@ export const TOPICS = [
     id: 'isomers',
     label: 'Isomers',
     blurb: 'Constitutional vs stereo, conformers, and spotting a stereocenter.',
-    build: () => withKind(isomers),
+    build: () => [...withKind(isomers), ...withKind(isomersExtra)],
   },
   {
     id: 'skeletal',
