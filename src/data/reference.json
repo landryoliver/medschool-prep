@@ -37,6 +37,17 @@
   ],
   "polarity": [
     {
+      "heading": "Ionic or covalent? Use position, not numbers",
+      "points": [
+        "Metal + nonmetal -> IONIC (NaCl, KBr, MgO). Nonmetal + nonmetal -> COVALENT (C-O, O-H, H-Cl). Metal + metal -> METALLIC.",
+        "This needs only the periodic table, which every exam gives you. Electronegativity values are NOT printed on exam periodic tables, so this is the rule to reach for first.",
+        "Then a second question, for covalent bonds only: same atoms -> nonpolar; different atoms -> polar. Electronegativity just tells you HOW polar.",
+        "The qualitative rule can beat the numeric one. HF has delta-EN 1.78, above the 1.7 ionic cutoff, but two nonmetals cannot form an ionic bond — and HF is indeed a molecular gas.",
+        "Two exceptions worth knowing: organometallics (C-Mg, C-Li) are polar covalent despite containing a metal, and small highly charged cations (AlCl3, BeCl2) give substantially covalent compounds.",
+        "Metalloids (B, Si, Ge, As, Sb, Te) sit on the staircase and are ambiguous; in practice they bond covalently."
+      ]
+    },
+    {
       "heading": "Reading a polar bond",
       "points": [
         "The more electronegative atom takes the electron density and gets δ−. Its partner gets δ+.",
