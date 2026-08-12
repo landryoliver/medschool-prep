@@ -3,6 +3,7 @@ import LewisDiagram from './LewisDiagram.jsx'
 import VseprDiagram from './VseprDiagram.jsx'
 import BondPolarityDiagram from './BondPolarityDiagram.jsx'
 import CurvedArrowDiagram from './CurvedArrowDiagram.jsx'
+import EnergyDiagram from './EnergyDiagram.jsx'
 
 /** Renders whatever visual a question carries. `revealed` lets a diagram
  *  show its answer annotations once the question has been graded. */
@@ -36,6 +37,15 @@ export default function QuestionVisual({ visual, revealed = false }) {
           b={visual.b}
           deltaOn={visual.deltaOn}
           showDeltas={revealed || visual.showDeltas}
+        />
+      )
+    case 'energy':
+      return (
+        <EnergyDiagram
+          levels={visual.levels}
+          marks={visual.marks ?? []}
+          showEa={revealed || visual.showEa}
+          eaStep={visual.eaStep ?? 0}
         />
       )
     case 'curvedArrow':

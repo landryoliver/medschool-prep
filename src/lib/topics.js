@@ -26,6 +26,7 @@ import isomers from '../data/curated/isomers.json'
 import resonanceExtra from '../data/curated/resonanceExtra.json'
 import arrowsExtra from '../data/curated/arrowsExtra.json'
 import * as imfGen from '../generators/imf.js'
+import * as energyDiagrams from '../generators/energyDiagrams.js'
 
 function hashId(str) {
   let h = 2166136261
@@ -158,7 +159,15 @@ export const TOPICS = [
     id: 'energy',
     label: 'Energy & Kinetics',
     blurb: 'Energy diagrams, activation barriers, rate laws — why SN1 and SN2 differ.',
-    build: () => withKind(energyKinetics),
+    build: () => [
+      ...withKind(energyKinetics),
+      ...buildBank(energyDiagrams.generateDiagramSteps, 12),
+      ...buildBank(energyDiagrams.generateDiagramIntermediates, 12),
+      ...buildBank(energyDiagrams.generateDiagramThermo, 12),
+      ...buildBank(energyDiagrams.generateDiagramRds, 12),
+      ...buildBank(energyDiagrams.generateDiagramEa, 12),
+      ...buildBank(energyDiagrams.generateDiagramPoint, 30),
+    ],
   },
   {
     id: 'isomers',
