@@ -78,10 +78,10 @@ export default function Progression({ onPickTopic, onNotes }) {
     <div>
       <div className="seg wide-seg">
         <button className={tab === 'stages' ? 'active' : ''} onClick={() => setTab('stages')}>
-          Before orgo
+          Prep stages
         </button>
         <button className={tab === 'roadmap' ? 'active' : ''} onClick={() => setTab('roadmap')}>
-          Once in orgo
+          Orgo roadmap
         </button>
       </div>
 

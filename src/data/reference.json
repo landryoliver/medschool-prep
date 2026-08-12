@@ -426,5 +426,120 @@
         "Tautomers (where an H actually moves) are isomers in equilibrium, drawn with ⇌, not ↔."
       ]
     }
+  ],
+  "aminoacids": [
+    {
+      "heading": "The only five with charged side chains",
+      "points": [
+        "Acidic (negative at pH 7.4): Aspartate (Asp, D) pKa 3.9, Glutamate (Glu, E) pKa 4.3.",
+        "Basic (positive at pH 7.4): Lysine (Lys, K) pKa 10.5, Arginine (Arg, R) pKa 12.5.",
+        "Histidine (His, H) pKa 6.0 — the borderline case, and the most important one. Near physiological pH it can gain OR lose a proton, which is why it appears in so many enzyme active sites.",
+        "Learn these five and the other fifteen follow by elimination: everything else is polar or nonpolar."
+      ]
+    },
+    {
+      "heading": "Classifying by side chain",
+      "points": [
+        "Carboxylate (–COO−) → acidic. Amine, guanidinium or imidazole → basic.",
+        "–OH, –SH, or amide (–CONH2) → polar uncharged: Ser, Thr, Cys, Tyr, Asn, Gln.",
+        "Pure hydrocarbon or aromatic with no polar group → nonpolar: Gly, Ala, Val, Leu, Ile, Met, Pro, Phe, Trp.",
+        "Watch the amide trap: Asparagine and Glutamine are the NEUTRAL amides of the acidic Asp and Glu.",
+        "Tyrosine is aromatic but polar, because of its ring hydroxyl. Phenylalanine is the same ring without the OH, so it is nonpolar."
+      ]
+    },
+    {
+      "heading": "The ones with special jobs",
+      "points": [
+        "Glycine — side chain is just H. The only achiral amino acid, and the most flexible.",
+        "Proline — side chain rings back to the backbone nitrogen. Rigid, and breaks alpha helices.",
+        "Cysteine — two of them oxidize into a disulfide bridge, the only covalent crosslink in tertiary structure.",
+        "Methionine — always the first residue of a new protein (AUG is the start codon).",
+        "Tryptophan and Tyrosine — responsible for protein absorbance at 280 nm, which is how concentration is measured."
+      ]
+    },
+    {
+      "heading": "One-letter codes that are not the first letter",
+      "points": [
+        "R = Arginine, K = Lysine, D = Aspartate, E = Glutamate, N = Asparagine, Q = Glutamine.",
+        "F = Phenylalanine, W = Tryptophan, Y = Tyrosine.",
+        "The rest are the first letter: A, C, G, H, I, L, M, P, S, T, V."
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "heading": "The one equation",
+      "points": [
+        "pH = pKa + log([A−]/[HA]).",
+        "pH = pKa → equal amounts of acid and base (1:1). This is where buffering is strongest.",
+        "Each pH unit ABOVE the pKa multiplies base-to-acid by ten: +1 → 10:1, +2 → 100:1.",
+        "Each unit BELOW does the reverse: −1 → 1:10, −2 → 1:100."
+      ]
+    },
+    {
+      "heading": "Protonated or not — the two-step check",
+      "points": [
+        "Step one: is the pH below the pKa? If yes, the group KEEPS its proton. If above, it has LOST it.",
+        "Step two: work out what that means for charge. A neutral acid (–COOH) losing a proton becomes −1. A positive amine (–NH3+) losing one becomes neutral.",
+        "Worked example: aspartate side chain, pKa 3.9, at pH 7.4. pH is above pKa, so deprotonated, so −1 and negative.",
+        "Worked example: lysine, pKa 10.5, at pH 7.4. pH is below pKa, so protonated, so +1 and positive."
+      ]
+    },
+    {
+      "heading": "Choosing and using buffers",
+      "points": [
+        "Effective buffering range is pKa ± 1 pH unit. Outside that, one form runs out.",
+        "Pick the buffer whose pKa is nearest your target pH. Phosphate (7.2) and HEPES (7.5) are the standards for work near physiological pH.",
+        "A buffer needs BOTH a weak acid and its conjugate base present. A strong acid cannot buffer.",
+        "Blood holds pH 7.4 on bicarbonate (pKa ~6.1) only because it is an open system — the lungs blow off CO2, which keeps the ratio adjustable."
+      ]
+    },
+    {
+      "heading": "Isoelectric point (pI)",
+      "points": [
+        "The pI is the pH at which a molecule carries NO net charge.",
+        "For an amino acid with no ionizable side chain, average the two pKa values flanking the zwitterion: glycine is roughly (2.3 + 9.6)/2 ≈ 6.0.",
+        "Proteins are least soluble at their pI, which is what isoelectric precipitation and IEF gels exploit."
+      ]
+    }
+  ],
+  "biomolecules": [
+    {
+      "heading": "One bond type per macromolecule",
+      "points": [
+        "Proteins: peptide bonds (amides) between amino acids.",
+        "Carbohydrates: glycosidic bonds between sugars.",
+        "Nucleic acids: phosphodiester bonds between the 3-prime OH and 5-prime phosphate.",
+        "Fats: ester bonds between glycerol and fatty acids.",
+        "All four are built by condensation (releasing water) and broken by hydrolysis (consuming it)."
+      ]
+    },
+    {
+      "heading": "The four levels of protein structure",
+      "points": [
+        "Primary — the amino acid sequence itself.",
+        "Secondary — alpha helices and beta sheets, held by hydrogen bonds between BACKBONE atoms only.",
+        "Tertiary — the whole chain folded in 3-D, held by SIDE-CHAIN interactions: the hydrophobic effect, H-bonds, salt bridges, and disulfides.",
+        "Quaternary — two or more separate chains assembled together.",
+        "Denaturation destroys shape but leaves the sequence intact, which is why a denatured protein is inactive but not chemically degraded."
+      ]
+    },
+    {
+      "heading": "Why proteins fold at all",
+      "points": [
+        "The hydrophobic effect dominates. Water must build an ordered cage around exposed nonpolar groups; burying them releases that water.",
+        "It is entropy-driven — and the entropy that increases is WATER's, not the protein's. This point is tested often and misremembered often.",
+        "Disulfide bridges are the only covalent contribution to tertiary structure."
+      ]
+    },
+    {
+      "heading": "Nucleic acid quick facts",
+      "points": [
+        "Nucleoside = base + sugar. Nucleotide = base + sugar + phosphate.",
+        "Purines (two rings): Adenine, Guanine. Pyrimidines (one ring): Cytosine, Thymine, Uracil.",
+        "A–T has 2 hydrogen bonds; G–C has 3, so GC-rich DNA melts at a higher temperature.",
+        "RNA uses uracil in place of thymine, and ribose in place of deoxyribose."
+      ]
+    }
   ]
 }

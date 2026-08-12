@@ -21,6 +21,7 @@ import pkaComparisons from '../data/curated/pkaComparisons.json'
 import mechanismConcepts from '../data/curated/mechanismConcepts.json'
 import snsE from '../data/curated/snsE.json'
 import imf from '../data/curated/imf.json'
+import biomolecules from '../data/curated/biomolecules.json'
 import energyKinetics from '../data/curated/energyKinetics.json'
 import isomers from '../data/curated/isomers.json'
 import resonanceExtra from '../data/curated/resonanceExtra.json'
@@ -28,6 +29,8 @@ import arrowsExtra from '../data/curated/arrowsExtra.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
+import * as aminoAcidGen from '../generators/aminoAcids.js'
+import * as buffersGen from '../generators/buffers.js'
 
 function hashId(str) {
   let h = 2166136261
@@ -159,6 +162,38 @@ export const TOPICS = [
       ...buildBank(imfGen.generateSolubility, 40),
       ...buildBank(imfGen.generateFamilyForce, 40),
     ],
+  },
+  {
+    id: 'aminoacids',
+    label: 'Amino Acids',
+    blurb: 'The 20, their codes, classes, side-chain pKa values and charges.',
+    speedRound: true,
+    build: () => [
+      ...buildBank(aminoAcidGen.generateThreeLetter, 40),
+      ...buildBank(aminoAcidGen.generateOneLetter, 40),
+      ...buildBank(aminoAcidGen.generateClassify, 20),
+      ...buildBank(aminoAcidGen.generateChargeAtPh, 20),
+      ...buildBank(aminoAcidGen.generateSideChainPka, 10),
+      ...buildBank(aminoAcidGen.generatePickFromClass, 60),
+      ...buildBank(aminoAcidGen.generateSpecial, 10),
+    ],
+  },
+  {
+    id: 'buffers',
+    label: 'pH & Buffers',
+    blurb: 'Henderson-Hasselbalch, protonation state, and picking a buffer.',
+    build: () => [
+      ...buildBank(buffersGen.generateProtonationState, 60),
+      ...buildBank(buffersGen.generateHHRatio, 45),
+      ...buildBank(buffersGen.generateBestBuffer, 30),
+      ...buildBank(buffersGen.generateBufferConcept, 10),
+    ],
+  },
+  {
+    id: 'biomolecules',
+    label: 'Biomolecules',
+    blurb: 'Proteins, carbs, lipids, nucleic acids — structure levels and bond types.',
+    build: () => withKind(biomolecules),
   },
   {
     id: 'energy',
