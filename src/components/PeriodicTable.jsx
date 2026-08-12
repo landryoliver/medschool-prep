@@ -30,7 +30,9 @@ export default function PeriodicTable() {
       <button
         key={e[Z]}
         className={`pt-cell cat-${e[CAT]}${d?.orgoCore ? ' orgo' : ''}${selected?.[Z] === e[Z] ? ' selected' : ''}`}
-        style={e[GROUP] > 0 ? { gridColumn: e[GROUP], gridRow: e[PERIOD] } : undefined}
+        // +1 on both axes leaves room for the group header row and the
+        // period label column.
+        style={e[GROUP] > 0 ? { gridColumn: e[GROUP] + 1, gridRow: e[PERIOD] + 1 } : undefined}
         onClick={() => setSelected(e)}
       >
         <span className="pt-z">{e[Z]}</span>
@@ -40,12 +42,28 @@ export default function PeriodicTable() {
     )
   }
 
+  const groupHeaders = Array.from({ length: 18 }, (_, i) => (
+    <div key={`g${i + 1}`} className="pt-axis pt-group" style={{ gridColumn: i + 2, gridRow: 1 }}>
+      {i + 1}
+    </div>
+  ))
+
+  const periodLabels = Array.from({ length: 7 }, (_, i) => (
+    <div key={`p${i + 1}`} className="pt-axis pt-period" style={{ gridColumn: 1, gridRow: i + 2 }}>
+      {i + 1}
+    </div>
+  ))
+
   const d = selected && detailBySymbol.get(selected[SYM])
 
   return (
     <div>
       <div className="pt-scroll">
-        <div className="pt-grid">{main.map(cell)}</div>
+        <div className="pt-grid">
+          {groupHeaders}
+          {periodLabels}
+          {main.map(cell)}
+        </div>
         <div className="pt-fblock">
           <div className="pt-frow">{lanth.map(cell)}</div>
           <div className="pt-frow">{act.map(cell)}</div>

@@ -393,8 +393,10 @@ button.wide {
 
 .pt-grid {
   display: grid;
-  grid-template-columns: repeat(18, 30px);
-  grid-auto-rows: 34px;
+  /* first track is the period-number gutter */
+  grid-template-columns: 18px repeat(18, 30px);
+  /* short header track, then one row per period */
+  grid-template-rows: 13px repeat(7, 34px);
   gap: 2px;
   min-width: max-content;
 }
@@ -409,8 +411,19 @@ button.wide {
   grid-template-columns: repeat(14, 30px);
   grid-auto-rows: 34px;
   gap: 2px;
-  margin-left: 62px; /* sit under the d-block, as printed tables do */
+  /* clears the period gutter plus groups 1-2, so the f-block sits under
+     the d-block the way printed tables show it */
+  margin-left: 86px;
   margin-bottom: 2px;
+}
+
+.pt-axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .pt-cell {
