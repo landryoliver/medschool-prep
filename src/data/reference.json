@@ -18,6 +18,17 @@
       ]
     },
     {
+      "heading": "When the trend does not answer the question",
+      "points": [
+        "The up/right rule only works along ONE axis. Same row? Compare across. Same column? Compare down. Both differ — a DIAGONAL pair — and the two halves of the trend point opposite ways.",
+        "Li vs I is the standard case: Li is up (favouring Li) but left (favouring I). The trend cannot settle it.",
+        "The resolver: METAL vs NONMETAL. Nonmetals are more electronegative, harder to ionize, and smaller than metals. Li is a metal, I is a nonmetal, so iodine wins — 2.66 vs 0.98.",
+        "Checked against every metal/nonmetal pair in the data: no exceptions at all for electronegativity or ionization energy, and one near-tie for radius (Be vs I, 3 pm apart).",
+        "If both are nonmetals, fall back on the memorized ordering: F > O > N ~ Cl > Br > I > S ~ C > H.",
+        "Anchor points worth holding: fluorine is the maximum, and the far bottom-left (Cs, Fr) is the minimum. The closer to fluorine, the more electronegative."
+      ]
+    },
+    {
       "heading": "Orbitals & electron configuration — the 5-minute refresher",
       "points": [
         "An orbital is a region holding at most 2 electrons (opposite spins). s orbitals are spheres; p orbitals are two-lobed dumbbells, three per shell at right angles.",

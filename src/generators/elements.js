@@ -225,6 +225,35 @@ export function generateTrendCompare(seed) {
   const key = [a.symbol, b.symbol].sort().join('-')
   const exception = property.key === 'ionizationEnergyKJ' ? IE_EXCEPTIONS[key] : null
 
+  // "Up and to the right" only settles a comparison along ONE axis. For a
+  // diagonal pair — one up-and-left, the other down-and-right — the two
+  // halves of the trend point opposite ways and the rule answers nothing.
+  // Li vs I is the standard example. There, metal-versus-nonmetal decides
+  // it outright, which is why that resolver is given instead of the trend.
+  const sameGroup = a.group === b.group
+  const samePeriod = a.period === b.period
+  const diagonal = !sameGroup && !samePeriod
+  const crossesMetalLine = a.kind !== b.kind && a.kind !== 'metalloid' && b.kind !== 'metalloid'
+
+  let reasoning
+  if (exception) {
+    reasoning = exception
+  } else if (diagonal && crossesMetalLine) {
+    const metal = a.kind === 'metal' ? a : b
+    const nonmetal = metal === a ? b : a
+    reasoning =
+      `These sit diagonally, so "up and to the right" pulls both ways and cannot settle it. What does: ${metal.symbol} is a METAL and ${nonmetal.symbol} is a NONMETAL. ` +
+      (property.key === 'atomicRadiusPm'
+        ? 'Metals hold their outer electrons loosely and are larger; nonmetals pull them in tightly and are smaller.'
+        : `Nonmetals hold electrons far more tightly, so a nonmetal always has ${property.higher} ${property.label} than a metal.`)
+  } else if (sameGroup) {
+    reasoning = `Same group, so compare down the column. ${property.why}`
+  } else if (samePeriod) {
+    reasoning = `Same period, so compare across the row. ${property.why}`
+  } else {
+    reasoning = property.why
+  }
+
   return {
     id: `trend-${seed}`,
     topic: 'periodic-trends',
@@ -232,8 +261,13 @@ export function generateTrendCompare(seed) {
     prompt: `Which has ${property.higher} ${property.label}: ${a.name} (${a.symbol}) or ${b.name} (${b.symbol})?`,
     choices,
     correctIndex: winner === a ? 0 : 1,
-    explanation: `${winner.symbol} (${winner[property.key]}) vs ${loser.symbol} (${loser[property.key]}). ${exception ?? property.why}`,
-    teach: exception ? 'Ionization energy generally rises up and to the right, but half-filled and filled subshells are stable enough to create exceptions.' : property.why,
+    explanation: `${winner.symbol} (${winner[property.key]}) vs ${loser.symbol} (${loser[property.key]}). ${reasoning}`,
+    teach:
+      exception
+        ? 'Ionization energy generally rises up and to the right, but half-filled and filled subshells are stable enough to create exceptions.'
+        : diagonal && crossesMetalLine
+          ? 'For a diagonal comparison the up/right trend conflicts with itself. Fall back to metal versus nonmetal: nonmetals are more electronegative, harder to ionize, and smaller than metals — with essentially no exceptions.'
+          : property.why,
   }
 }
 
