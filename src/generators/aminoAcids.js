@@ -148,6 +148,40 @@ export function generatePickFromClass(seed) {
   }
 }
 
+/**
+ * Side chain → amino acid, and back. The most common form the question
+ * takes on a biochem exam is a structure you have to name, and this is
+ * the text equivalent of that.
+ */
+export function generateFromSideChain(seed) {
+  if (seed >= aminoAcids.length * 2) return null
+  const rng = rngFor(seed * 6997 + 31)
+  const aa = aminoAcids[seed % aminoAcids.length]
+  const chainToName = seed < aminoAcids.length
+
+  // Some side-chain descriptions repeat across amino acids (both amides,
+  // both branched); only ask when this one identifies a single residue.
+  const sameChain = aminoAcids.filter((a) => a.sideChain === aa.sideChain)
+  if (sameChain.length > 1) return null
+
+  const { choices, correctIndex } = chainToName
+    ? makeChoices(rng, aa.name, aminoAcids.map((a) => a.name))
+    : makeChoices(rng, aa.sideChain, aminoAcids.map((a) => a.sideChain))
+
+  return {
+    id: `aachain-${seed}`,
+    topic: 'amino-acids',
+    kind: 'mcq',
+    prompt: chainToName
+      ? `Which amino acid has the side chain ${aa.sideChain}?`
+      : `What is the side chain of ${aa.name} (${aa.three})?`,
+    choices,
+    correctIndex,
+    explanation: `${aa.name} (${aa.three}, ${aa.one}) — side chain ${aa.sideChain}, classified ${aa.class}. ${aa.note}`,
+    teach: 'Recognizing side chains on sight is what biochem actually tests. Group them by the functional group you already know: hydroxyl, thiol, amide, carboxylate, amine, aromatic ring.',
+  }
+}
+
 /** The distinguishing facts biochem keeps coming back to. */
 const SPECIALS = [
   { q: 'Which amino acid is the only ACHIRAL one?', a: 'Glycine', why: 'Its side chain is a hydrogen, so the alpha carbon carries two identical H atoms and is not a stereocenter.' },

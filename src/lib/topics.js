@@ -177,6 +177,7 @@ export const TOPICS = [
       ...buildBank(aminoAcidGen.generateChargeAtPh, 20),
       ...buildBank(aminoAcidGen.generateSideChainPka, 10),
       ...buildBank(aminoAcidGen.generatePickFromClass, 60),
+      ...buildBank(aminoAcidGen.generateFromSideChain, 40),
       ...buildBank(aminoAcidGen.generateSpecial, 10),
     ],
   },
