@@ -383,6 +383,125 @@ button.wide {
   font-size: 0.9rem;
 }
 
+/* Periodic table: 18 columns never fits a phone, so it scrolls sideways
+   as a unit while the detail panel below stays put. */
+.pt-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+}
+
+.pt-grid {
+  display: grid;
+  grid-template-columns: repeat(18, 30px);
+  grid-auto-rows: 34px;
+  gap: 2px;
+  min-width: max-content;
+}
+
+.pt-fblock {
+  margin-top: 6px;
+  min-width: max-content;
+}
+
+.pt-frow {
+  display: grid;
+  grid-template-columns: repeat(14, 30px);
+  grid-auto-rows: 34px;
+  gap: 2px;
+  margin-left: 62px; /* sit under the d-block, as printed tables do */
+  margin-bottom: 2px;
+}
+
+.pt-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 0;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--panel);
+  color: var(--text);
+  line-height: 1.05;
+  overflow: hidden;
+}
+
+.pt-cell.orgo {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.pt-cell.selected {
+  outline: 2px solid var(--accent);
+}
+
+.pt-z {
+  font-size: 7px;
+  color: var(--muted);
+}
+
+.pt-sym {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pt-mass {
+  font-size: 6px;
+  color: var(--muted);
+}
+
+.cat-noble { background: rgba(168, 85, 247, 0.14); }
+.cat-halogen { background: rgba(250, 204, 21, 0.14); }
+.cat-alkali { background: rgba(248, 113, 113, 0.14); }
+.cat-alkaline { background: rgba(251, 146, 60, 0.14); }
+.cat-metalloid { background: rgba(45, 212, 191, 0.14); }
+.cat-transition,
+.cat-post,
+.cat-lanthanide,
+.cat-actinide { background: var(--panel-2); }
+
+.pt-detail {
+  margin-top: 0.5rem;
+}
+
+.pt-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+
+.pt-detail-sym {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 2.4rem;
+  text-align: center;
+}
+
+.pt-facts {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.pt-facts dt {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.pt-facts dd {
+  margin: 0;
+  font-weight: 650;
+}
+
+.pt-nodetail {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
 .table-btn {
   display: block;
   width: 100%;

@@ -1,5 +1,6 @@
 import reference from '../data/reference.json'
 import ElementReference from './ElementReference.jsx'
+import PeriodicTable from './PeriodicTable.jsx'
 
 /** Read-first cheat sheet for a topic — the "learn" half of learn-and-drill. */
 export default function ReferenceView({ topicId, title, onStudy }) {
@@ -10,7 +11,12 @@ export default function ReferenceView({ topicId, title, onStudy }) {
   return (
     <div>
       <h2 className="section-title">{title} — the essentials</h2>
-      {topicId === 'periodic' && <ElementReference />}
+      {topicId === 'periodic' && (
+        <>
+          <PeriodicTable />
+          <ElementReference />
+        </>
+      )}
       {sections.map((section, i) => (
         <div key={i} className="card">
           <h3 className="ref-heading">{section.heading}</h3>
