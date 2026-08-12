@@ -21,6 +21,10 @@ import pkaComparisons from '../data/curated/pkaComparisons.json'
 import mechanismConcepts from '../data/curated/mechanismConcepts.json'
 import snsE from '../data/curated/snsE.json'
 import imf from '../data/curated/imf.json'
+import energyKinetics from '../data/curated/energyKinetics.json'
+import isomers from '../data/curated/isomers.json'
+import resonanceExtra from '../data/curated/resonanceExtra.json'
+import arrowsExtra from '../data/curated/arrowsExtra.json'
 import * as imfGen from '../generators/imf.js'
 
 function hashId(str) {
@@ -151,6 +155,18 @@ export const TOPICS = [
     ],
   },
   {
+    id: 'energy',
+    label: 'Energy & Kinetics',
+    blurb: 'Energy diagrams, activation barriers, rate laws — why SN1 and SN2 differ.',
+    build: () => withKind(energyKinetics),
+  },
+  {
+    id: 'isomers',
+    label: 'Isomers',
+    blurb: 'Constitutional vs stereo, conformers, and spotting a stereocenter.',
+    build: () => withKind(isomers),
+  },
+  {
     id: 'skeletal',
     label: 'Skeletal Structures',
     blurb: 'Read line-angle drawings fast: hidden hydrogens, formulas, unsaturation.',
@@ -193,13 +209,13 @@ export const TOPICS = [
     id: 'resonance',
     label: 'Resonance',
     blurb: 'Delocalization, major vs minor contributors, and what resonance is not.',
-    build: () => withKind(resonance),
+    build: () => [...withKind(resonance), ...withKind(resonanceExtra)],
   },
   {
     id: 'arrows',
     label: 'Curved Arrows',
     blurb: 'Recognition only — what an arrow means before mechanisms start in class.',
-    build: () => withKind(curvedArrows),
+    build: () => [...withKind(curvedArrows), ...withKind(arrowsExtra)],
   },
   {
     id: 'orgopreview',

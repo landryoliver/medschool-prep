@@ -1,0 +1,226 @@
+[
+  {
+    "id": "arr2-1",
+    "topic": "curved-arrows",
+    "prompt": "A carbon already has four bonds. A nucleophile attacks it. What MUST also happen?",
+    "choices": [
+      "A bond to that carbon must break at the same time — carbon cannot hold five bonds",
+      "The carbon expands its octet to hold five bonds",
+      "The nucleophile bonds to a hydrogen instead",
+      "Nothing else needs to happen"
+    ],
+    "correctIndex": 0,
+    "explanation": "Every arrow forming a bond to a saturated carbon needs a partner arrow breaking one. This is the whole reason SN2 is concerted.",
+    "teach": "Before drawing an arrow to a carbon, count its bonds. If it already has four, you owe a second arrow."
+  },
+  {
+    "id": "arr2-2",
+    "topic": "curved-arrows",
+    "prompt": "Which is the best FIRST arrow when a strong acid protonates an alcohol?",
+    "choices": [
+      "From an oxygen lone pair to the acidic hydrogen",
+      "From the O–H bond to the oxygen",
+      "From the carbon to the oxygen",
+      "From the acid's hydrogen to the oxygen"
+    ],
+    "correctIndex": 0,
+    "explanation": "The alcohol is the nucleophile here: its lone pair reaches out and grabs the proton. Arrows start at electrons, so they start on the lone pair.",
+    "teach": "Protonating an alcohol turns a terrible leaving group (OH⁻) into a good one (water). This is step one of countless mechanisms."
+  },
+  {
+    "id": "arr2-3",
+    "topic": "curved-arrows",
+    "prompt": "In an E2 elimination, how many arrows are drawn and what do they show?",
+    "choices": [
+      "Three: base to the beta-hydrogen, the C–H bond to form the pi bond, and the C–LG bond onto the leaving group",
+      "One: the base removing a proton",
+      "Two: base to hydrogen and hydrogen to carbon",
+      "Four arrows, one per atom involved"
+    ],
+    "correctIndex": 0,
+    "explanation": "E2 is one concerted step with three electron movements happening together, which is why it needs an anti-periplanar arrangement.",
+    "teach": "Counting arrows is a good self-check: E2 takes three, SN2 takes two, a simple proton transfer takes two."
+  },
+  {
+    "id": "arr2-4",
+    "topic": "curved-arrows",
+    "prompt": "Where does the arrow START when a carbocation is attacked by water?",
+    "choices": [
+      "On a lone pair of the water's oxygen",
+      "On the positive carbon",
+      "On one of water's O–H bonds",
+      "On the positive charge symbol"
+    ],
+    "correctIndex": 0,
+    "explanation": "Water is the electron donor; the carbocation is the acceptor. Arrows always run from the electron source to the electron-poor site.",
+    "teach": "A positive charge is never a starting point for an arrow — it is a destination."
+  },
+  {
+    "id": "arr2-5",
+    "topic": "curved-arrows",
+    "prompt": "A 1,2-hydride shift is drawn with an arrow starting:",
+    "choices": [
+      "On the C–H bond, moving to the adjacent positive carbon",
+      "On the hydrogen atom itself",
+      "On the positive carbon",
+      "On a lone pair"
+    ],
+    "correctIndex": 0,
+    "explanation": "The hydrogen migrates WITH its bonding pair, so the arrow starts on the C–H bond. The positive charge ends up on the carbon the hydride left.",
+    "teach": "Carbocations rearrange when it produces a more stable cation — usually secondary shifting to tertiary. Watch for it whenever a carbocation forms next to a more substituted carbon."
+  },
+  {
+    "id": "arr2-6",
+    "topic": "curved-arrows",
+    "prompt": "Why can a leaving group not simply be 'removed' without an arrow?",
+    "choices": [
+      "The electrons in the bond have to be accounted for — the arrow shows they leave with the departing group",
+      "Leaving groups never depart",
+      "Arrows are optional decoration",
+      "Only nucleophiles need arrows"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mechanisms track electrons. Erasing a bond without an arrow hides where two electrons went and usually produces a wrong charge.",
+    "teach": "Check charges after every step. If they don't balance, you dropped or invented an arrow."
+  },
+  {
+    "id": "arr2-7",
+    "topic": "curved-arrows",
+    "prompt": "In the first step of electrophilic addition of HBr to an alkene, the arrow runs:",
+    "choices": [
+      "From the C=C pi bond to the hydrogen of HBr",
+      "From the alkene's sigma bond to bromine",
+      "From HBr's hydrogen to the alkene",
+      "From bromine's lone pair to carbon"
+    ],
+    "correctIndex": 0,
+    "explanation": "The pi electrons are the loosest and most available, so they attack the partially positive hydrogen. A second arrow breaks the H–Br bond onto bromine.",
+    "teach": "Alkenes act as nucleophiles through their pi bond. Recognizing pi bonds as electron sources unlocks most addition mechanisms."
+  },
+  {
+    "id": "arr2-8",
+    "topic": "curved-arrows",
+    "prompt": "After the total charge is tallied on both sides of a mechanism step, what must be true?",
+    "choices": [
+      "Charge must balance — total charge before equals total charge after",
+      "Charge always becomes zero",
+      "Charge can change freely",
+      "Only the products' charges matter"
+    ],
+    "correctIndex": 0,
+    "explanation": "Arrows move electrons around, never create or destroy them, so overall charge is conserved at every step.",
+    "teach": "Charge balance is the fastest way to catch a mechanism error, and it takes about five seconds per step."
+  },
+  {
+    "id": "arr2-9",
+    "topic": "curved-arrows",
+    "prompt": "Which site in a carbonyl compound (C=O) does a nucleophile attack, and why?",
+    "choices": [
+      "The carbon, because oxygen's greater electronegativity leaves the carbon partially positive",
+      "The oxygen, because it holds lone pairs",
+      "Neither; carbonyls are unreactive",
+      "Whichever atom is drawn on the left"
+    ],
+    "correctIndex": 0,
+    "explanation": "The polar C=O leaves carbon electron-poor. The arrow runs from the nucleophile to the carbon, with a second arrow pushing the pi bond up onto the oxygen.",
+    "teach": "Nucleophilic addition to a carbonyl always takes two arrows: in at carbon, and the pi bond up onto oxygen as a new lone pair."
+  },
+  {
+    "id": "arr2-10",
+    "topic": "curved-arrows",
+    "prompt": "A mechanism step shows an arrow from a C–C sigma bond to an adjacent carbocation. This is:",
+    "choices": [
+      "A 1,2-alkyl shift — a legitimate rearrangement, if it gives a more stable cation",
+      "Always an error; sigma bonds cannot move",
+      "A resonance structure",
+      "A proton transfer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Alkyl groups can migrate with their bonding electrons, exactly like a hydride shift, when the result is a more stable carbocation.",
+    "teach": "Methyl and hydride shifts are the two rearrangements to expect. Both require a carbocation and both move toward greater stability."
+  },
+  {
+    "id": "arr2-11",
+    "topic": "curved-arrows",
+    "prompt": "Which arrow would violate the octet rule?",
+    "choices": [
+      "One forming a fifth bond to a nitrogen that already has four",
+      "One forming a bond to a carbocation with only three bonds",
+      "One breaking a C–Br bond onto bromine",
+      "One moving a lone pair onto an adjacent positive carbon"
+    ],
+    "correctIndex": 0,
+    "explanation": "Second-row atoms cannot exceed an octet. A nitrogen with four bonds is already at capacity (and positively charged); a fifth is impossible.",
+    "teach": "Second-row elements (C, N, O, F) max out at eight electrons. Only third row and below can expand."
+  },
+  {
+    "id": "arr2-12",
+    "topic": "curved-arrows",
+    "prompt": "In a two-arrow proton transfer, the second arrow:",
+    "choices": [
+      "Runs from the bond holding the proton onto the atom that keeps the electrons",
+      "Runs from the base to the product",
+      "Points at the proton again",
+      "Is unnecessary"
+    ],
+    "correctIndex": 0,
+    "explanation": "The first arrow forms the new bond to the proton; the second releases the old bond's electrons onto the atom left behind, which becomes negative.",
+    "teach": "Any time a bond forms to an atom that already has a full complement, a matching arrow must break something."
+  },
+  {
+    "id": "arr2-13",
+    "topic": "curved-arrows",
+    "prompt": "Which is the better electron source (nucleophile) — a lone pair on a negatively charged oxygen, or a C–C sigma bond?",
+    "choices": [
+      "The negatively charged lone pair — it is far more available",
+      "The sigma bond",
+      "They are equally good",
+      "Neither can act as a nucleophile"
+    ],
+    "correctIndex": 0,
+    "explanation": "Electron availability ranks: negative lone pairs, then neutral lone pairs, then pi bonds, then sigma bonds last.",
+    "teach": "When several sources compete, the arrow starts at the most available electrons. Sigma bonds only participate in rearrangements."
+  },
+  {
+    "id": "arr2-14",
+    "topic": "curved-arrows",
+    "prompt": "SN1 and SN2 differ in arrow-pushing terms because:",
+    "choices": [
+      "SN2 draws both arrows in one step; SN1 draws the leaving group's departure first, then the nucleophile's attack in a separate step",
+      "SN1 uses no arrows",
+      "SN2 requires three steps",
+      "They are drawn identically"
+    ],
+    "correctIndex": 0,
+    "explanation": "Concerted versus stepwise is visible directly in the drawing: SN2 shows simultaneous arrows, SN1 shows an isolated carbocation between two steps.",
+    "teach": "If your mechanism ever shows a carbocation, you have drawn a stepwise (SN1/E1) pathway, with all the consequences that implies for stereochemistry."
+  },
+  {
+    "id": "arr2-15",
+    "topic": "curved-arrows",
+    "prompt": "Why does SN2 invert stereochemistry at the reacting carbon?",
+    "choices": [
+      "The nucleophile attacks from the side opposite the leaving group, flipping the other three groups like an umbrella",
+      "The carbocation intermediate is planar",
+      "The nucleophile attacks the same side the leaving group departs from",
+      "SN2 does not affect stereochemistry"
+    ],
+    "correctIndex": 0,
+    "explanation": "Backside attack is required for the nucleophile's electrons to reach the antibonding orbital of the C–LG bond, and it forces the inversion.",
+    "teach": "SN2 gives clean inversion; SN1 goes through a flat carbocation attacked from both faces, giving a racemic mixture. The mechanism predicts the stereochemistry."
+  },
+  {
+    "id": "arr2-16",
+    "topic": "curved-arrows",
+    "prompt": "You draw a mechanism and end with a carbon bearing five bonds. What went wrong?",
+    "choices": [
+      "You formed a bond without breaking one — a missing arrow",
+      "You used too many arrows",
+      "Nothing; five-bonded carbon is fine in intermediates",
+      "The starting material must be wrong"
+    ],
+    "correctIndex": 0,
+    "explanation": "Five bonds to carbon is always an error. Either the attack needed a partner arrow, or the electrons should have gone somewhere else.",
+    "teach": "Three self-checks after every step: charge balance, octets intact, and no carbon over four bonds."
+  }
+]

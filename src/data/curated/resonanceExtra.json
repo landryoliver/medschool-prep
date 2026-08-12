@@ -1,0 +1,249 @@
+[
+  {
+    "id": "res2-1",
+    "topic": "resonance",
+    "prompt": "Which is NOT allowed when drawing a resonance structure?",
+    "choices": [
+      "Moving an atom to a new position",
+      "Moving a lone pair into an adjacent bond",
+      "Moving a pi bond onto an adjacent atom as a lone pair",
+      "Shifting a pi bond one position along a conjugated system"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only electrons move between resonance forms. If an atom moved, you have drawn a different compound — an isomer, not a resonance structure.",
+    "teach": "The single rule that catches most mistakes: atoms stay frozen, electrons move."
+  },
+  {
+    "id": "res2-2",
+    "topic": "resonance",
+    "prompt": "For resonance to be possible, the participating orbitals must be:",
+    "choices": [
+      "Aligned in the same plane so their p orbitals overlap side by side",
+      "Perpendicular to each other",
+      "On atoms that are far apart",
+      "All sp3 hybridized"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delocalization requires continuous p-orbital overlap. Twist the system out of plane and the conjugation breaks.",
+    "teach": "Resonance needs a conjugated, planar system: alternating p orbitals lined up so electrons can spread across them."
+  },
+  {
+    "id": "res2-3",
+    "topic": "resonance",
+    "prompt": "How many significant resonance structures can be drawn for the carboxylate ion, RCOO⁻?",
+    "choices": ["2 — equivalent, with the negative charge on either oxygen", "1", "3", "4"],
+    "correctIndex": 0,
+    "explanation": "The double bond and the negative charge swap between the two oxygens. Because the forms are equivalent, each oxygen carries −½.",
+    "teach": "Equivalent resonance forms give maximum stabilization — the reason carboxylic acids are far more acidic than alcohols."
+  },
+  {
+    "id": "res2-4",
+    "topic": "resonance",
+    "prompt": "Which species has NO resonance stabilization?",
+    "choices": [
+      "The ethoxide ion, CH₃CH₂O⁻",
+      "The acetate ion, CH₃COO⁻",
+      "The phenoxide ion, C₆H₅O⁻",
+      "The allyl cation, CH₂=CH–CH₂⁺"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ethoxide's negative charge sits on an oxygen with only an sp3 carbon beside it — there is no adjacent pi system or empty orbital to delocalize into.",
+    "teach": "Resonance needs a neighbour to share with: an adjacent pi bond, an adjacent empty orbital, or an adjacent lone pair."
+  },
+  {
+    "id": "res2-5",
+    "topic": "resonance",
+    "prompt": "In the nitro group (–NO₂), the two N–O bonds are experimentally found to be:",
+    "choices": [
+      "Identical in length, intermediate between a single and a double bond",
+      "One clearly short and one clearly long",
+      "Both full single bonds",
+      "Both full triple bonds"
+    ],
+    "correctIndex": 0,
+    "explanation": "The real molecule is the hybrid, not either drawing. Equivalent resonance forms average out to two identical bonds of intermediate length.",
+    "teach": "Measured bond lengths are the physical evidence that resonance hybrids are real and the individual structures are not."
+  },
+  {
+    "id": "res2-6",
+    "topic": "resonance",
+    "prompt": "Which carbocation is MOST stabilized by resonance?",
+    "choices": [
+      "The benzylic cation, C₆H₅–CH₂⁺",
+      "The tert-butyl cation, (CH₃)₃C⁺",
+      "The ethyl cation, CH₃CH₂⁺",
+      "The methyl cation, CH₃⁺"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only the benzylic cation has resonance available: the empty p orbital overlaps with the ring, spreading the charge over four positions. The others rely on hyperconjugation alone.",
+    "teach": "Ranking cations: resonance-stabilized (benzylic, allylic) beats 3° beats 2° beats 1° beats methyl."
+  },
+  {
+    "id": "res2-7",
+    "topic": "resonance",
+    "prompt": "When two resonance structures are NOT equivalent, the hybrid:",
+    "choices": [
+      "Resembles the more stable structure more closely",
+      "Is an exact 50:50 average",
+      "Resembles the less stable structure",
+      "Is unaffected by their relative stabilities"
+    ],
+    "correctIndex": 0,
+    "explanation": "Contributors are weighted by stability — the major contributor dominates the hybrid's character.",
+    "teach": "For an amide, the neutral form is the major contributor, but the charge-separated form contributes enough to make the C–N bond partly double and block rotation."
+  },
+  {
+    "id": "res2-8",
+    "topic": "resonance",
+    "prompt": "Why is an amide's C–N bond unable to rotate freely at room temperature?",
+    "choices": [
+      "Resonance gives it partial double-bond character",
+      "The nitrogen is sp3 hybridized",
+      "The bond is ionic",
+      "Amides are always cyclic"
+    ],
+    "correctIndex": 0,
+    "explanation": "The nitrogen lone pair delocalizes into the carbonyl, so the C–N bond is part double. Rotating it would break that overlap.",
+    "teach": "This restricted rotation is what holds proteins' backbone geometry — the peptide bond is an amide."
+  },
+  {
+    "id": "res2-9",
+    "topic": "resonance",
+    "prompt": "Which resonance structure is the LEAST significant contributor?",
+    "choices": [
+      "One with a positive charge on oxygen and a negative charge on carbon",
+      "One with no formal charges and full octets",
+      "One with a negative charge on oxygen and positive on carbon",
+      "One with full octets and adjacent opposite charges"
+    ],
+    "correctIndex": 0,
+    "explanation": "Putting positive charge on the most electronegative atom and negative charge on carbon fights electronegativity — a very poor contributor.",
+    "teach": "Negative charge belongs on electronegative atoms; positive charge belongs on the least electronegative. Structures that reverse this contribute little."
+  },
+  {
+    "id": "res2-10",
+    "topic": "resonance",
+    "prompt": "The allyl anion, CH₂=CH–CH₂⁻, has its negative charge:",
+    "choices": [
+      "Shared equally between the two terminal carbons",
+      "Localized on the central carbon",
+      "Localized on one terminal carbon only",
+      "Spread over all three carbons equally"
+    ],
+    "correctIndex": 0,
+    "explanation": "Two equivalent resonance forms place the charge on either end carbon, so each carries −½. The central carbon carries none.",
+    "teach": "In allylic systems the charge alternates to the ENDS, never resting on the middle carbon."
+  },
+  {
+    "id": "res2-11",
+    "topic": "resonance",
+    "prompt": "Benzene is drawn as two structures with alternating double bonds. What is the real molecule like?",
+    "choices": [
+      "A single hybrid with six identical C–C bonds, each of intermediate length",
+      "Rapidly flipping between the two structures",
+      "A mixture of two different compounds",
+      "Three short bonds and three long bonds"
+    ],
+    "correctIndex": 0,
+    "explanation": "Benzene never 'switches' — it is permanently the hybrid, with all six bonds identical (139 pm, between a single 154 and a double 134).",
+    "teach": "The double-headed arrow means 'is a blend of', not 'turns into'. This is the most common resonance misconception."
+  },
+  {
+    "id": "res2-12",
+    "topic": "resonance",
+    "prompt": "Which group can donate electron density into a benzene ring by resonance?",
+    "choices": [
+      "–OH (it has lone pairs to share)",
+      "–CH₃ (it has no lone pairs)",
+      "–NO₂ (it withdraws)",
+      "–CF₃"
+    ],
+    "correctIndex": 0,
+    "explanation": "An OH lone pair can push into the ring, enriching it. Methyl donates only weakly by induction and hyperconjugation, having no lone pair to give.",
+    "teach": "Donation by resonance needs a lone pair adjacent to the pi system. This is the basis of aromatic substitution directing effects later on."
+  },
+  {
+    "id": "res2-13",
+    "topic": "resonance",
+    "prompt": "An enolate forms when an alpha-hydrogen is removed from a carbonyl compound. Its negative charge is shared between:",
+    "choices": [
+      "The alpha carbon and the carbonyl oxygen",
+      "Two carbons only",
+      "Two oxygens",
+      "The carbonyl carbon and its oxygen"
+    ],
+    "correctIndex": 0,
+    "explanation": "One resonance form puts the charge on carbon, the other on oxygen. The oxygen form is the major contributor, since oxygen holds negative charge better.",
+    "teach": "This dual character makes enolates react at either site — a central theme of carbonyl chemistry."
+  },
+  {
+    "id": "res2-14",
+    "topic": "resonance",
+    "prompt": "Which pair of drawings does NOT show a valid resonance relationship?",
+    "choices": [
+      "Two structures where a hydrogen has moved to a neighbouring atom",
+      "Two structures where a pi bond has shifted along a conjugated chain",
+      "Two structures where a lone pair became a pi bond",
+      "Two structures where a pi bond became a lone pair"
+    ],
+    "correctIndex": 0,
+    "explanation": "Moving a hydrogen moves an ATOM. Those two drawings are tautomers — genuinely different compounds in equilibrium — not resonance forms.",
+    "teach": "Tautomers use an equilibrium arrow (⇌) and are separate species; resonance forms use ↔ and describe one species."
+  },
+  {
+    "id": "res2-15",
+    "topic": "resonance",
+    "prompt": "Resonance stabilization makes a conjugate base MORE stable. What does that do to the acidity of its conjugate acid?",
+    "choices": [
+      "Increases acidity — a more stable conjugate base means a stronger acid",
+      "Decreases acidity",
+      "Has no effect on acidity",
+      "Makes the acid neutral"
+    ],
+    "correctIndex": 0,
+    "explanation": "Anything stabilizing the deprotonated form makes losing the proton more favorable, lowering pKa.",
+    "teach": "This single idea explains most pKa comparisons in orgo: carboxylic acid (4.8) beats phenol (10) beats alcohol (16), tracking how well each conjugate base delocalizes."
+  },
+  {
+    "id": "res2-16",
+    "topic": "resonance",
+    "prompt": "For a lone pair to participate in resonance with an adjacent pi bond, the atom holding it should be:",
+    "choices": [
+      "In a p orbital aligned with the pi system, which usually means the atom becomes sp2",
+      "sp3 hybridized with the lone pair pointing away",
+      "Positively charged",
+      "A hydrogen atom"
+    ],
+    "correctIndex": 0,
+    "explanation": "The lone pair must sit in an unhybridized p orbital parallel to the pi system. Atoms often rehybridize to sp2 to make that possible — as amide nitrogen does.",
+    "teach": "This is why the amide nitrogen is planar and sp2 even though counting groups suggests sp3."
+  },
+  {
+    "id": "res2-17",
+    "topic": "resonance",
+    "prompt": "Which explains why phenol (pKa ≈ 10) is far more acidic than cyclohexanol (pKa ≈ 16)?",
+    "choices": [
+      "Phenoxide delocalizes its negative charge into the aromatic ring; cyclohexanol's alkoxide cannot delocalize at all",
+      "Phenol has more carbons",
+      "Cyclohexanol contains a ring and phenol does not",
+      "Phenol's O–H bond is ionic"
+    ],
+    "correctIndex": 0,
+    "explanation": "Phenoxide spreads its charge onto three ring carbons; cyclohexanol's alkoxide keeps it entirely on one oxygen.",
+    "teach": "Six orders of magnitude in acidity from resonance alone — a good measure of how much delocalization is worth."
+  },
+  {
+    "id": "res2-18",
+    "topic": "resonance",
+    "prompt": "A structure where every atom has a full octet but there are +1 and −1 charges on adjacent atoms is:",
+    "choices": [
+      "A legitimate but minor contributor — acceptable, though less important than a neutral full-octet form",
+      "Never allowed",
+      "Always the major contributor",
+      "Not a resonance structure at all"
+    ],
+    "correctIndex": 0,
+    "explanation": "Charge separation costs energy, so such a form contributes less than a neutral one — but it is valid and often matters, as in the amide.",
+    "teach": "Ranking order: full octets first, then fewest charges, then charges on the right atoms. Separated charges are a demotion, not a disqualification."
+  }
+]

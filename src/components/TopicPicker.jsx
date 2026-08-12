@@ -80,9 +80,9 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onRevi
       </div>
 
       <button className="ghost wide" onClick={onPlan}>
-        Where do I start? — suggested order
+        Progression — what I still need before orgo
       </button>
-      <p className="muted hint-line">A day-by-day path through the topics, in the order they build on each other.</p>
+      <p className="muted hint-line">Stages of prep with readiness, plus how each one maps onto the course once it starts.</p>
 
       <button className="primary wide" onClick={onMixed}>
         Mixed review — all topics

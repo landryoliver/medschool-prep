@@ -1,0 +1,352 @@
+[
+  {
+    "id": "ek-1",
+    "topic": "energy-kinetics",
+    "prompt": "An EXOTHERMIC reaction is one where:",
+    "choices": [
+      "Energy is released; the products are lower in energy than the reactants (ΔH is negative)",
+      "Energy is absorbed and the products sit higher in energy",
+      "No energy changes at all",
+      "The reaction cannot occur without a catalyst"
+    ],
+    "correctIndex": 0,
+    "explanation": "Exothermic = heat out = products downhill from reactants = negative ΔH.",
+    "teach": "Sign convention: ΔH negative means energy left the system. On a reaction coordinate diagram, products end up BELOW reactants."
+  },
+  {
+    "id": "ek-2",
+    "topic": "energy-kinetics",
+    "prompt": "On a reaction coordinate diagram, the ACTIVATION ENERGY (Ea) is:",
+    "choices": [
+      "The height from the reactants up to the transition state",
+      "The height difference between reactants and products",
+      "The depth of any intermediate well",
+      "The total width of the diagram"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ea is the energy barrier that must be climbed to reach the transition state. It controls how FAST a reaction goes.",
+    "teach": "Two separate ideas: Ea (the hill) controls RATE; ΔG (start vs finish) controls whether it is FAVORABLE. A reaction can be very favorable and still be slow."
+  },
+  {
+    "id": "ek-3",
+    "topic": "energy-kinetics",
+    "prompt": "On a reaction coordinate diagram, a transition state sits at a PEAK and an intermediate sits in a WELL. What does that difference mean?",
+    "choices": [
+      "A transition state cannot be isolated; an intermediate is a real species that exists, however briefly",
+      "They are two names for the same thing",
+      "An intermediate cannot be isolated but a transition state can",
+      "Only transition states appear in multi-step reactions"
+    ],
+    "correctIndex": 0,
+    "explanation": "Peaks are energy maxima — nothing rests there. Wells are local minima, so an intermediate has a real (if short) lifetime. Carbocations are the classic example.",
+    "teach": "Count the peaks to count the steps. Count the wells to count the intermediates."
+  },
+  {
+    "id": "ek-4",
+    "topic": "energy-kinetics",
+    "prompt": "In a multi-step reaction, the RATE-DETERMINING step is:",
+    "choices": [
+      "The step with the highest transition state — the largest barrier to climb",
+      "The first step, always",
+      "The last step, always",
+      "The step that releases the most energy"
+    ],
+    "correctIndex": 0,
+    "explanation": "The overall rate can be no faster than its slowest step, which is the one with the tallest barrier.",
+    "teach": "This is why SN1 rate depends only on the substrate: carbocation formation is the slow step, and the nucleophile joins after it."
+  },
+  {
+    "id": "ek-5",
+    "topic": "energy-kinetics",
+    "prompt": "The SN2 rate law is rate = k[substrate][nucleophile]. What does that tell you about the mechanism?",
+    "choices": [
+      "Both species are present in the rate-determining step — it is one concerted step (bimolecular)",
+      "The nucleophile is irrelevant to the rate",
+      "There must be a carbocation intermediate",
+      "The reaction has three steps"
+    ],
+    "correctIndex": 0,
+    "explanation": "Second-order kinetics means two molecules meet in the slow step. That is exactly what the '2' in SN2 stands for — bimolecular.",
+    "teach": "Rate laws are experimental evidence FOR a mechanism. If doubling the nucleophile doubles the rate, the nucleophile is in the slow step."
+  },
+  {
+    "id": "ek-6",
+    "topic": "energy-kinetics",
+    "prompt": "The SN1 rate law is rate = k[substrate] — the nucleophile does not appear. Why?",
+    "choices": [
+      "The slow step is ionization to a carbocation; the nucleophile attacks afterwards, in a fast step",
+      "The nucleophile is not involved in the reaction at all",
+      "The nucleophile is always in vast excess",
+      "SN1 reactions have no rate law"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only species in the rate-determining step appear in the rate law. Adding more nucleophile does not speed up a step that has already happened.",
+    "teach": "SN1 = unimolecular in the slow step. This kinetic difference is the original experimental evidence separating SN1 from SN2."
+  },
+  {
+    "id": "ek-7",
+    "topic": "energy-kinetics",
+    "prompt": "A catalyst speeds up a reaction by:",
+    "choices": [
+      "Lowering the activation energy, offering a new pathway — without changing ΔG or the equilibrium position",
+      "Making the products more stable",
+      "Increasing the temperature",
+      "Shifting the equilibrium toward products"
+    ],
+    "correctIndex": 0,
+    "explanation": "A catalyst changes the route, not the destination. Reactants and products keep the same energies, so ΔG and Keq are untouched — only the barrier drops.",
+    "teach": "Catalysts affect kinetics, never thermodynamics. Acid catalysis in orgo works exactly this way: protonation makes a better leaving group, lowering Ea."
+  },
+  {
+    "id": "ek-8",
+    "topic": "energy-kinetics",
+    "prompt": "ΔG = ΔH − TΔS. A reaction is SPONTANEOUS (favorable) when:",
+    "choices": [
+      "ΔG is negative",
+      "ΔG is positive",
+      "ΔH is positive",
+      "ΔS is zero"
+    ],
+    "correctIndex": 0,
+    "explanation": "Negative ΔG means the products are lower in free energy, so the equilibrium favors them. It says nothing about speed.",
+    "teach": "Negative ΔG = exergonic = favorable. Spontaneous does NOT mean fast — diamond turning to graphite is spontaneous and takes geological time."
+  },
+  {
+    "id": "ek-9",
+    "topic": "energy-kinetics",
+    "prompt": "Elimination reactions are favored by heat partly because:",
+    "choices": [
+      "Elimination increases entropy (two molecules from one), and the −TΔS term grows more negative as T rises",
+      "Heat lowers the activation energy",
+      "Heat makes the base stronger",
+      "Entropy does not affect elimination"
+    ],
+    "correctIndex": 0,
+    "explanation": "Elimination produces an alkene plus a small molecule from one starting material — more particles, more disorder. Raising T amplifies that entropy advantage in ΔG = ΔH − TΔS.",
+    "teach": "This is the thermodynamic reason 'heat favors elimination' — a rule you will otherwise just memorize."
+  },
+  {
+    "id": "ek-10",
+    "topic": "energy-kinetics",
+    "prompt": "If a reaction has a large negative ΔG but proceeds extremely slowly at room temperature, that means:",
+    "choices": [
+      "It is thermodynamically favorable but kinetically hindered — a large activation barrier",
+      "The ΔG value must be wrong",
+      "It is not actually favorable",
+      "It has no transition state"
+    ],
+    "correctIndex": 0,
+    "explanation": "Thermodynamics says where the equilibrium sits; kinetics says how fast you get there. They are independent.",
+    "teach": "Keeping these separate is one of the highest-yield habits in orgo. 'Favorable' and 'fast' are different claims."
+  },
+  {
+    "id": "ek-11",
+    "topic": "energy-kinetics",
+    "prompt": "KINETIC control versus THERMODYNAMIC control means:",
+    "choices": [
+      "The kinetic product forms fastest (lowest Ea); the thermodynamic product is the most stable. Low temperature favors kinetic, higher temperature and longer times favor thermodynamic",
+      "They always give the same product",
+      "Kinetic control only applies to catalysts",
+      "Thermodynamic control means the reaction is faster"
+    ],
+    "correctIndex": 0,
+    "explanation": "When two products compete, the one over the lower barrier appears first. If the reaction is reversible and given energy and time, the system settles into the more stable product instead.",
+    "teach": "Watch for it whenever a problem specifies an unusual temperature — that detail is usually the whole question."
+  },
+  {
+    "id": "ek-12",
+    "topic": "energy-kinetics",
+    "prompt": "Bond dissociation energy is the energy required to:",
+    "choices": [
+      "Break a bond homolytically, giving two radicals",
+      "Break a bond heterolytically, giving two ions",
+      "Form a bond from two atoms",
+      "Melt a substance"
+    ],
+    "correctIndex": 0,
+    "explanation": "BDE is defined for even splitting — one electron to each fragment. Breaking bonds always costs energy; forming them releases it.",
+    "teach": "Weaker bond = lower BDE = easier to break. This is how radical halogenation selectivity is explained."
+  },
+  {
+    "id": "ek-13",
+    "topic": "energy-kinetics",
+    "prompt": "A reaction coordinate diagram shows TWO peaks with a well between them. How many steps and intermediates does the mechanism have?",
+    "choices": [
+      "Two steps, one intermediate",
+      "One step, two intermediates",
+      "Two steps, two intermediates",
+      "Three steps, no intermediates"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each peak is one step's transition state; each well between peaks is an intermediate. Two peaks and one well = two steps, one intermediate — the shape of every SN1 reaction.",
+    "teach": "Reading these diagrams is a common exam question. Peaks = steps, wells = intermediates, first peak higher = first step is rate-determining."
+  },
+  {
+    "id": "ek-14",
+    "topic": "energy-kinetics",
+    "prompt": "For the equilibrium A ⇌ B, a LARGE equilibrium constant (Keq >> 1) means:",
+    "choices": [
+      "Products are strongly favored, corresponding to a negative ΔG",
+      "Reactants are favored",
+      "The reaction is fast",
+      "The reaction has a small activation energy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Keq and ΔG are two ways of saying the same thing: ΔG = −RT ln(Keq). A big Keq means a strongly negative ΔG.",
+    "teach": "This is the same logic used for acid-base reactions: a reaction that goes from a stronger acid to a weaker one has a large Keq."
+  },
+  {
+    "id": "ek-15",
+    "topic": "energy-kinetics",
+    "prompt": "Raising the temperature increases reaction rate mainly because:",
+    "choices": [
+      "A larger fraction of molecules have enough energy to clear the activation barrier",
+      "It lowers the activation energy",
+      "It makes ΔG more negative",
+      "It increases the number of molecules present"
+    ],
+    "correctIndex": 0,
+    "explanation": "Temperature does not move the barrier — it changes how many molecules can get over it. That is the Arrhenius relationship.",
+    "teach": "Catalysts lower the barrier; heat gives molecules more energy to climb it. Different mechanisms, same visible effect."
+  },
+  {
+    "id": "ek-16",
+    "topic": "energy-kinetics",
+    "prompt": "Which of these is an ENDOTHERMIC process?",
+    "choices": [
+      "Breaking a chemical bond",
+      "Forming a chemical bond",
+      "Condensing a gas to a liquid",
+      "Freezing water"
+    ],
+    "correctIndex": 0,
+    "explanation": "Breaking bonds always costs energy; forming them always releases it. A reaction's overall ΔH is the balance of the two.",
+    "teach": "Quick estimate of ΔH: (energy to break the bonds you break) − (energy released forming new bonds). Negative means exothermic."
+  },
+  {
+    "id": "ek-17",
+    "topic": "energy-kinetics",
+    "prompt": "The Hammond postulate says that a transition state resembles whichever species it is closer to in energy. For a highly ENDOTHERMIC step, the transition state most resembles:",
+    "choices": [
+      "The products — it is a 'late' transition state",
+      "The reactants — it is an 'early' transition state",
+      "Neither; it always sits exactly halfway",
+      "A catalyst"
+    ],
+    "correctIndex": 0,
+    "explanation": "Uphill steps have late, product-like transition states. This is why carbocation stability predicts the rate of carbocation-forming steps — the transition state already looks like the cation.",
+    "teach": "The practical payoff: anything that stabilizes a carbocation also lowers the barrier to forming it, so more substituted substrates react faster in SN1."
+  },
+  {
+    "id": "ek-18",
+    "topic": "energy-kinetics",
+    "prompt": "If a reaction's rate is unchanged when you double the concentration of reagent X, then X:",
+    "choices": [
+      "Does not appear in the rate-determining step",
+      "Must be a catalyst",
+      "Is the limiting reagent",
+      "Makes the reaction exothermic"
+    ],
+    "correctIndex": 0,
+    "explanation": "Rate is only sensitive to species involved at or before the slow step. Zero order in X means X joins after it.",
+    "teach": "This is precisely the experiment that distinguishes SN1 from SN2 in the lab."
+  },
+  {
+    "id": "ek-19",
+    "topic": "energy-kinetics",
+    "prompt": "A reaction is EXERGONIC. This means:",
+    "choices": [
+      "ΔG is negative — free energy is released and products are favored",
+      "ΔH is negative but ΔG may be positive",
+      "It must be fast",
+      "It absorbs free energy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Exergonic refers to free energy (ΔG), while exothermic refers to heat (ΔH). Usually they agree, but entropy can separate them.",
+    "teach": "Exo/endoTHERMIC = heat (ΔH). Exer/enderGONIC = free energy (ΔG). ΔG is the one that decides favorability."
+  },
+  {
+    "id": "ek-20",
+    "topic": "energy-kinetics",
+    "prompt": "Two competing reactions start from the same material. Reaction A has Ea = 15 kJ/mol; reaction B has Ea = 45 kJ/mol. At low temperature you will mostly see:",
+    "choices": [
+      "Product A — the lower barrier is crossed far more often",
+      "Product B",
+      "An equal mixture",
+      "Neither reaction proceeds"
+    ],
+    "correctIndex": 0,
+    "explanation": "Lower barrier means a much faster rate, so at low temperature the kinetic product dominates — even if B would be more stable.",
+    "teach": "Barrier heights compound exponentially in the rate, so even a modest Ea difference produces a lopsided product ratio."
+  },
+  {
+    "id": "ek-21",
+    "topic": "energy-kinetics",
+    "prompt": "Entropy (ΔS) generally INCREASES when:",
+    "choices": [
+      "One molecule becomes two, or a solid becomes a gas",
+      "Two molecules combine into one",
+      "A gas condenses to a liquid",
+      "A ring forms from an open chain"
+    ],
+    "correctIndex": 0,
+    "explanation": "More independent particles and more freedom of movement mean more disorder, so ΔS is positive.",
+    "teach": "Addition reactions (two into one) pay an entropy penalty; eliminations (one into two) get an entropy bonus. That is why heat drives elimination."
+  },
+  {
+    "id": "ek-22",
+    "topic": "energy-kinetics",
+    "prompt": "Which statement about a transition state is TRUE?",
+    "choices": [
+      "It has partial bonds — bonds being formed and broken simultaneously — and is drawn in brackets with a double dagger",
+      "It has only fully formed bonds",
+      "It can be isolated and put in a bottle",
+      "It sits at an energy minimum"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transition states are drawn with dashed partial bonds because they are caught mid-change, at the top of the barrier.",
+    "teach": "In an SN2 transition state the nucleophile is partly bonded and the leaving group is partly detached, with the carbon momentarily five-coordinate."
+  },
+  {
+    "id": "ek-23",
+    "topic": "energy-kinetics",
+    "prompt": "Why does a more stable carbocation form FASTER, even though stability is a thermodynamic idea and rate is kinetic?",
+    "choices": [
+      "By the Hammond postulate, the transition state for forming it resembles the cation, so stabilizing the cation also lowers the barrier",
+      "Stability and rate are unrelated; this is a coincidence",
+      "Because stable carbocations have larger equilibrium constants",
+      "Because tertiary substrates are more concentrated"
+    ],
+    "correctIndex": 0,
+    "explanation": "The endothermic ionization step has a late, cation-like transition state, so anything lowering the cation's energy lowers the barrier too.",
+    "teach": "This bridge between stability and rate is used constantly in orgo — it justifies ranking SN1 rates by carbocation stability."
+  },
+  {
+    "id": "ek-24",
+    "topic": "energy-kinetics",
+    "prompt": "On a reaction coordinate diagram with two steps, the FIRST peak is higher than the second. Which step is rate-determining?",
+    "choices": [
+      "The first step",
+      "The second step",
+      "Both equally",
+      "Cannot be determined from the diagram"
+    ],
+    "correctIndex": 0,
+    "explanation": "The tallest barrier measured from the preceding valley governs the overall rate — here that is step one.",
+    "teach": "For SN1 the first peak (ionization) is the tall one, which is why the nucleophile's identity does not affect the rate."
+  },
+  {
+    "id": "ek-25",
+    "topic": "energy-kinetics",
+    "prompt": "'Thermodynamic product' means the product that is:",
+    "choices": [
+      "Most stable — lowest in energy — regardless of how quickly it forms",
+      "Formed fastest",
+      "Formed at the lowest temperature",
+      "Formed with the smallest activation energy"
+    ],
+    "correctIndex": 0,
+    "explanation": "The thermodynamic product wins when the reaction is reversible and given enough energy and time to equilibrate.",
+    "teach": "Conjugated diene additions are the standard example: 1,2-addition is kinetic (low temp), 1,4-addition is thermodynamic (higher temp)."
+  }
+]

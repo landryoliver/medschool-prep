@@ -1,0 +1,88 @@
+{
+  "stages": [
+    {
+      "id": "atoms",
+      "title": "Atoms & Bonds",
+      "subtitle": "Stage 1 — the gen-chem you are assumed to still have",
+      "why": "Orgo does not reteach any of this. It opens by assuming you can already say how many bonds an atom makes, which atom in a bond is electron-poor, and what a molecule looks like in three dimensions. Everything after this stage leans on it.",
+      "topics": ["periodic", "lewis", "vsepr", "polarity", "imf"]
+    },
+    {
+      "id": "language",
+      "title": "Reading Organic Structures",
+      "subtitle": "Stage 2 — the notation the whole course is written in",
+      "why": "From week one, lectures are drawn in line-angle structures with the carbons and hydrogens invisible. If decoding a drawing takes conscious effort, you spend your attention on notation instead of chemistry. This stage is mostly repetition, and it pays off more than any other.",
+      "topics": ["skeletal", "functional", "isomers", "nomenclature"]
+    },
+    {
+      "id": "reactivity",
+      "title": "How Reactions Work",
+      "subtitle": "Stage 3 — the reasoning engine",
+      "why": "These four are what orgo actually tests. Almost every mechanism opens or closes with a proton transfer, is drawn with curved arrows, is explained by delocalization, and is argued over with energy diagrams. Get here and lecture becomes a second exposure rather than a first.",
+      "topics": ["acidbase", "energy", "resonance", "arrows"]
+    },
+    {
+      "id": "ahead",
+      "title": "What's Coming",
+      "subtitle": "Stage 4 — a look down the road",
+      "why": "Not prerequisites — a preview, so the first weeks of lecture feel familiar rather than sudden.",
+      "topics": ["preview"]
+    }
+  ],
+  "roadmap": [
+    {
+      "unit": "Structure & bonding review",
+      "when": "Weeks 1-2",
+      "prep": ["periodic", "lewis", "vsepr", "polarity"],
+      "note": "Most courses open with a fast review that assumes you already know it. This is the part rusty students most often underestimate."
+    },
+    {
+      "unit": "Acids & bases",
+      "when": "Weeks 2-3",
+      "prep": ["acidbase", "resonance"],
+      "note": "Taught early precisely because every later mechanism uses it. pKa reasoning and resonance stability are the whole content."
+    },
+    {
+      "unit": "Alkanes, nomenclature & conformations",
+      "when": "Weeks 3-4",
+      "prep": ["nomenclature", "skeletal", "isomers"],
+      "note": "Newman projections and chair conformations get added on top of the naming and isomer ideas you already have."
+    },
+    {
+      "unit": "Stereochemistry",
+      "when": "Weeks 4-6",
+      "prep": ["isomers", "vsepr"],
+      "note": "Chirality, R/S assignment, enantiomers and diastereomers. Builds directly on stereocenters and 3-D geometry."
+    },
+    {
+      "unit": "Substitution — SN1 and SN2",
+      "when": "Weeks 6-8",
+      "prep": ["arrows", "energy", "acidbase"],
+      "note": "The first big mechanism unit. Rate laws, leaving-group ability and carbocation stability all come from Stage 3."
+    },
+    {
+      "unit": "Elimination — E1 and E2",
+      "when": "Weeks 8-9",
+      "prep": ["arrows", "energy"],
+      "note": "Taught alongside substitution because they compete. Anti-periplanar geometry and the entropy argument for heat both appear here."
+    },
+    {
+      "unit": "Alkenes & addition reactions",
+      "when": "Weeks 9-11",
+      "prep": ["arrows", "resonance", "functional"],
+      "note": "Markovnikov selectivity, carbocation rearrangements, and pi bonds acting as nucleophiles."
+    },
+    {
+      "unit": "Alkynes & radicals",
+      "when": "Weeks 11-13",
+      "prep": ["arrows", "energy"],
+      "note": "Radicals introduce fishhook arrows and bond dissociation energies."
+    },
+    {
+      "unit": "Alcohols, ethers & spectroscopy",
+      "when": "Weeks 13-15",
+      "prep": ["functional", "imf"],
+      "note": "IR and NMR arrive here in most courses. Functional-group recognition is what makes spectra readable."
+    }
+  ]
+}

@@ -15,6 +15,8 @@ const TOPIC_LABELS = {
   hybridization: 'Hybridization',
   'acid-base': 'Acids & bases',
   imf: 'Intermolecular forces',
+  'energy-kinetics': 'Energy & kinetics',
+  isomers: 'Isomers',
   pka: 'pKa comparisons',
   'skeletal-fluency': 'Skeletal structures',
   'functional-groups': 'Functional groups',

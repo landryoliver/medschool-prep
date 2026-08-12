@@ -1,0 +1,237 @@
+[
+  {
+    "id": "iso-1",
+    "topic": "isomers",
+    "prompt": "Two molecules with the SAME molecular formula but DIFFERENT connectivity (different bonding order) are called:",
+    "choices": ["Constitutional (structural) isomers", "Stereoisomers", "Conformers", "Resonance structures"],
+    "correctIndex": 0,
+    "explanation": "Constitutional isomers differ in what is bonded to what. Butane and 2-methylpropane are both C₄H₁₀ but connected differently.",
+    "teach": "The isomer decision tree starts here: same formula? If connectivity differs → constitutional. If connectivity is the same but 3-D arrangement differs → stereoisomer."
+  },
+  {
+    "id": "iso-2",
+    "topic": "isomers",
+    "prompt": "Two molecules with the same formula AND the same connectivity, differing only in the three-dimensional arrangement of atoms, are:",
+    "choices": ["Stereoisomers", "Constitutional isomers", "The same compound", "Resonance forms"],
+    "correctIndex": 0,
+    "explanation": "Stereoisomers share a connectivity map but differ in spatial arrangement — cis/trans alkenes and enantiomers are both examples.",
+    "teach": "Stereoisomers split further into enantiomers (non-superimposable mirror images) and diastereomers (everything else)."
+  },
+  {
+    "id": "iso-3",
+    "topic": "isomers",
+    "prompt": "How many constitutional isomers does C₄H₁₀ have?",
+    "choices": ["2", "1", "3", "4"],
+    "correctIndex": 0,
+    "explanation": "Butane (a straight chain) and 2-methylpropane (isobutane, branched). There is no third arrangement — '1-methylpropane' is just butane renamed.",
+    "teach": "When counting isomers, draw the longest chain first, then progressively shorten it and add branches. Check each one is genuinely new."
+  },
+  {
+    "id": "iso-4",
+    "topic": "isomers",
+    "prompt": "How many constitutional isomers does C₅H₁₂ have?",
+    "choices": ["3", "2", "4", "5"],
+    "correctIndex": 0,
+    "explanation": "Pentane, 2-methylbutane (isopentane), and 2,2-dimethylpropane (neopentane).",
+    "teach": "C₄ has 2, C₅ has 3, C₆ has 5, C₇ has 9 — the count grows quickly, which is part of why organic chemistry is so large."
+  },
+  {
+    "id": "iso-5",
+    "topic": "isomers",
+    "prompt": "Rotating around a single (sigma) bond converts a molecule between different:",
+    "choices": [
+      "Conformations — these are NOT different isomers, just different shapes of one molecule",
+      "Constitutional isomers",
+      "Enantiomers",
+      "Resonance structures"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sigma bonds rotate freely at room temperature, so conformers interconvert constantly. They are one compound, not two.",
+    "teach": "Interconverting by rotation alone = same compound. Interconverting only by BREAKING a bond = genuinely different isomers."
+  },
+  {
+    "id": "iso-6",
+    "topic": "isomers",
+    "prompt": "Why can cis- and trans-but-2-ene NOT interconvert at room temperature, while butane's conformers can?",
+    "choices": [
+      "The double bond's pi component blocks rotation; breaking it costs far too much energy",
+      "They are the same compound",
+      "Alkenes are always solids",
+      "Cis and trans differ in molecular formula"
+    ],
+    "correctIndex": 0,
+    "explanation": "Rotating about a C=C would require breaking the pi bond's sideways p-orbital overlap. That barrier is far too high at room temperature, so the two are separable compounds.",
+    "teach": "Restricted rotation is exactly why alkenes have cis/trans isomers and alkanes do not."
+  },
+  {
+    "id": "iso-7",
+    "topic": "isomers",
+    "prompt": "A carbon bonded to FOUR DIFFERENT groups is called:",
+    "choices": [
+      "A stereocenter (chirality center)",
+      "A carbocation",
+      "A resonance center",
+      "A conformer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Four different substituents make the carbon's mirror image non-superimposable on the original — the definition of a chirality center.",
+    "teach": "Scanning for stereocenters is a reflex worth building now: look for any carbon with four distinct groups. If two groups are identical, it is not one."
+  },
+  {
+    "id": "iso-8",
+    "topic": "isomers",
+    "prompt": "Is the central carbon in 2-chlorobutane, CH₃–CHCl–CH₂–CH₃, a stereocenter?",
+    "choices": [
+      "Yes — it carries H, Cl, CH₃ and CH₂CH₃, four different groups",
+      "No — it has two identical groups",
+      "No — stereocenters require a double bond",
+      "Only at high temperature"
+    ],
+    "correctIndex": 0,
+    "explanation": "Its four substituents (H, Cl, methyl, ethyl) are all distinct, so C2 is a chirality center and the compound is chiral.",
+    "teach": "Check each group all the way out. Methyl and ethyl differ at the first atom out; longer chains sometimes need you to look further."
+  },
+  {
+    "id": "iso-9",
+    "topic": "isomers",
+    "prompt": "Non-superimposable mirror-image molecules are called:",
+    "choices": ["Enantiomers", "Diastereomers", "Conformers", "Constitutional isomers"],
+    "correctIndex": 0,
+    "explanation": "Enantiomers relate like your left and right hands: mirror images that cannot be laid on top of each other.",
+    "teach": "Enantiomers share nearly every physical property — same melting point, same boiling point — differing only toward other chiral things (including biology)."
+  },
+  {
+    "id": "iso-10",
+    "topic": "isomers",
+    "prompt": "Stereoisomers that are NOT mirror images of each other are:",
+    "choices": ["Diastereomers", "Enantiomers", "Identical", "Constitutional isomers"],
+    "correctIndex": 0,
+    "explanation": "Diastereomers is the catch-all for stereoisomers that fail the mirror-image test. Cis/trans alkene pairs are diastereomers.",
+    "teach": "Unlike enantiomers, diastereomers have genuinely different physical properties, so they can be separated by ordinary means."
+  },
+  {
+    "id": "iso-11",
+    "topic": "isomers",
+    "prompt": "Are CH₃OCH₃ (dimethyl ether) and CH₃CH₂OH (ethanol) isomers?",
+    "choices": [
+      "Yes — both are C₂H₆O with different connectivity, so they are constitutional isomers",
+      "No — they have different molecular formulas",
+      "Yes, they are stereoisomers",
+      "No, they are resonance structures"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both count to C₂H₆O. In ethanol the oxygen sits on the end bonded to H; in the ether it sits between two carbons — different functional groups entirely.",
+    "teach": "Constitutional isomers can belong to completely different families, which is why boiling points differ so sharply: ethanol 78 °C, dimethyl ether −24 °C."
+  },
+  {
+    "id": "iso-12",
+    "topic": "isomers",
+    "prompt": "A compound has formula C₄H₈. What does its ONE degree of unsaturation tell you?",
+    "choices": [
+      "It contains either one ring or one double bond",
+      "It must contain a triple bond",
+      "It must be aromatic",
+      "It has no rings and no pi bonds"
+    ],
+    "correctIndex": 0,
+    "explanation": "One degree of unsaturation is satisfied by either a ring (cyclobutane, methylcyclopropane) or a double bond (but-1-ene, but-2-ene).",
+    "teach": "Degrees of unsaturation narrows the search before you draw anything. Four degrees usually signals a benzene ring (one ring + three pi bonds)."
+  },
+  {
+    "id": "iso-13",
+    "topic": "isomers",
+    "prompt": "Which pair are RESONANCE structures rather than isomers?",
+    "choices": [
+      "Two drawings of the acetate ion differing only in which C–O bond is double",
+      "Butane and 2-methylpropane",
+      "cis- and trans-but-2-ene",
+      "Ethanol and dimethyl ether"
+    ],
+    "correctIndex": 0,
+    "explanation": "In acetate only ELECTRONS move between the drawings; the atoms stay put. That makes them resonance forms of one species, not two compounds.",
+    "teach": "Isomers are different substances you could put in separate flasks. Resonance forms are two incomplete drawings of a single substance."
+  },
+  {
+    "id": "iso-14",
+    "topic": "isomers",
+    "prompt": "For cis/trans (geometric) isomerism to be possible across a C=C double bond, each double-bond carbon must:",
+    "choices": [
+      "Carry two DIFFERENT groups",
+      "Carry two identical groups",
+      "Carry at least one hydrogen",
+      "Be part of a ring"
+    ],
+    "correctIndex": 0,
+    "explanation": "If either carbon holds two identical groups, flipping them produces the same molecule and there is no cis/trans distinction. That is why but-1-ene has no cis/trans forms but but-2-ene does.",
+    "teach": "Test each alkene carbon separately. Both must have two different substituents for geometric isomers to exist."
+  },
+  {
+    "id": "iso-15",
+    "topic": "isomers",
+    "prompt": "A molecule with one stereocenter exists as how many stereoisomers?",
+    "choices": ["2 — a pair of enantiomers", "1", "4", "It depends on the temperature"],
+    "correctIndex": 0,
+    "explanation": "One stereocenter gives two possible arrangements, related as mirror images.",
+    "teach": "The general rule is 2ⁿ stereoisomers for n stereocenters — though symmetric cases (meso compounds) come in under that maximum."
+  },
+  {
+    "id": "iso-16",
+    "topic": "isomers",
+    "prompt": "How many stereoisomers are possible, at most, for a molecule with THREE stereocenters?",
+    "choices": ["8", "3", "6", "9"],
+    "correctIndex": 0,
+    "explanation": "2ⁿ with n = 3 gives 2³ = 8. Internal symmetry can reduce the real number below the maximum.",
+    "teach": "Sugars are the classic demonstration — glucose has four stereocenters and belongs to a family of sixteen possible stereoisomers."
+  },
+  {
+    "id": "iso-17",
+    "topic": "isomers",
+    "prompt": "Which is TRUE of a pair of enantiomers?",
+    "choices": [
+      "They have identical melting and boiling points but rotate plane-polarized light in opposite directions",
+      "They have different boiling points and are easy to separate by distillation",
+      "They are the same compound",
+      "They have different molecular formulas"
+    ],
+    "correctIndex": 0,
+    "explanation": "In an ordinary achiral environment enantiomers are physically indistinguishable. They differ in optical rotation and in how they interact with other chiral molecules.",
+    "teach": "This is why chirality matters in medicine: receptors are chiral, so two enantiomers of a drug can behave completely differently in the body."
+  },
+  {
+    "id": "iso-18",
+    "topic": "isomers",
+    "prompt": "A molecule that contains stereocenters but is achiral overall due to an internal mirror plane is called:",
+    "choices": ["A meso compound", "An enantiomer", "A racemic mixture", "A conformer"],
+    "correctIndex": 0,
+    "explanation": "One half mirrors the other, so the molecule is superimposable on its own mirror image despite having stereocenters — it is optically inactive.",
+    "teach": "Always check for an internal mirror plane before assuming a molecule with stereocenters is chiral."
+  },
+  {
+    "id": "iso-19",
+    "topic": "isomers",
+    "prompt": "A 50:50 mixture of two enantiomers is called:",
+    "choices": [
+      "A racemic mixture — optically inactive, since the rotations cancel",
+      "A meso compound",
+      "A diastereomeric mixture",
+      "A pure enantiomer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Equal and opposite rotations cancel exactly, so a racemate shows no net optical rotation.",
+    "teach": "Reactions that create a stereocenter from achiral starting materials produce a racemic mixture — the classic SN1 outcome."
+  },
+  {
+    "id": "iso-20",
+    "topic": "isomers",
+    "prompt": "Which pair represents the SAME compound rather than two isomers?",
+    "choices": [
+      "Two drawings of butane, one bent and one straight, differing only by rotation about a C–C single bond",
+      "Butane and 2-methylpropane",
+      "Propan-1-ol and propan-2-ol",
+      "cis- and trans-but-2-ene"
+    ],
+    "correctIndex": 0,
+    "explanation": "Skeletal drawings can look very different while representing the same connectivity. If rotating single bonds converts one into the other, it is one compound.",
+    "teach": "A common exam trap: check connectivity atom by atom rather than trusting how the drawing looks on the page."
+  }
+]

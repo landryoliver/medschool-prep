@@ -333,5 +333,87 @@
         "Carbocations rearrange (hydride and methyl shifts) to reach a more stable arrangement — watch for it in SN1/E1."
       ]
     }
+  ],
+  "energy": [
+    {
+      "heading": "Two separate questions, never confuse them",
+      "points": [
+        "ΔG (thermodynamics) asks: is this FAVORABLE? Negative ΔG = products favored = large Keq.",
+        "Ea (kinetics) asks: is this FAST? Bigger barrier = slower, no matter how favorable.",
+        "A reaction can be strongly favorable and still take years. Diamond → graphite is the standard example.",
+        "ΔG = ΔH − TΔS. Exothermic (−ΔH) helps; increasing disorder (+ΔS) helps, and helps more as T rises."
+      ]
+    },
+    {
+      "heading": "Reading a reaction coordinate diagram",
+      "points": [
+        "Peaks = transition states = one per step. Count peaks to count steps.",
+        "Wells between peaks = intermediates (carbocations live here). They are real but short-lived.",
+        "Transition states sit at maxima and can never be isolated; intermediates sit at minima and sometimes can.",
+        "The rate-determining step is the one with the tallest barrier measured from the valley before it.",
+        "SN1 has two peaks and one well. SN2 has a single peak and no intermediate."
+      ]
+    },
+    {
+      "heading": "Rate laws are evidence for mechanisms",
+      "points": [
+        "SN2: rate = k[substrate][nucleophile]. Both in the slow step → one concerted step → bimolecular.",
+        "SN1: rate = k[substrate] only. The nucleophile joins after the slow ionization, so it does not affect rate.",
+        "If doubling a reagent does not change the rate, that reagent is not in the rate-determining step."
+      ]
+    },
+    {
+      "heading": "Things that trip people up",
+      "points": [
+        "A catalyst lowers Ea only. It never changes ΔG, Keq, or the products — just the speed.",
+        "Heat does not lower the barrier; it gives more molecules the energy to clear it.",
+        "Hammond postulate: an uphill step has a late, product-like transition state. This is why a more stable carbocation also FORMS faster.",
+        "Kinetic product = fastest to form (low temperature). Thermodynamic product = most stable (higher temperature, reversible)."
+      ]
+    }
+  ],
+  "isomers": [
+    {
+      "heading": "The isomer decision tree",
+      "points": [
+        "Same molecular formula? If no, not isomers at all.",
+        "Different connectivity (what is bonded to what)? → constitutional (structural) isomers.",
+        "Same connectivity, different 3-D arrangement? → stereoisomers.",
+        "Interconvert by rotating a single bond alone? → not isomers, just conformations of ONE compound."
+      ]
+    },
+    {
+      "heading": "Stereoisomers split in two",
+      "points": [
+        "Enantiomers: non-superimposable mirror images. Identical physical properties; opposite optical rotation.",
+        "Diastereomers: stereoisomers that are NOT mirror images — including cis/trans pairs. Different physical properties, so separable.",
+        "A 50:50 mix of enantiomers is racemic and shows no net optical rotation. SN1 reactions produce these.",
+        "Meso compounds have stereocenters but an internal mirror plane, so they are achiral overall."
+      ]
+    },
+    {
+      "heading": "Finding stereocenters",
+      "points": [
+        "A stereocenter is a carbon with FOUR DIFFERENT groups. Two identical groups disqualifies it.",
+        "Compare groups all the way out, not just the first atom.",
+        "n stereocenters give at most 2ⁿ stereoisomers; symmetry can reduce that."
+      ]
+    },
+    {
+      "heading": "Why alkenes have cis/trans and alkanes do not",
+      "points": [
+        "Sigma bonds rotate freely, so alkane conformers interconvert constantly and are one compound.",
+        "A pi bond blocks rotation — breaking it costs far too much — so cis and trans are separable compounds.",
+        "Both alkene carbons must carry two DIFFERENT groups for cis/trans to exist."
+      ]
+    },
+    {
+      "heading": "Isomers vs resonance — a common mix-up",
+      "points": [
+        "Isomers are different substances you could put in separate flasks. Atoms are in different places.",
+        "Resonance forms are two incomplete drawings of ONE substance. Only electrons differ.",
+        "Tautomers (where an H actually moves) are isomers in equilibrium, drawn with ⇌, not ↔."
+      ]
+    }
   ]
 }
