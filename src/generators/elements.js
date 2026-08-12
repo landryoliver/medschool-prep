@@ -4,18 +4,62 @@ import { rngFor, pick, pickN, shuffleWith, makeChoices } from './util.js'
 const ORGO = periodicTable.filter((e) => e.orgoCore)
 const NAMED = periodicTable.filter((e) => e.electronegativity != null)
 
-// Bonds a student will actually meet. Without this, the polarity drills
-// happily ask about Na–Mg, which is not a covalent bond in any meaningful
-// sense and has no delta-minus atom to identify.
-const METALS = new Set(['Li', 'Na', 'K', 'Mg', 'Ca', 'Al', 'Be'])
-const BONDABLE = periodicTable.filter((e) => e.electronegativity != null && e.typicalBonds > 0)
-const NONMETALS = BONDABLE.filter((e) => !METALS.has(e.symbol))
+/**
+ * Bonds that actually turn up in organic chemistry and on the MCAT,
+ * with the classification a textbook would accept.
+ *
+ * Drawing two arbitrary elements from the table produces P–K and Ca–Br:
+ * real compounds, but ones neither exam has any reason to ask about, and
+ * answering them would mean memorizing numeric electronegativities that
+ * no exam supplies.
+ *
+ * Classifications are stated rather than computed from the ΔEN cutoffs,
+ * because those cutoffs are approximate and get two important cases
+ * wrong. H–F comes out at 1.78 and would be labelled ionic, when it is a
+ * covalent gas; C–H at 0.35 sits close enough to the 0.4 line that a
+ * numeric guard would drop it, when it is the single most important bond
+ * to know as nonpolar.
+ */
+const BONDS = [
+  // Nonpolar covalent — carbon with atoms of similar electronegativity
+  { a: 'C', b: 'H', cls: 'Nonpolar covalent' },
+  { a: 'C', b: 'S', cls: 'Nonpolar covalent' },
+  { a: 'C', b: 'I', cls: 'Nonpolar covalent' },
+  { a: 'C', b: 'P', cls: 'Nonpolar covalent' },
 
-/** A realistic pair: at least one nonmetal, never metal-metal. */
+  // Polar covalent — the bonds organic reactions actually happen at
+  { a: 'C', b: 'O', cls: 'Polar covalent' },
+  { a: 'C', b: 'N', cls: 'Polar covalent' },
+  { a: 'C', b: 'F', cls: 'Polar covalent' },
+  { a: 'C', b: 'Cl', cls: 'Polar covalent' },
+  { a: 'C', b: 'Br', cls: 'Polar covalent' },
+  { a: 'O', b: 'H', cls: 'Polar covalent' },
+  { a: 'N', b: 'H', cls: 'Polar covalent' },
+  { a: 'H', b: 'Cl', cls: 'Polar covalent' },
+  { a: 'H', b: 'Br', cls: 'Polar covalent' },
+  // Organometallics: polarized toward CARBON, unlike everything above
+  { a: 'C', b: 'Mg', cls: 'Polar covalent' },
+  { a: 'C', b: 'Li', cls: 'Polar covalent' },
+
+  // Ionic — the canonical salts, for contrast
+  { a: 'Na', b: 'Cl', cls: 'Ionic' },
+  { a: 'K', b: 'Cl', cls: 'Ionic' },
+  { a: 'K', b: 'Br', cls: 'Ionic' },
+  { a: 'Na', b: 'Br', cls: 'Ionic' },
+  { a: 'Li', b: 'F', cls: 'Ionic' },
+  { a: 'Na', b: 'F', cls: 'Ionic' },
+  { a: 'Mg', b: 'O', cls: 'Ionic' },
+  { a: 'Ca', b: 'Cl', cls: 'Ionic' },
+]
+
+const bySymbol = new Map(periodicTable.map((e) => [e.symbol, e]))
+const bondAtoms = (bond) => [bySymbol.get(bond.a), bySymbol.get(bond.b)]
+
+/** Covalent bonds only — "which atom is δ−" is the wrong frame for a salt. */
+const COVALENT_BONDS = BONDS.filter((x) => x.cls !== 'Ionic')
+
 function pickBondPair(rng) {
-  const a = pick(rng, BONDABLE)
-  const partners = METALS.has(a.symbol) ? NONMETALS : BONDABLE.filter((e) => e.symbol !== a.symbol)
-  return [a, pick(rng, partners)]
+  return bondAtoms(pick(rng, COVALENT_BONDS))
 }
 const ALL_NAMES = periodicTable.map((e) => e.name)
 const ALL_SYMBOLS = periodicTable.map((e) => e.symbol)
@@ -320,13 +364,11 @@ export function generatePolarityDirection(seed) {
 
 /** Classify a bond as nonpolar covalent / polar covalent / ionic. */
 export function generatePolarityClass(seed) {
-  const rng = rngFor(seed)
-  const [a, b] = pickBondPair(rng)
-  if (a.symbol === b.symbol) return null
+  if (seed >= BONDS.length) return null
+  const rng = rngFor(seed * 337 + 19)
+  const bond = BONDS[seed]
+  const [a, b] = bondAtoms(bond)
   const delta = Math.abs(a.electronegativity - b.electronegativity)
-  // Right on a band boundary the "correct" label is arbitrary.
-  if (Math.abs(delta - 0.4) < 0.08 || Math.abs(delta - 1.7) < 0.08) return null
-  const correct = classifyBond(delta)
   const choices = shuffleWith(rng, ['Nonpolar covalent', 'Polar covalent', 'Ionic'])
 
   return {
@@ -335,9 +377,9 @@ export function generatePolarityClass(seed) {
     kind: 'mcq',
     prompt: `How would you classify the ${a.symbol}–${b.symbol} bond?`,
     choices,
-    correctIndex: choices.indexOf(correct),
-    explanation: `ΔEN = |${a.electronegativity} − ${b.electronegativity}| = ${delta.toFixed(2)} → ${correct.toLowerCase()}.`,
-    teach: 'Rough cutoffs: ΔEN < 0.4 nonpolar covalent, 0.4–1.7 polar covalent, > 1.7 ionic.',
+    correctIndex: choices.indexOf(bond.cls),
+    explanation: `ΔEN = |${a.electronegativity} − ${b.electronegativity}| = ${delta.toFixed(2)} → ${bond.cls.toLowerCase()}.`,
+    teach: 'Rough cutoffs: ΔEN < 0.4 nonpolar covalent, 0.4–1.7 polar covalent, > 1.7 ionic. They are guidelines, not laws — HF has ΔEN 1.78 yet is plainly covalent. No exam supplies the numbers, so learn the relative ordering instead.',
   }
 }
 
