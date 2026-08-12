@@ -12,7 +12,6 @@ import * as functionalGroups from '../generators/functionalGroups.js'
 
 import lewisStructures from '../data/genchem/lewisStructures.json'
 import electronConfig from '../data/genchem/electronConfig.json'
-import enMnemonic from '../data/curated/enMnemonic.json'
 import vseprCurated from '../data/genchem/vsepr.json'
 import acidBaseCurated from '../data/genchem/acidBase.json'
 import curvedArrows from '../data/curated/curvedArrows.json'
@@ -86,7 +85,6 @@ export const TOPICS = [
       ...buildBank(elements.generateENRanking, 60),
       ...buildBank(elements.generateTrendDirection, 12),
       ...withKind(electronConfig),
-      ...withKind(enMnemonic),
     ],
   },
   {
