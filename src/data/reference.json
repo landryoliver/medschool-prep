@@ -28,14 +28,26 @@
       ]
     },
     {
-      "heading": "Electronegativity ordering worth memorizing",
+      "heading": "Electronegativity ordering — the mnemonic",
       "points": [
-        "F (3.98) > O (3.44) > N (3.04) ≈ Cl (3.16) > Br (2.96) > I (2.66) ≈ S (2.58) ≈ C (2.55) > H (2.20)",
-        "The one that matters most: O and N are much more electronegative than C, which is why C–O and C–N bonds are polar and reactive."
+        "FUNNY OWLS NEED CLEAN CLOTHES, SOCKS, HATS → F, O, N, Cl, C, S, H — most electronegative to least.",
+        "Actual Pauling values: F 3.98 > O 3.44 > Cl 3.16 > N 3.04 > Br 2.96 > I 2.66 > S 2.58 > C 2.55 > H 2.20.",
+        "Two caveats the mnemonic glosses over: Cl is very slightly ABOVE N (3.16 vs 3.04), and S is very slightly above C (2.58 vs 2.55). Both pairs are close enough to treat as ties — just do not claim N beats Cl on an exam.",
+        "What the mnemonic gets right is the part that matters: F and O dominate, C and H sit at the bottom, and everything organic happens in between.",
+        "The payoff: O and N are much more electronegative than C, which is why C-O and C-N bonds are polar, and why those carbons are the electrophilic ones."
       ]
     }
   ],
   "polarity": [
+    {
+      "heading": "The ordering to have memorized",
+      "points": [
+        "FUNNY OWLS NEED CLEAN CLOTHES, SOCKS, HATS → F > O > N > Cl > C > S > H.",
+        "Strictly, Cl edges out N and S edges out C, but both pairs are near-ties. The mnemonic is reliable everywhere else.",
+        "Every polarity question reduces to this list: whichever atom sits earlier takes the electrons and carries the delta-minus.",
+        "C-H is the one to internalize as effectively NONPOLAR (2.55 vs 2.20). That is why hydrocarbons are greasy and water-insoluble."
+      ]
+    },
     {
       "heading": "Reading a polar bond",
       "points": [
