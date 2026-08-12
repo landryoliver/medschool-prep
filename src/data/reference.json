@@ -63,6 +63,16 @@
         "Linear does not automatically mean nonpolar: HCN is linear but its two ends differ, so nothing cancels.",
         "This is what decides the intermolecular force: no net dipole means dispersion only, however polar the individual bonds are."
       ]
+    },
+    {
+      "heading": "The exception: bonds to metals",
+      "points": [
+        "Every metal sits BELOW carbon in electronegativity: Li 0.98, Na 0.93, K 0.82, Mg 1.31, Al 1.61, versus carbon at 2.55.",
+        "So in a C-metal bond, carbon is the delta-MINUS partner — the reverse of C-O, C-N and C-halogen, where carbon is delta-plus.",
+        "A delta-minus carbon is NUCLEOPHILIC. That single reversal is what makes Grignard (C-Mg) and organolithium (C-Li) reagents able to build new carbon-carbon bonds.",
+        "Same logic for hydrides: in B-H (2.04 vs 2.20) and Al-H (1.61 vs 2.20) the HYDROGEN is delta-minus, so NaBH4 and LiAlH4 donate hydride rather than protons. The larger Al-H gap is why LiAlH4 is the stronger reducer.",
+        "Hydrogen has no fixed identity here: delta-plus and acidic on O or N, delta-minus and hydride-like on a metal. Always compare it with its partner."
+      ]
     }
   ],
   "lewis": [

@@ -12,6 +12,7 @@ import * as functionalGroups from '../generators/functionalGroups.js'
 
 import lewisStructures from '../data/genchem/lewisStructures.json'
 import electronConfig from '../data/genchem/electronConfig.json'
+import metalCarbon from '../data/curated/metalCarbon.json'
 import vseprCurated from '../data/genchem/vsepr.json'
 import acidBaseCurated from '../data/genchem/acidBase.json'
 import curvedArrows from '../data/curated/curvedArrows.json'
@@ -100,6 +101,7 @@ export const TOPICS = [
       ...buildBank(molPolarity.generateCancelsBySymmetry, 12),
       ...buildBank(molPolarity.generatePolarityReason, 25),
       ...buildBank(molPolarity.generateComparePolarity, 40),
+      ...withKind(metalCarbon),
     ],
   },
   {
