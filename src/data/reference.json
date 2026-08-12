@@ -152,6 +152,17 @@
   ],
   "acidbase": [
     {
+      "heading": "ARIO — the order to check when ranking acidity",
+      "points": [
+        "Draw the CONJUGATE BASES first. Everything below is about which anion is more stable.",
+        "A — ATOM. Are the charges on different atoms? Across a period use electronegativity (O beats N beats C). Down a group use SIZE (S beats O, I beats Cl). This factor is the largest, worth tens of pKa units.",
+        "R — RESONANCE. Same atom? Then ask which charge delocalizes. Carboxylate over two oxygens beats a localized alkoxide by ~11 pKa units.",
+        "I — INDUCTION. Same atom, same resonance? Nearby electron-withdrawing groups stabilize the charge. Trichloroacetic acid (0.7) versus acetic acid (4.8). Falls off sharply with distance.",
+        "O — ORBITAL. Everything else tied? More s-character holds the lone pair closer in: sp (50%) beats sp2 (33%) beats sp3 (25%). This is why terminal alkynes (25) are so much more acidic than alkanes (50).",
+        "Work down the list and STOP at the first factor that differs — later factors cannot overturn an earlier one."
+      ]
+    },
+    {
       "heading": "Definitions",
       "points": [
         "Bronsted-Lowry: acid donates a proton, base accepts one.",
@@ -340,6 +351,16 @@
   ],
   "orgopreview": [
     {
+      "heading": "SN1 / SN2 / E1 / E2 — ask three questions in order",
+      "points": [
+        "1. SUBSTRATE. Methyl or primary rules out SN1 and E1 (no stable carbocation). Tertiary rules out SN2 (no room for backside attack). Secondary keeps everything open, so conditions decide.",
+        "2. REAGENT. Strong nucleophile -> SN2. Strong AND bulky base (KOtBu, LDA, DBU) -> E2. Weak or neutral, often the solvent itself -> SN1/E1.",
+        "3. SOLVENT AND TEMPERATURE. Polar protic (water, alcohols) stabilizes ions -> SN1/E1. Polar aprotic (DMSO, DMF, acetone) frees the nucleophile -> SN2. Heat favours elimination, because it makes more particles and the -T*delta-S term grows.",
+        "Substrate first, because it eliminates the most options fastest. Then the reagent narrows it to one or two. Solvent and temperature break any remaining tie.",
+        "Seeing a carbocation anywhere in your mechanism means you have drawn a stepwise (SN1/E1) pathway, with everything that implies for stereochemistry."
+      ]
+    },
+    {
       "heading": "Substitution vs elimination at a glance",
       "points": [
         "SN2: strong nucleophile + unhindered (primary) carbon. One concerted step, backside attack, inversion.",
@@ -405,6 +426,17 @@
     }
   ],
   "isomers": [
+    {
+      "heading": "Assigning R/S — and the shortcut that saves the rotation",
+      "points": [
+        "Rank the four groups 1-4 by atomic number at the first point of difference. Orient priority 4 AWAY, read 1 to 2 to 3: clockwise is R, counterclockwise is S.",
+        "THE SHORTCUT: if priority 4 points TOWARD you (on a wedge), assign as drawn and then REVERSE the answer. Never rotate the molecule mentally — that is where mistakes come from.",
+        "Swapping any two groups inverts configuration. Two swaps cancel. This gives a second route: swap priority 4 to the back, assign, then flip once to undo the swap.",
+        "Ties are broken by exploring outward one atom at a time: -CH2OH beats -CH2CH3 because O outranks C at the second atom.",
+        "Multiple bonds duplicate the atom: C=O counts as two oxygens on that carbon, which is why an aldehyde outranks an alcohol.",
+        "Enantiomers differ at EVERY stereocenter; diastereomers differ at some but not all."
+      ]
+    },
     {
       "heading": "The isomer decision tree",
       "points": [

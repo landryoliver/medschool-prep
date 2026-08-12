@@ -14,6 +14,9 @@ import lewisStructures from '../data/genchem/lewisStructures.json'
 import electronConfig from '../data/genchem/electronConfig.json'
 import metalCarbon from '../data/curated/metalCarbon.json'
 import bondTypeRule from '../data/curated/bondTypeRule.json'
+import arioFramework from '../data/curated/arioFramework.json'
+import stereoShortcuts from '../data/curated/stereoShortcuts.json'
+import substitutionDecision from '../data/curated/substitutionDecision.json'
 import vseprCurated from '../data/genchem/vsepr.json'
 import acidBaseCurated from '../data/genchem/acidBase.json'
 import curvedArrows from '../data/curated/curvedArrows.json'
@@ -155,6 +158,7 @@ export const TOPICS = [
       ...buildBank(acidBase.generateAcidBaseRole, 4),
       ...withKind(acidBaseCurated),
       ...withKind(pkaComparisons),
+      ...withKind(arioFramework),
     ],
   },
   {
@@ -220,7 +224,7 @@ export const TOPICS = [
     id: 'isomers',
     label: 'Isomers',
     blurb: 'Constitutional vs stereo, conformers, and spotting a stereocenter.',
-    build: () => [...withKind(isomers), ...withKind(isomersExtra)],
+    build: () => [...withKind(isomers), ...withKind(isomersExtra), ...withKind(stereoShortcuts)],
   },
   {
     id: 'skeletal',
@@ -277,7 +281,7 @@ export const TOPICS = [
     id: 'orgopreview',
     label: 'Orgo Preview',
     blurb: 'A look ahead: mechanism concepts and SN1/SN2/E1/E2 conditions.',
-    build: () => [...withKind(mechanismConcepts), ...withKind(snsE)],
+    build: () => [...withKind(mechanismConcepts), ...withKind(snsE), ...withKind(substitutionDecision)],
   },
 ]
 
