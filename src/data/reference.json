@@ -52,6 +52,17 @@
         "ΔEN > 1.7 → ionic (Na–Cl).",
         "These are soft boundaries, not hard rules — the ranking matters more than the exact number."
       ]
+    },
+    {
+      "heading": "Bond polarity vs MOLECULAR polarity",
+      "points": [
+        "A polar bond is about two atoms. A polar MOLECULE is about whether all the bond dipoles cancel once you account for shape.",
+        "Symmetric shapes cancel: linear with identical ends (CO2), trigonal planar (BF3), tetrahedral with four identical groups (CCl4), octahedral (SF6).",
+        "CCl4 is the case to remember: four strongly polar C-Cl bonds, zero net dipole. Polar bonds do NOT guarantee a polar molecule.",
+        "Two things break the symmetry. A lone pair on the central atom (H2O bent, NH3 pyramidal, SO2 bent) or outer atoms that are not all the same (CHCl3, CH2Cl2).",
+        "Linear does not automatically mean nonpolar: HCN is linear but its two ends differ, so nothing cancels.",
+        "This is what decides the intermolecular force: no net dipole means dispersion only, however polar the individual bonds are."
+      ]
     }
   ],
   "lewis": [

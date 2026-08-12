@@ -27,6 +27,7 @@ import resonanceExtra from '../data/curated/resonanceExtra.json'
 import arrowsExtra from '../data/curated/arrowsExtra.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
+import * as molPolarity from '../generators/molecularPolarity.js'
 
 function hashId(str) {
   let h = 2166136261
@@ -84,12 +85,16 @@ export const TOPICS = [
   {
     id: 'polarity',
     label: 'Bond Polarity',
-    blurb: 'Which atom gets δ−, how polar a bond is, and where dipoles point.',
+    blurb: 'Which atom gets δ−, and whether the whole molecule ends up with a net dipole.',
     speedRound: true,
     build: () => [
       ...buildBank(elements.generatePolarityDirection, 90),
       ...buildBank(elements.generatePolarityClass, 60),
       ...buildBank(elements.generateMorePolarBond, 70),
+      ...buildBank(molPolarity.generateMoleculePolar, 25),
+      ...buildBank(molPolarity.generateCancelsBySymmetry, 12),
+      ...buildBank(molPolarity.generatePolarityReason, 25),
+      ...buildBank(molPolarity.generateComparePolarity, 40),
     ],
   },
   {

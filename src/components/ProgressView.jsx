@@ -9,6 +9,7 @@ const TOPIC_LABELS = {
   'periodic-trends': 'Periodic trends',
   'electron-config': 'Electron configuration',
   'bond-polarity': 'Bond polarity',
+  'molecular-polarity': 'Molecular polarity',
   'lewis-structures': 'Lewis structures',
   'formal-charge': 'Formal charge',
   vsepr: 'VSEPR geometry',
