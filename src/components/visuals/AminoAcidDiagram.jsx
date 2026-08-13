@@ -19,7 +19,13 @@ export default function AminoAcidDiagram({ sideChain, name, cyclic = false }) {
   )
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 330, display: 'block', margin: '0 auto' }}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      style={{ maxWidth: 330, display: 'block', margin: '0 auto' }}
+      role="img"
+      aria-label={`${name}: amino acid backbone with ${cyclic ? 'a side chain bonded back to the nitrogen' : `the side chain ${sideChain}`}`}
+    >
       {/* backbone bonds */}
       {bond(CX - 52, CY, CX - 12, CY)}
       {bond(CX + 12, CY, CX + 52, CY)}

@@ -51,7 +51,13 @@ export default function AufbauDiagram({ highlightThrough = null }) {
   const cutoff = highlightThrough ? order.findIndex((c) => c.label === highlightThrough) : -1
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 330, display: 'block', margin: '0 auto' }}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      style={{ maxWidth: 330, display: 'block', margin: '0 auto' }}
+      role="img"
+      aria-label="Aufbau chart: subshells in rows by shell number, read diagonally for filling order 1s, 2s, 2p, 3s, 3p, 4s, 3d"
+    >
       {/* diagonal guides, drawn behind the labels */}
       {Array.from({ length: maxSum + 1 }, (_, s) => {
         const on = order.filter((c) => c.r + c.c === s)

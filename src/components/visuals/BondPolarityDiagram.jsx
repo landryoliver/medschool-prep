@@ -5,7 +5,16 @@
  */
 export default function BondPolarityDiagram({ a, b, deltaOn = null, showDeltas = false, height = 120 }) {
   return (
-    <svg viewBox="-90 -50 180 100" style={{ width: '100%', maxHeight: height, display: 'block', margin: '0 auto' }} role="img">
+    <svg
+      viewBox="-90 -50 180 100"
+      style={{ width: '100%', maxHeight: height, display: 'block', margin: '0 auto' }}
+      role="img"
+      aria-label={
+        showDeltas
+          ? `${a} to ${b} bond${deltaOn ? `, partial negative charge on ${deltaOn}` : ', essentially nonpolar'}`
+          : `A bond between ${a} and ${b}`
+      }
+    >
       <line x1="-46" y1="0" x2="46" y2="0" stroke="#e2e8f0" strokeWidth="2" />
       <rect x="-84" y="-14" width="38" height="28" fill="var(--panel)" />
       <rect x="46" y="-14" width="38" height="28" fill="var(--panel)" />

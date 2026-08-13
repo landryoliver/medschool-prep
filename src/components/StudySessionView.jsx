@@ -35,7 +35,7 @@ function ScoreRing({ pct }) {
   const C = 2 * Math.PI * R
   const color = pct >= 80 ? 'var(--good)' : pct >= 50 ? '#facc15' : 'var(--bad)'
   return (
-    <svg viewBox="0 0 110 110" width="118" height="118" className="done-ring">
+    <svg viewBox="0 0 110 110" width="118" height="118" className="done-ring" role="img" aria-label={`Score ${pct} percent`}>
       <circle className="track" cx="55" cy="55" r={R} fill="none" strokeWidth="8" />
       <circle
         className="fill"

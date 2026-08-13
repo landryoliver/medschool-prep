@@ -33,7 +33,7 @@ function MasteryRing({ mastered, studied, total, topicId }) {
 
   return (
     <div className="ring-wrap" title={`${mastered} mastered · ${studied} seen`}>
-      <svg viewBox="0 0 44 44" className="ring">
+      <svg viewBox="0 0 44 44" className="ring" role="img" aria-label={`${mastered} mastered, ${studied} seen`}>
         <circle cx="22" cy="22" r={R} fill="none" stroke="var(--line)" strokeWidth="3" />
         {seenRatio > 0 && (
           <circle

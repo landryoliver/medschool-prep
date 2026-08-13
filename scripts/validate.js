@@ -202,6 +202,11 @@ for (const q of getMixedBank()) {
       const html = renderToStaticMarkup(createElement(QuestionVisual, { visual, revealed: true }))
       if (!html) fail(`${q.id}: visual rendered empty`)
       if (html.includes('NaN')) fail(`${q.id}: visual contains NaN coordinates`)
+      // A diagram carries the question's content; unlabelled it announces
+      // nothing at all to a screen reader.
+      if (!/role="img"/.test(html) || !/aria-label="[^"]{8,}"/.test(html)) {
+        fail(`${q.id}: ${visual.type} diagram has no descriptive aria-label`)
+      }
       if (/(cx|cy|x1|y1|x2|y2|d)="[^"]*(Infinity|undefined)/.test(html)) {
         fail(`${q.id}: visual contains a non-finite coordinate`)
       }

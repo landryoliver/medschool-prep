@@ -17,7 +17,13 @@ export default function HBondDiagram({ kind = 'hbond' }) {
   const strength = { hbond: 'strongest', dipole: 'moderate', dispersion: 'weakest — but always present' }[kind]
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 330, display: 'block', margin: '0 auto' }}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      style={{ maxWidth: 330, display: 'block', margin: '0 auto' }}
+      role="img"
+      aria-label={`Two molecules attracting: ${label}, ${strength}`}
+    >
       {kind === 'hbond' && (
         <>
           {/* donor molecule: O-H */}

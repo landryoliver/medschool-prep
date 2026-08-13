@@ -37,7 +37,13 @@ export default function EnergyDiagram({ levels, marks = [], showEa = false, eaSt
   const tsIdx = startIdx + 1
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 360, display: 'block', margin: '0 auto' }}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      style={{ maxWidth: 360, display: 'block', margin: '0 auto' }}
+      role="img"
+      aria-label={`Reaction energy diagram with ${(levels.length - 1) / 2} step${(levels.length - 1) / 2 === 1 ? '' : 's'}, energies ${levels.join(', ')} kilojoules per mole`}
+    >
       {/* axes */}
       <line x1={PAD_L} y1={PAD_T - 6} x2={PAD_L} y2={H - PAD_B} stroke="#475569" strokeWidth="1" />
       <line x1={PAD_L} y1={H - PAD_B} x2={W - 6} y2={H - PAD_B} stroke="#475569" strokeWidth="1" />

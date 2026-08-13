@@ -19,7 +19,13 @@ export default function PhScale({ pKa, pH, protonatedLabel = 'protonated', depro
   const protonated = pH < pKa
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 340, display: 'block', margin: '0 auto' }}>
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      style={{ maxWidth: 340, display: 'block', margin: '0 auto' }}
+      role="img"
+      aria-label={`pH scale: pKa ${pKa}, current pH ${pH}, so mostly ${protonated ? protonatedLabel : deprotonatedLabel}`}
+    >
       {/* buffering range: pKa +/- 1, where both forms are present */}
       <rect x={x(pKa - 1)} y={AXIS_Y - 9} width={x(pKa + 1) - x(pKa - 1)} height="18" fill="rgba(56,189,248,0.16)" />
 
