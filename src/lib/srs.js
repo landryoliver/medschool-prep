@@ -9,9 +9,16 @@ export const BOX_INTERVALS_MS = [0, DAY_MS, 3 * DAY_MS, 7 * DAY_MS, 21 * DAY_MS]
  * pressure — neither is evidence of recall, and counting them as mastery
  * would push the question out to a 3-week interval it hasn't earned.
  * A wrong answer always resets the box regardless.
+ *
+ * An unseen question starts at box 0, so the first correct answer moves it
+ * to box 1 and a one-day interval. Treating "unseen" as box −1 instead put
+ * a freshly-learned question back in box 0, whose interval is zero — so it
+ * was immediately due again and kept competing for the next session
+ * instead of spacing out. It also meant mastery (box 3) quietly needed
+ * four correct recalls rather than the three the UI describes.
  */
 export function nextProgressState(prev, id, mode, topic, correct, now = Date.now(), { promote = true } = {}) {
-  const box = correct ? (promote ? Math.min((prev?.box ?? -1) + 1, 4) : (prev?.box ?? 0)) : 0
+  const box = correct ? (promote ? Math.min((prev?.box ?? 0) + 1, 4) : (prev?.box ?? 0)) : 0
   return {
     id,
     mode,

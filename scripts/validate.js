@@ -3,6 +3,7 @@ import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/top
 import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt, canonicalKey, isValidMolecule } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
 import { lookupGeometry, GEOMETRIES } from '../src/lib/chem/vsepr.js'
+import { nextProgressState, selectSessionQuestions, BOX_INTERVALS_MS } from '../src/lib/srs.js'
 import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
@@ -228,6 +229,60 @@ for (const t of TOPICS.filter((t) => t.speedRound)) {
 // The generators derive answers correctly from their tables, so an error in
 // a TABLE produces confidently wrong chemistry that every other check
 // passes. These compare the tables against independent reference values.
+
+// === SPACED REPETITION ===
+// The scheduler decides what appears in every session, and a mistake here
+// is invisible in the UI: questions simply come back at the wrong time.
+console.log('\n=== Spaced repetition ===')
+{
+  const DAY = 86400000
+  let srsBad = 0
+  const srs = (label, cond) => { if (!cond) { fail('SRS: ' + label); srsBad++ } }
+
+  let p = nextProgressState(undefined, 'q', 'm', 't', true, 0)
+  srs('first correct answer should reach box 1 and a one-day interval', p.box === 1 && p.nextDueAt === DAY)
+  srs('a freshly learned question must not be instantly due again', p.nextDueAt > 0)
+
+  p = nextProgressState(p, 'q', 'm', 't', true, DAY)
+  srs('second correct answer should reach box 2', p.box === 2)
+  p = nextProgressState(p, 'q', 'm', 't', true, 4 * DAY)
+  srs('three correct recalls should equal mastery (box 3), matching the UI', p.box === 3)
+
+  const missed = nextProgressState(p, 'q', 'm', 't', false, 5 * DAY)
+  srs('a miss resets to box 0 and becomes due immediately', missed.box === 0 && missed.nextDueAt === 5 * DAY)
+
+  const hinted = nextProgressState(undefined, 'h', 'm', 't', true, 0, { promote: false })
+  srs('a hinted correct answer records the attempt without promoting', hinted.box === 0 && hinted.timesSeen === 1)
+  const hintedMiss = nextProgressState(p, 'h', 'm', 't', false, 0, { promote: false })
+  srs('a miss demotes even when promotion is suppressed', hintedMiss.box === 0)
+
+  let capped = p
+  for (let i = 0; i < 10; i++) capped = nextProgressState(capped, 'c', 'm', 't', true, i * DAY)
+  srs('the box caps at 4 rather than growing without bound', capped.box === 4)
+  srs('intervals strictly increase with the box', BOX_INTERVALS_MS.every((x, i, a) => i === 0 || x > a[i - 1]))
+
+  // Selection must favour due and unseen material over things not yet due.
+  const bank = Array.from({ length: 60 }, (_, i) => ({ id: 'x' + i, topic: 't' }))
+  const progress = new Map()
+  const now = Date.now()
+  for (let i = 0; i < 20; i++) progress.set('x' + i, { id: 'x' + i, topic: 't', box: 4, nextDueAt: now + 30 * DAY, timesSeen: 5, timesCorrect: 5, lastResult: true })
+  for (let i = 20; i < 40; i++) progress.set('x' + i, { id: 'x' + i, topic: 't', box: 1, nextDueAt: now - 5 * DAY, timesSeen: 2, timesCorrect: 1, lastResult: true })
+  let notDue = 0, due = 0, unseen = 0
+  for (let run = 0; run < 120; run++) {
+    for (const id of selectSessionQuestions(bank, progress, 15)) {
+      const n = +id.slice(1)
+      if (n < 20) notDue++
+      else if (n < 40) due++
+      else unseen++
+    }
+  }
+  srs('due material must dominate not-yet-due material', due > notDue * 3)
+  srs('unseen material must still surface', unseen > 0)
+  srs('not-yet-due material must not be excluded entirely', notDue > 0)
+
+  if (!srsBad) console.log('  ok  promotion, demotion, intervals, hint handling and session selection')
+}
+
 console.log('\n=== Reference data ===')
 {
   // Amino acids: codes, class, side-chain pKa and charge at pH 7.4.
