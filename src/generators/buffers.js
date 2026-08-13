@@ -55,6 +55,10 @@ export function generateProtonationState(seed) {
     correctIndex: choices.indexOf(correct),
     explanation: `pH ${pH} is ${isProtonated ? 'BELOW' : 'ABOVE'} the pKa of ${g.pKa}, so the group ${isProtonated ? 'holds onto its proton' : 'has lost its proton'} — it is ${isProtonated ? g.protonated : g.deprotonated}.`,
     teach: 'Below the pKa, a group keeps its proton. Above the pKa, it loses it. Then ask what that does to the charge: losing a proton from a neutral acid gives −1; losing one from a positive amine gives neutral.',
+    // Shown after answering: the axis makes the comparison spatial, but it
+    // also shows which side pH falls on, so it would give the answer away.
+    visual: { type: 'phScale', pKa: g.pKa, pH },
+    visualAfter: true,
   }
 }
 
@@ -83,6 +87,8 @@ export function generateHHRatio(seed) {
     correctIndex: choices.indexOf(correct),
     explanation: `Henderson-Hasselbalch: pH = pKa + log([A⁻]/[HA]). Here pH − pKa = ${delta}, so log of the ratio is ${delta} and the ratio is ${delta === 0 ? '1:1' : `10^${delta}`} — ${correct}.`,
     teach: 'Each pH unit above the pKa multiplies the base-to-acid ratio by ten. At pH = pKa the two forms are equal, which is also where buffering is strongest.',
+    visual: { type: 'phScale', pKa: b.pKa, pH, protonatedLabel: 'acid form (HA)', deprotonatedLabel: 'base form (A⁻)' },
+    visualAfter: true,
   }
 }
 

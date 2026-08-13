@@ -75,6 +75,8 @@ export function generateClassify(seed) {
     correctIndex: choices.indexOf(CLASS_LABEL[aa.class]),
     explanation: `${aa.name} is ${aa.class}. Side chain: ${aa.sideChain}. ${aa.note}`,
     teach: 'Sort by side chain: carboxylate → acidic; amine, guanidinium or imidazole → basic; –OH, –SH or amide → polar; hydrocarbon or aromatic-with-no-polar-group → nonpolar.',
+    visual: { type: 'aminoAcid', sideChain: aa.sideChain, name: aa.name, cyclic: aa.name === 'Proline' },
+    visualAfter: true,
   }
 }
 
@@ -179,6 +181,8 @@ export function generateFromSideChain(seed) {
     correctIndex,
     explanation: `${aa.name} (${aa.three}, ${aa.one}) — side chain ${aa.sideChain}, classified ${aa.class}. ${aa.note}`,
     teach: 'Recognizing side chains on sight is what biochem actually tests. Group them by the functional group you already know: hydroxyl, thiol, amide, carboxylate, amine, aromatic ring.',
+    visual: { type: 'aminoAcid', sideChain: aa.sideChain, name: aa.name, cyclic: aa.name === 'Proline' },
+    visualAfter: true,
   }
 }
 

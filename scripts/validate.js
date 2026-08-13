@@ -96,6 +96,13 @@ for (const topic of TOPICS) {
       fail(`${q.id}: unknown kind "${q.kind}"`)
     }
 
+    // These two diagram types print the answer on their face — the amino
+    // acid name, or which side of the pKa the pH falls on — so they must
+    // stay hidden until the question has been answered.
+    if ((q.visual?.type === 'aminoAcid' || q.visual?.type === 'phScale') && !q.visualAfter) {
+      fail(`${q.id}: ${q.visual.type} visual names the answer but is not marked visualAfter`)
+    }
+
     // Check answer options too, not just the question's own diagram —
     // an invalid structure offered as a distractor is still drawn.
     for (const visual of [q.visual, ...(q.choiceVisuals ?? [])]) {

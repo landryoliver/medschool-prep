@@ -4,6 +4,8 @@ import VseprDiagram from './VseprDiagram.jsx'
 import BondPolarityDiagram from './BondPolarityDiagram.jsx'
 import CurvedArrowDiagram from './CurvedArrowDiagram.jsx'
 import EnergyDiagram from './EnergyDiagram.jsx'
+import AminoAcidDiagram from './AminoAcidDiagram.jsx'
+import PhScale from './PhScale.jsx'
 
 /** Renders whatever visual a question carries. `revealed` lets a diagram
  *  show its answer annotations once the question has been graded. */
@@ -37,6 +39,17 @@ export default function QuestionVisual({ visual, revealed = false }) {
           b={visual.b}
           deltaOn={visual.deltaOn}
           showDeltas={revealed || visual.showDeltas}
+        />
+      )
+    case 'aminoAcid':
+      return <AminoAcidDiagram sideChain={visual.sideChain} name={visual.name} cyclic={visual.cyclic} />
+    case 'phScale':
+      return (
+        <PhScale
+          pKa={visual.pKa}
+          pH={visual.pH}
+          protonatedLabel={visual.protonatedLabel}
+          deprotonatedLabel={visual.deprotonatedLabel}
         />
       )
     case 'energy':

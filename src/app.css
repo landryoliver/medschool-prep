@@ -1022,3 +1022,48 @@ button.wide {
 .topic-card:active {
   border-color: var(--accent);
 }
+
+/* ---- Topic cards: mastery ring + layout ---------------------------- */
+
+.topic-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.topic-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ring-wrap {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  margin-top: 0.1rem;
+}
+
+.ring {
+  width: 40px;
+  height: 40px;
+}
+
+.ring circle {
+  transition: stroke-dasharray 0.4s ease-out;
+}
+
+.topic-blurb {
+  margin: 0.25rem 0 0.6rem;
+}
+
+/* Buttons big enough to hit reliably on a phone */
+.topic-actions button,
+.plan-topic-actions button {
+  min-height: 40px;
+}
+
+/* ---- Amino acid + pH visuals --------------------------------------- */
+
+.card svg {
+  overflow: visible;
+}

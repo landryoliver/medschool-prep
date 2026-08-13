@@ -7,14 +7,47 @@ import { getStreak } from '../lib/streaks.js'
 // without being the kind of target that gets abandoned on a busy day.
 const DAILY_GOAL = 30
 
+// 25 mastered is "solid enough to move on", matching the progression view.
+const MASTERY_TARGET = 25
+
+/**
+ * Mastery as a ring rather than a number. Scanning fifteen topic cards for
+ * where to spend time is a visual comparison, and a filled arc reads at a
+ * glance in a way "7 mastered" does not.
+ */
+function MasteryRing({ mastered }) {
+  const R = 15
+  const C = 2 * Math.PI * R
+  const ratio = Math.min(1, mastered / MASTERY_TARGET)
+  const done = ratio >= 1
+
+  return (
+    <div className="ring-wrap" title={`${mastered} of ${MASTERY_TARGET} mastered`}>
+      <svg viewBox="0 0 40 40" className="ring">
+        <circle cx="20" cy="20" r={R} fill="none" stroke="#0d1626" strokeWidth="4" />
+        <circle
+          cx="20"
+          cy="20"
+          r={R}
+          fill="none"
+          stroke={done ? 'var(--good)' : 'var(--accent)'}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={`${ratio * C} ${C}`}
+          transform="rotate(-90 20 20)"
+        />
+        <text x="20" y="24" textAnchor="middle" fontSize="11" fontWeight="700" fill={done ? 'var(--good)' : 'var(--text)'}>
+          {done ? '✓' : mastered}
+        </text>
+      </svg>
+    </div>
+  )
+}
+
 function TopicStat({ stat }) {
   if (!stat.seen) return <span className="muted">Not started</span>
   const pct = Math.round((stat.correct / stat.seen) * 100)
-  return (
-    <span className="muted">
-      {pct}% · {stat.mastered} mastered
-    </span>
-  )
+  return <span className="muted">{pct}% correct</span>
 }
 
 export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onReviewMisses, onPlan }) {
@@ -103,11 +136,16 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onRevi
         const pct = stat?.seen ? Math.round((stat.correct / stat.seen) * 100) : 0
         return (
           <div key={topic.id} className="card topic-card">
-            <div className="topic-head">
-              <h3>{topic.label}</h3>
-              {stat ? <TopicStat stat={stat} /> : <span className="muted">…</span>}
+            <div className="topic-row">
+              <MasteryRing mastered={stat?.mastered ?? 0} />
+              <div className="topic-main">
+                <div className="topic-head">
+                  <h3>{topic.label}</h3>
+                  {stat ? <TopicStat stat={stat} /> : <span className="muted">…</span>}
+                </div>
+                <p className="muted topic-blurb">{topic.blurb}</p>
+              </div>
             </div>
-            <p className="muted topic-blurb">{topic.blurb}</p>
             {stat?.seen ? (
               <div className="progress-track thin">
                 <div
