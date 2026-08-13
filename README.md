@@ -100,6 +100,22 @@ src/
     visuals/      inline-SVG diagram renderers
 ```
 
+## Backing up progress
+
+All progress lives in this browser's IndexedDB. Phones sometimes clear
+that storage on their own — iOS has done so for installed web apps after
+periods of disuse — which would erase every spaced-repetition interval.
+
+**Progress → Save a copy** writes a small JSON file. **Restore** merges it
+back, keeping whichever record was practised most recently, so restoring
+an older backup cannot overwrite newer work.
+
+Worth doing every few weeks, and before reinstalling or clearing site data.
+
+If storage is unavailable entirely (private browsing, quota refusal), the
+app still runs for studying and says so on the Progress screen rather than
+failing silently.
+
 ## Study behaviour worth knowing
 
 - **Learn mode** gives immediate feedback, one retry, and an opt-in hint.

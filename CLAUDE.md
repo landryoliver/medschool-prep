@@ -108,6 +108,33 @@ projections, oxidation levels and R/S mechanics are taught *in* orgo;
 amino acid structures and buffer arithmetic are *assumed* by biochem. When
 proposing content, say which side of that line it falls on and why.
 
+### 6. A check that has never failed has not been tested
+
+Every guard added here gets deliberately broken once, and the failure
+observed, before it is trusted. This is not pedantry — a first attempt
+passed *vacuously* five separate times in one session:
+
+- A branched-name check whose regex matched zero rows and reported success.
+- A reproducible-build check that compared two hashes built in the same
+  minute, so the clock fallback it was meant to catch looked fine.
+- An aria-label test whose removal step silently edited nothing.
+- An aufbau chart verified by eye rather than against the (n+l) rule; it
+  was generating `1s 2s 3s 2p` and looked plausible.
+- An answer-leak guard that passed because no question yet had the visual
+  it was written to police.
+
+Corrupt the data, watch the check fail, restore. It costs a minute.
+
+### 7. Verify appearance claims differently from correctness claims
+
+Validation proves diagram geometry is sound and answers are derivable. It
+cannot tell you whether a marker covers the bond the question asks about,
+whether two topics share a colour, or whether a ring reads as broken. Those
+were all found from a single screenshot after six rounds of blind work.
+
+When changing anything visual, say plainly that it is unverified rather
+than implying it was checked.
+
 ## Adding questions
 
 Generated questions take an integer seed and return the same question every
@@ -174,6 +201,11 @@ scripts/validate.js   the correctness gate
 - **Test mode** stays silent until an end-of-session review.
 - **Speed rounds** never promote a question — a fast guess is not recall —
   but a miss still demotes it.
+- **Leitner boxes start at 0 for unseen material**, so the first correct
+  answer reaches box 1 and a one-day interval, and three correct recalls
+  means mastered. Treating unseen as box −1 puts a freshly-learned question
+  back on a zero-length interval, so it is immediately due again and the
+  spacing never starts. `scripts/validate.js` asserts this.
 - **The periodic table** is available during any study session with no
   scoring penalty, because every real exam supplies one. It is deliberately
   absent from speed rounds, which are where recall gets pressure-tested.
