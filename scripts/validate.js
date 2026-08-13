@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/topics.js'
 import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt, canonicalKey, isValidMolecule } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
-import { lookupGeometry } from '../src/lib/chem/vsepr.js'
+import { lookupGeometry, GEOMETRIES } from '../src/lib/chem/vsepr.js'
 import { TOPIC_META } from '../src/lib/topicMeta.js'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
@@ -209,6 +209,104 @@ console.log(`${rendered} diagrams rendered`)
 console.log(`\nMixed bank: ${getMixedBank().length}`)
 for (const t of TOPICS.filter((t) => t.speedRound)) {
   console.log(`Speed bank ${t.id}: ${getSpeedBank(t.id).length}`)
+}
+
+
+// === REFERENCE DATA AUDIT ===
+// The generators derive answers correctly from their tables, so an error in
+// a TABLE produces confidently wrong chemistry that every other check
+// passes. These compare the tables against independent reference values.
+console.log('\n=== Reference data ===')
+{
+  // Amino acids: codes, class, side-chain pKa and charge at pH 7.4.
+  const AA_REF = {
+    Glycine: ['Gly', 'G', 'nonpolar', null, 0], Alanine: ['Ala', 'A', 'nonpolar', null, 0],
+    Valine: ['Val', 'V', 'nonpolar', null, 0], Leucine: ['Leu', 'L', 'nonpolar', null, 0],
+    Isoleucine: ['Ile', 'I', 'nonpolar', null, 0], Methionine: ['Met', 'M', 'nonpolar', null, 0],
+    Proline: ['Pro', 'P', 'nonpolar', null, 0], Phenylalanine: ['Phe', 'F', 'nonpolar', null, 0],
+    Tryptophan: ['Trp', 'W', 'nonpolar', null, 0], Serine: ['Ser', 'S', 'polar', null, 0],
+    Threonine: ['Thr', 'T', 'polar', null, 0], Cysteine: ['Cys', 'C', 'polar', 8.3, 0],
+    Tyrosine: ['Tyr', 'Y', 'polar', 10.1, 0], Asparagine: ['Asn', 'N', 'polar', null, 0],
+    Glutamine: ['Gln', 'Q', 'polar', null, 0], Aspartate: ['Asp', 'D', 'acidic', 3.9, -1],
+    Glutamate: ['Glu', 'E', 'acidic', 4.3, -1], Lysine: ['Lys', 'K', 'basic', 10.5, 1],
+    Arginine: ['Arg', 'R', 'basic', 12.5, 1], Histidine: ['His', 'H', 'basic', 6.0, 0],
+  }
+  const aa = JSON.parse(fs.readFileSync('src/data/genchem/aminoAcids.json', 'utf8'))
+  if (aa.length !== 20) fail(`amino acid table has ${aa.length} entries, expected 20`)
+  let aaBad = 0
+  for (const a of aa) {
+    const r = AA_REF[a.name]
+    if (!r) { fail(`unknown amino acid "${a.name}"`); aaBad++; continue }
+    const [three, one, cls, pka, ch] = r
+    if (a.three !== three) { fail(`${a.name}: three-letter code "${a.three}" should be "${three}"`); aaBad++ }
+    if (a.one !== one) { fail(`${a.name}: one-letter code "${a.one}" should be "${one}"`); aaBad++ }
+    if (a.class !== cls) { fail(`${a.name}: class "${a.class}" should be "${cls}"`); aaBad++ }
+    if (a.pKaR !== pka) { fail(`${a.name}: side-chain pKa ${a.pKaR} should be ${pka}`); aaBad++ }
+    if (a.charge7 !== ch) { fail(`${a.name}: charge at pH 7.4 is ${a.charge7}, should be ${ch}`); aaBad++ }
+  }
+  if (!aaBad) console.log('  ok  20 amino acids: codes, classes, pKa and charges')
+
+  // VSEPR: shape and hybridization per (bonding, lone), and the drawing
+  // must show exactly the groups the entry claims.
+  const VSEPR_REF = {
+    '2,0': ['linear', 'sp'], '3,0': ['trigonal planar', 'sp2'], '2,1': ['bent', 'sp2'],
+    '4,0': ['tetrahedral', 'sp3'], '3,1': ['trigonal pyramidal', 'sp3'], '2,2': ['bent', 'sp3'],
+    '5,0': ['trigonal bipyramidal', 'sp3d'], '4,1': ['seesaw', 'sp3d'], '3,2': ['T-shaped', 'sp3d'],
+    '2,3': ['linear', 'sp3d'], '6,0': ['octahedral', 'sp3d2'], '5,1': ['square pyramidal', 'sp3d2'],
+    '4,2': ['square planar', 'sp3d2'],
+  }
+  let vBad = 0
+  for (const g of GEOMETRIES) {
+    const key = `${g.bonding},${g.lone}`
+    const r = VSEPR_REF[key]
+    if (!r) { fail(`unexpected VSEPR entry ${key}`); vBad++; continue }
+    if (g.shape !== r[0]) { fail(`VSEPR (${key}): shape "${g.shape}" should be "${r[0]}"`); vBad++ }
+    if (g.hybridization !== r[1]) { fail(`VSEPR (${key}): hybridization "${g.hybridization}" should be "${r[1]}"`); vBad++ }
+    if (g.draw.bonds.length !== g.bonding) { fail(`VSEPR (${key}): drawing shows ${g.draw.bonds.length} bonds but entry claims ${g.bonding}`); vBad++ }
+    if (g.draw.lone.length !== g.lone) { fail(`VSEPR (${key}): drawing shows ${g.draw.lone.length} lone pairs but entry claims ${g.lone}`); vBad++ }
+  }
+  if (!vBad) console.log('  ok  13 VSEPR geometries: shapes, hybridizations, and drawings')
+
+  // Branched alkane names: every name must account for exactly the carbons
+  // its structure contains, and satisfy the lowest-locant rule.
+  const src = fs.readFileSync('src/generators/nomenclature.js', 'utf8')
+  const branchBlock = src.match(/const BRANCHED = \[([\s\S]*?)\n\]/)
+  if (!branchBlock) {
+    fail('could not read the BRANCHED table — this check would pass without testing anything')
+  } else {
+    const rows = [...branchBlock[1].matchAll(/\{ size: (\d+), subs: \[(.*?)\], name: '([^']+)' \}/g)]
+    if (rows.length === 0) {
+      fail('BRANCHED table parsed to zero rows — check is vacuous')
+    } else {
+      const STEM = { meth: 1, eth: 2, prop: 3, but: 4, pent: 5, hex: 6, hept: 7, oct: 8, non: 9, dec: 10 }
+      const SUBC = { CH3: 1, CH2CH3: 2 }
+      const MULT = { di: 2, tri: 3, tetra: 4 }
+      let nBad = 0
+      for (const [, size, subs, name] of rows) {
+        const subList = [...subs.matchAll(/'([A-Za-z0-9]+)'/g)].map((x) => x[1])
+        const structC = +size + subList.reduce((n, s) => n + (SUBC[s] || 0), 0)
+        const stemKey = Object.keys(STEM).find((k) => name.endsWith(k + 'ane'))
+        if (!stemKey) { fail(`branched name "${name}": could not parse parent stem`); nBad++; continue }
+        let nameC = STEM[stemKey]
+        for (const [, mult, sub] of name.matchAll(/(di|tri|tetra)?(methyl|ethyl)/g)) {
+          nameC += (MULT[mult] || 1) * (sub === 'methyl' ? 1 : 2)
+        }
+        if (structC !== nameC) { fail(`branched name "${name}": structure has ${structC} carbons but the name implies ${nameC}`); nBad++ }
+        const locs = (name.match(/^[\d,]+/) || [''])[0].split(',').filter(Boolean).map(Number)
+        const n = STEM[stemKey]
+        for (const l of locs) if (l > n) { fail(`branched name "${name}": locant ${l} exceeds the ${n}-carbon parent`); nBad++ }
+        if (locs.length) {
+          const mirrored = locs.map((l) => n + 1 - l).sort((a, b) => a - b)
+          const forward = [...locs].sort((a, b) => a - b)
+          for (let i = 0; i < forward.length; i++) {
+            if (forward[i] < mirrored[i]) break
+            if (forward[i] > mirrored[i]) { fail(`branched name "${name}" violates the lowest-locant rule`); nBad++; break }
+          }
+        }
+      }
+      if (!nBad) console.log(`  ok  ${rows.length} branched alkane names: carbon counts and lowest locants`)
+    }
+  }
 }
 
 console.log('\n=== Chemistry spot checks ===')
