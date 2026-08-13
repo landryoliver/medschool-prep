@@ -1,0 +1,358 @@
+{
+  "periodic": {
+    "intro": "Almost everything in organic chemistry traces back to one question: how badly does a given atom want electrons? The periodic table answers that by position alone, which is why every exam hands you one and expects you to reason from it.",
+    "sections": [
+      {
+        "heading": "Why the table is arranged this way",
+        "body": [
+          "Elements are laid out by atomic number — the number of protons. That ordering isn't arbitrary bookkeeping: it produces columns of elements that behave almost identically, because behaviour is set by the outermost electrons, and elements in a column have the same number of them.",
+          "Those outermost electrons are the valence electrons, and they are the only ones that do chemistry. Carbon's inner pair never participates in a reaction. Its four valence electrons do all the work. This is why the column an element sits in predicts its chemistry so reliably."
+        ],
+        "example": {
+          "label": "Reading valence off the table",
+          "text": "Groups 1 and 2 have 1 and 2 valence electrons. For groups 13–18, subtract 10 from the group number: group 16 (oxygen) has 6, group 17 (halogens) has 7. Oxygen needs 2 more to reach 8, so it forms 2 bonds. Halogens need 1, so they form 1."
+        }
+      },
+      {
+        "heading": "Electronegativity: the pull on shared electrons",
+        "body": [
+          "When two atoms share a pair of electrons, they rarely share equally. Electronegativity measures how hard an atom pulls on that shared pair. Fluorine pulls hardest of all elements; the metals at the bottom left pull least.",
+          "Two forces set it. Moving right across a row, protons pile up in the nucleus while electrons go into the same shell — more positive charge, same distance, so the pull rises. Moving down a column, each row adds a whole new shell, so the valence electrons sit further out and are shielded by the ones beneath. Distance wins, and the pull drops.",
+          "Combine those and you get the rule you'll use constantly: electronegativity increases up and to the right."
+        ]
+      },
+      {
+        "heading": "When 'up and to the right' isn't enough",
+        "body": [
+          "That rule only settles a comparison along one axis. If two elements are in the same row, compare across. Same column, compare down. But if they differ in both — a diagonal pair — the two halves of the rule point opposite ways and it answers nothing.",
+          "For those, fall back on something simpler and more reliable: metals versus nonmetals. Metals hold their outer electrons loosely; nonmetals grip them tightly. Every nonmetal is more electronegative than every metal, with no exceptions worth worrying about."
+        ],
+        "example": {
+          "label": "Lithium vs iodine",
+          "text": "Lithium is up (favouring Li) but far left (favouring I). The trend deadlocks. But lithium is a metal and iodine is a nonmetal, so iodine wins — 2.66 against 0.98. No numbers needed to get there."
+        }
+      },
+      {
+        "heading": "The ten elements that actually matter",
+        "body": [
+          "Organic chemistry runs almost entirely on C, H, N, O, plus the halogens F, Cl, Br, I, plus S and P. Everything else appears as a reagent, not as part of the molecule.",
+          "For those ten, the bonding pattern is worth knowing cold, because you'll use it every time you check whether a structure is drawn correctly: carbon makes 4 bonds, nitrogen 3, oxygen 2, and hydrogen and the halogens 1 each. Sulfur behaves like oxygen (2), phosphorus like nitrogen (3)."
+        ]
+      }
+    ]
+  },
+
+  "polarity": {
+    "intro": "Reactions happen where charge is uneven. Before you can predict where a molecule reacts, you need to see which atoms are electron-rich and which are electron-poor — and that comes almost entirely from comparing electronegativities.",
+    "sections": [
+      {
+        "heading": "Three kinds of bond, decided by position",
+        "body": [
+          "Start with the question that needs no numbers: is each atom a metal or a nonmetal? A metal bonded to a nonmetal transfers electrons outright and you get an ionic bond — a lattice of separate ions, like table salt. Two nonmetals share instead, giving a covalent bond. Two metals pool their electrons into a 'sea', which is metallic bonding.",
+          "This is the rule to reach for first, because a periodic table is the one reference every exam supplies, while electronegativity values are printed on none of them."
+        ],
+        "example": {
+          "label": "Two quick calls",
+          "text": "K–Br: potassium is a metal, bromine a nonmetal → ionic. C–O: both nonmetals → covalent. Neither answer needed a number."
+        }
+      },
+      {
+        "heading": "Polar or nonpolar — the second question",
+        "body": [
+          "Once you know a bond is covalent, ask whether the sharing is even. Two identical atoms share perfectly evenly: nonpolar. Two different atoms don't, and the more electronegative one takes a larger share of the electron density.",
+          "That atom picks up a partial negative charge, written δ−. Its partner is left partially positive, δ+. These are partial charges, not full ones — nobody has gained or lost an electron, the pair is just sitting closer to one end."
+        ]
+      },
+      {
+        "heading": "Why any of this matters",
+        "body": [
+          "The δ+ atom is electron-poor, and electron-rich species are attracted to it. That is the single most useful thing bond polarity tells you: it marks where a molecule will be attacked.",
+          "A carbon bonded to oxygen or a halogen is δ+, which is why those carbons are the reactive ones in nearly every mechanism you'll see. A carbon bonded only to hydrogen and other carbons is essentially neutral, which is why hydrocarbon chains just sit there being unreactive."
+        ],
+        "example": {
+          "label": "The C–H exception worth internalizing",
+          "text": "Carbon is 2.55 and hydrogen 2.20 — close enough that C–H counts as effectively nonpolar. This is why oils and fats don't dissolve in water, and why the hydrocarbon parts of a molecule hide from it."
+        }
+      },
+      {
+        "heading": "A whole molecule can be nonpolar even with polar bonds",
+        "body": [
+          "Bond polarity and molecular polarity are different questions. Each polar bond has a direction, and those directions can cancel if the molecule is symmetric enough.",
+          "Carbon tetrachloride has four strongly polar C–Cl bonds pointing to the corners of a tetrahedron. They pull equally in opposing directions and cancel exactly, so the molecule has no net dipole at all. Break the symmetry — swap one chlorine for a hydrogen — and the cancellation fails, leaving chloroform distinctly polar.",
+          "Two things break symmetry: a lone pair on the central atom (which is why water is bent and polar), or outer atoms that aren't all the same."
+        ]
+      }
+    ]
+  },
+
+  "lewis": {
+    "intro": "A Lewis structure is a bookkeeping system for valence electrons. Getting fluent at drawing and reading them matters because every mechanism you'll ever push arrows through is drawn on top of one.",
+    "sections": [
+      {
+        "heading": "What the drawing represents",
+        "body": [
+          "Every line between two atoms is a shared pair of electrons — one bond, two electrons. Every pair of dots sitting on a single atom is a lone pair: two electrons that belong to that atom alone and aren't being shared.",
+          "Lone pairs are not decoration. They are where most reactions start, because an atom with an available pair is an atom that can attack something. Leaving them off a drawing hides the reactive part of the molecule."
+        ]
+      },
+      {
+        "heading": "The octet rule, and what it really says",
+        "body": [
+          "Most second-row atoms are stable with eight electrons around them, counting both bonding and lone pairs. That's not a law of nature so much as a consequence of shell capacity: the second shell holds exactly eight (one s orbital plus three p orbitals, two electrons each).",
+          "Hydrogen is the exception everyone forgets — it only has a first shell, which holds two. Hydrogen wants a duet, not an octet.",
+          "There are real exceptions beyond that. Boron is commonly stable with only six. Elements from the third row down (S, P, Cl) can exceed eight, because they have d orbitals available."
+        ]
+      },
+      {
+        "heading": "Building one, step by step",
+        "body": [
+          "Count all the valence electrons first, adding one for each negative charge and subtracting one for each positive charge. That total is your budget — every electron has to end up somewhere.",
+          "Connect the atoms with single bonds, then hand out remaining electrons as lone pairs to the outer atoms until they have octets. If the central atom is short, pull a lone pair from a neighbour into a second bond. You're rearranging, never adding."
+        ],
+        "example": {
+          "label": "Water, worked",
+          "text": "Oxygen brings 6, each hydrogen brings 1: 8 electrons total. Two O–H bonds use 4. The remaining 4 become two lone pairs on oxygen. Oxygen now has 8 around it, each hydrogen has its duet, and the whole budget is spent."
+        }
+      },
+      {
+        "heading": "Formal charge: who owns what",
+        "body": [
+          "Formal charge asks whether an atom is holding its fair share of electrons. Take its normal valence count, subtract the lone-pair electrons it keeps entirely, and subtract half of the shared ones.",
+          "In practice it's faster as: valence − lone pair electrons − number of bonds. An oxygen with two bonds and two lone pairs gives 6 − 4 − 2 = 0, which is why that's oxygen's neutral, happy arrangement.",
+          "Learn the neutral patterns and you can spot charges instantly instead of computing them: carbon with 4 bonds, nitrogen with 3 bonds and a lone pair, oxygen with 2 bonds and two lone pairs. Deviate from those and there's a charge."
+        ],
+        "example": {
+          "label": "Spotting charges by pattern",
+          "text": "Nitrogen with 4 bonds is one more than neutral → +1 (ammonium). Oxygen with 3 bonds is one more than neutral → +1. Oxygen with 1 bond and 3 lone pairs is one fewer → −1 (hydroxide)."
+        }
+      }
+    ]
+  },
+
+  "vsepr": {
+    "intro": "Molecules are three-dimensional, and their shape decides how they pack, whether they're polar, and how reagents can approach them. VSEPR is a surprisingly simple way to predict that shape from a flat drawing.",
+    "sections": [
+      {
+        "heading": "The whole idea in one sentence",
+        "body": [
+          "Electron groups around an atom repel each other, so they spread out as far apart as they can get. That's it. Everything else is working out the geometry that maximizes separation for a given number of groups.",
+          "The crucial move is counting GROUPS, not bonds. An electron group is any single, double, or triple bond, or any lone pair. A double bond counts as one group, not two — both pairs sit between the same two atoms and point the same direction."
+        ]
+      },
+      {
+        "heading": "Groups to shape",
+        "body": [
+          "Two groups get as far apart as possible by pointing in opposite directions: 180°, linear. Three spread into a flat triangle: 120°, trigonal planar. Four can't stay flat and still be maximally separated, so they pyramid out into three dimensions: 109.5°, tetrahedral.",
+          "Hybridization follows straight from the same count, with no extra work: 2 groups is sp, 3 is sp², 4 is sp³. The number in the label is literally how many p orbitals got mixed in."
+        ],
+        "example": {
+          "label": "CO₂ catches people out",
+          "text": "Carbon has two double bonds and no lone pairs. Two groups, not four — so CO₂ is linear at 180°, and because it's symmetric, nonpolar despite two strongly polar bonds."
+        }
+      },
+      {
+        "heading": "Electron geometry versus molecular shape",
+        "body": [
+          "Here's where most mistakes happen. Electron geometry describes where all the groups point, lone pairs included. Molecular shape describes only where the ATOMS are — you can't see a lone pair.",
+          "Water has four groups, so its electron geometry is tetrahedral. But two of those groups are lone pairs, and the remaining atoms form a bent shape. Both descriptions are true; they answer different questions.",
+          "Lone pairs also squeeze the angles. They're held closer to the nucleus and take up more angular room than a bonding pair, so each one pushes the remaining bonds slightly closer together. Methane sits at the ideal 109.5°, ammonia (one lone pair) at about 107°, water (two) at about 104.5°."
+        ]
+      },
+      {
+        "heading": "Sigma and pi, and why rotation matters",
+        "body": [
+          "A single bond is one sigma bond, formed by orbitals overlapping head-on along the axis between the atoms. That overlap is unchanged if you spin one end, which is why single bonds rotate freely at room temperature.",
+          "A double bond is one sigma plus one pi. The pi bond comes from two p orbitals overlapping sideways, above and below the axis. Rotating one end would tear that overlap apart, so double bonds are locked.",
+          "That locking is the entire reason cis and trans isomers exist — and why an alkene is a rigid, flat piece of a molecule while an alkane chain flops around freely."
+        ]
+      }
+    ]
+  },
+
+  "imf": {
+    "intro": "Intermolecular forces are the attractions BETWEEN molecules, and they explain the properties you can actually observe: what melts, what boils, what dissolves in what. Every extraction and purification you'll do in lab is this reasoning applied.",
+    "sections": [
+      {
+        "heading": "Between, not within",
+        "body": [
+          "This distinction is worth being pedantic about. Covalent bonds hold a molecule together internally. Intermolecular forces hold separate molecules near each other. The second kind are roughly ten to a hundred times weaker.",
+          "So when water boils, the hydrogen bonds between molecules break and the molecules fly apart — but each H₂O survives intact. If boiling broke covalent bonds, steam would be hydrogen and oxygen gas. Phase changes are always about intermolecular forces."
+        ]
+      },
+      {
+        "heading": "The three forces, weakest first",
+        "body": [
+          "London dispersion is present in every molecule without exception. Electrons are constantly moving, so at any instant they're slightly lopsided, creating a fleeting dipole that induces one in the neighbour. Individually feeble, but it scales with size and surface contact — and in a large molecule it dominates everything else.",
+          "Dipole-dipole attraction appears in any polar molecule: the δ+ end of one is drawn to the δ− end of the next. Stronger than dispersion at comparable size.",
+          "Hydrogen bonding is the strongest of the three, but it's fussy about requirements. It needs a hydrogen bonded directly to nitrogen, oxygen, or fluorine on one molecule, and a lone pair on N, O, or F on the other. A C–H hydrogen does not qualify, however polar the rest of the molecule."
+        ]
+      },
+      {
+        "heading": "Donors and acceptors",
+        "body": [
+          "It helps to split hydrogen bonding into two roles. A donor supplies the hydrogen — it needs an actual H attached to N, O, or F. An acceptor supplies a lone pair for someone else's hydrogen.",
+          "An alcohol does both: its O–H donates, its oxygen lone pairs accept. An ether has the lone pairs but no O–H, so it can only accept. That single difference is worth about 80°C of boiling point."
+        ],
+        "example": {
+          "label": "Same formula, very different behaviour",
+          "text": "Butan-1-ol and diethyl ether are both C₄H₁₀O. The alcohol boils at 118°C, the ether at 35°C. Identical size, identical mass — the gap is almost entirely the ability to donate a hydrogen bond."
+        }
+      },
+      {
+        "heading": "Predicting boiling points",
+        "body": [
+          "Work in this order. First compare size: bigger molecules have more dispersion, and if the sizes differ a lot that can settle it on its own. If sizes are comparable, ask which strongest force each molecule can use.",
+          "Shape matters too, at equal size. A straight chain packs closely against its neighbours and maximizes contact; a branched isomer is more spherical and touches less, so it boils lower. Pentane boils at 36°C, its fully branched isomer neopentane at 10°C — same formula, same mass, less contact."
+        ]
+      },
+      {
+        "heading": "Like dissolves like",
+        "body": [
+          "For something to dissolve, the new solute-solvent attractions have to compensate for the solvent-solvent attractions being broken. Water molecules hold each other with strong hydrogen bonds, and a nonpolar solute offers nothing comparable in return — so it doesn't dissolve.",
+          "This is why alcohols with short chains mix freely with water while long-chain ones don't: the O–H head can hydrogen bond, but past four or five carbons the hydrocarbon tail dominates and the molecule behaves like an oil."
+        ]
+      }
+    ]
+  },
+
+  "acidbase": {
+    "intro": "Acid-base chemistry is the most reused idea in organic chemistry. Most mechanisms begin or end with a proton moving, and the reasoning that predicts acid strength is the same reasoning that predicts stability, reactivity, and leaving-group ability.",
+    "sections": [
+      {
+        "heading": "Two definitions, both useful",
+        "body": [
+          "The Brønsted-Lowry definition is about protons: an acid donates H⁺, a base accepts it. This is the one to use when something obviously gains or loses a hydrogen.",
+          "The Lewis definition is broader and about electrons: an acid accepts an electron pair, a base donates one. This turns out to be the more useful lens for mechanisms, because it covers reactions where no proton moves at all. Every nucleophile is a Lewis base; every electrophile is a Lewis acid."
+        ]
+      },
+      {
+        "heading": "pKa, and why lower means stronger",
+        "body": [
+          "pKa is a logarithmic measure of how readily an acid gives up its proton. Lower means stronger, and because it's a log scale, each unit is a factor of ten. A pKa difference of 11 between acetic acid and ethanol is a factor of a hundred billion.",
+          "The values are worth anchoring roughly rather than precisely: strong mineral acids sit below zero, carboxylic acids around 5, ammonium around 10, water at 15.7, alcohols around 16, and C–H bonds are so weakly acidic they run from 25 up to 50."
+        ]
+      },
+      {
+        "heading": "The one rule for reaction direction",
+        "body": [
+          "An acid-base reaction always favours the side with the WEAKER acid — the higher pKa. That's it. If you can identify the acid on each side and compare their pKa values, you know which way the equilibrium sits.",
+          "This is enormously practical. It tells you whether a given base is strong enough to deprotonate a given compound, which is the first thing you need to know before drawing any mechanism that starts with deprotonation."
+        ],
+        "example": {
+          "label": "Will hydroxide deprotonate a carboxylic acid?",
+          "text": "The acid on the left is the carboxylic acid, pKa 4.8. If hydroxide takes the proton, the acid on the right is water, pKa 15.7. Products hold the weaker acid, so yes — and by about eleven orders of magnitude."
+        }
+      },
+      {
+        "heading": "Predicting acid strength: always look at the conjugate base",
+        "body": [
+          "Acidity is really a question about what's left behind. If the anion formed by losing the proton is stable, the acid gives it up readily. If that anion is a miserable, high-energy species, the acid holds on.",
+          "So the habit to build is: deprotonate both compounds first, draw both anions, then ask which is more stable. Comparing the acids directly will mislead you.",
+          "Four factors decide it, and they're checked in a fixed order because earlier ones dominate later ones — remembered as ARIO."
+        ]
+      },
+      {
+        "heading": "ARIO in order",
+        "body": [
+          "ATOM comes first and is by far the largest effect. If the charges sit on different atoms, that usually settles it. Across a row, more electronegative atoms hold negative charge better (O beats N beats C). Down a column, bigger wins instead, because the charge spreads over more volume (S beats O, I beats Cl).",
+          "RESONANCE is next. If the atoms tie, ask whether either anion can spread its charge over several atoms. A carboxylate spreads its charge over two oxygens; an alkoxide can't spread it at all.",
+          "INDUCTION follows. Electronegative atoms nearby pull electron density away through the sigma bonds, stabilizing the charge. The effect falls off sharply with distance.",
+          "ORBITAL is last and weakest. More s-character holds a lone pair closer to the nucleus, so sp beats sp² beats sp³. It only matters when everything else has tied — which is exactly the case for alkanes, alkenes and alkynes."
+        ],
+        "example": {
+          "label": "Stopping at the first difference",
+          "text": "Ethanol vs acetic acid: both put the charge on oxygen, so ATOM ties. Move to RESONANCE — the carboxylate delocalizes, the alkoxide doesn't. Acetic acid is the stronger acid, and you never need to check induction or orbital."
+        }
+      }
+    ]
+  },
+
+  "aminoacids": {
+    "intro": "Biochemistry treats the twenty amino acids as vocabulary from the first lecture and never slows down for them again. Learning them properly beforehand is the single highest-return thing you can do for that course.",
+    "sections": [
+      {
+        "heading": "One skeleton, twenty side chains",
+        "body": [
+          "Every amino acid has the same backbone: a central carbon carrying an amino group, a carboxyl group, a hydrogen, and one variable group — the side chain, universally written R.",
+          "That's the whole design. Nineteen of the twenty differ ONLY in R. Proline is the single exception, because its side chain loops back and bonds to the backbone nitrogen, which makes it rigid and gives it unusual structural effects.",
+          "So learning amino acids means learning twenty side chains, not twenty molecules."
+        ]
+      },
+      {
+        "heading": "Why they're drawn charged",
+        "body": [
+          "At physiological pH, the carboxyl group has given up its proton (becoming −COO⁻) and the amino group has picked one up (becoming −NH₃⁺). The molecule carries both a positive and a negative charge while being neutral overall — a zwitterion.",
+          "This isn't a technicality. It's why amino acids are crystalline solids with high melting points rather than oily liquids: they behave like salts."
+        ]
+      },
+      {
+        "heading": "Sorting them into five groups",
+        "body": [
+          "Rather than memorizing twenty facts, sort by what the side chain contains. If it's a carboxylic acid, the residue is ACIDIC — that's only aspartate and glutamate. If it contains an amine, guanidinium, or imidazole, it's BASIC — only lysine, arginine, and histidine.",
+          "That's five residues carrying charge. Everything else is neutral, split into POLAR (containing an −OH, −SH, or amide: serine, threonine, cysteine, tyrosine, asparagine, glutamine) and NONPOLAR (pure hydrocarbon or an aromatic ring with nothing polar on it).",
+          "Learn the charged five and the rest follows by elimination."
+        ],
+        "example": {
+          "label": "The amide trap",
+          "text": "Asparagine and glutamine are the amide versions of aspartate and glutamate. Amides are NEUTRAL. Confusing them with the acids is one of the most common early biochem mistakes."
+        }
+      },
+      {
+        "heading": "Side-chain pKa: which are actually charged",
+        "body": [
+          "Seven side chains can gain or lose a proton, and their pKa values tell you what they look like at physiological pH 7.4. Compare the pKa to the pH: below its pKa a group keeps its proton, above it the proton is gone.",
+          "Aspartate (3.9) and glutamate (4.3) are well below 7.4, so they're deprotonated and negative. Lysine (10.5) and arginine (12.5) are well above, so they're protonated and positive.",
+          "Histidine sits at 6.0 — close enough to physiological pH that it can be either. That's what makes it uniquely useful in enzyme active sites: it can pick up or hand off a proton under normal cellular conditions, which is exactly what acid-base catalysis requires."
+        ]
+      },
+      {
+        "heading": "The handful with special jobs",
+        "body": [
+          "A few residues carry outsized importance and are worth knowing individually. Glycine's side chain is just a hydrogen, making it the only achiral amino acid and the most conformationally flexible.",
+          "Proline's ring locks its geometry, so it breaks alpha helices. Cysteine's thiol can oxidize with another cysteine to form a disulfide bridge — the only covalent crosslink holding a folded protein together. Methionine always starts a newly translated protein, since AUG is the start codon."
+        ]
+      }
+    ]
+  },
+
+  "buffers": {
+    "intro": "Biochemistry asks constantly whether a group is protonated, because that determines its charge, and charge determines whether an enzyme works. All of it reduces to comparing two numbers: the pH and the pKa.",
+    "sections": [
+      {
+        "heading": "The comparison that answers everything",
+        "body": [
+          "A group's pKa is the pH at which it's exactly half protonated. Below that pH, it mostly holds its proton. Above it, the proton is mostly gone. That's the whole rule.",
+          "But knowing whether a group is protonated is only half the answer — you then have to ask what that means for CHARGE, and it depends on what kind of group it is.",
+          "A neutral acid like −COOH becomes −COO⁻ when deprotonated: neutral to negative. A positive amine like −NH₃⁺ becomes −NH₂: positive to neutral. Same event, opposite consequences."
+        ],
+        "example": {
+          "label": "Two side chains at pH 7.4",
+          "text": "Aspartate, pKa 3.9: pH is above, so deprotonated, so −COO⁻ and negative. Lysine, pKa 10.5: pH is below, so protonated, so −NH₃⁺ and positive."
+        }
+      },
+      {
+        "heading": "Henderson-Hasselbalch, and what it's really saying",
+        "body": [
+          "The equation pH = pKa + log([A⁻]/[HA]) looks intimidating and says something simple: the further the pH sits above the pKa, the more of the deprotonated form you have — logarithmically.",
+          "At pH = pKa, the log term is zero and the two forms are present in equal amounts. One unit above, the ratio is 10:1 in favour of the base form. Two units above, 100:1. Below the pKa it runs the other way.",
+          "In practice you rarely need to calculate anything. You need to know which side of the pKa you're on, and roughly how lopsided that makes things."
+        ]
+      },
+      {
+        "heading": "What makes a buffer work",
+        "body": [
+          "A buffer resists pH change because it contains meaningful amounts of both a weak acid and its conjugate base. Add acid, and the base form absorbs it. Add base, and the acid form neutralizes it.",
+          "That only works while both forms are actually present, which is why the useful buffering range is roughly pKa ± 1. Beyond that one form runs out and the buffer stops buffering. Buffering is strongest exactly at pH = pKa, where the two forms are equal.",
+          "So choosing a buffer is simple: pick the one whose pKa is closest to the pH you want to hold. Phosphate (7.2) and HEPES (7.5) are the standards for biological work near 7.4."
+        ]
+      },
+      {
+        "heading": "Isoelectric point",
+        "body": [
+          "The pI is the pH at which a molecule carries no NET charge — positive and negative contributions exactly cancel. For an amino acid with no ionizable side chain, it's the average of the two pKa values flanking the neutral form.",
+          "It's worth knowing because proteins are least soluble at their pI. With no net charge, molecules stop repelling each other and clump together, which is the basis of isoelectric precipitation and of separating proteins by isoelectric focusing."
+        ]
+      }
+    ]
+  }
+}

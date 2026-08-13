@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { TOPICS, getTopicBank, getMixedBank } from '../lib/topics.js'
 import { getAllProgress } from '../lib/db.js'
 import { getStreak } from '../lib/streaks.js'
+import lessons from '../data/lessons.json'
+
+const hasLesson = (id) => Boolean(lessons[id])
 
 // Two short sessions a day — enough to keep the spacing engine fed
 // without being the kind of target that gets abandoned on a busy day.
@@ -50,7 +53,7 @@ function TopicStat({ stat }) {
   return <span className="muted">{pct}% correct</span>
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onReviewMisses, onPlan }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onReviewMisses, onPlan }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -155,10 +158,15 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onRevi
               </div>
             ) : null}
             <div className="topic-actions">
+              {hasLesson(topic.id) && (
+                <button className={stat?.seen ? 'ghost' : 'primary'} onClick={() => onLesson(topic.id)}>
+                  Learn
+                </button>
+              )}
               <button className="ghost" onClick={() => onLearn(topic.id)}>
                 Notes
               </button>
-              <button className="primary" onClick={() => onStudy(topic.id)}>
+              <button className={stat?.seen || !hasLesson(topic.id) ? 'primary' : 'ghost'} onClick={() => onStudy(topic.id)}>
                 Study
               </button>
               {topic.speedRound && (

@@ -5,6 +5,7 @@ import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import ReferenceView from './components/ReferenceView.jsx'
 import Walkthroughs from './components/Walkthroughs.jsx'
+import LessonView from './components/LessonView.jsx'
 import Progression from './components/Progression.jsx'
 import UpdateCheck from './components/UpdateCheck.jsx'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank, getMissedBank } from './lib/topics.js'
@@ -52,6 +53,7 @@ export default function App() {
             onSpeed={(topicId) => setView({ name: 'speed', topicId })}
             onMixed={() => setView({ name: 'session', topicId: null })}
             onLearn={(topicId) => setView({ name: 'learn', topicId })}
+            onLesson={(topicId) => setView({ name: 'lesson', topicId })}
             onReviewMisses={() => {
               setMissedBank(null)
               setView({ name: 'misses' })
@@ -63,7 +65,7 @@ export default function App() {
         {view.name === 'plan' && (
           <Progression
             onPickTopic={(topicId) => setView({ name: 'session', topicId })}
-            onNotes={(topicId) => setView({ name: 'learn', topicId })}
+            onNotes={(topicId) => setView({ name: 'lesson', topicId })}
           />
         )}
 
@@ -85,6 +87,15 @@ export default function App() {
             title={label}
             onStudy={() => setView({ name: 'session', topicId: view.topicId })}
             onWalk={() => setView({ name: 'walk', topicId: view.topicId })}
+          />
+        )}
+
+        {view.name === 'lesson' && (
+          <LessonView
+            topicId={view.topicId}
+            title={label}
+            onNotes={() => setView({ name: 'learn', topicId: view.topicId })}
+            onStudy={() => setView({ name: 'session', topicId: view.topicId })}
           />
         )}
 

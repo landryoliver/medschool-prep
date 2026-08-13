@@ -1067,3 +1067,85 @@ button.wide {
 .card svg {
   overflow: visible;
 }
+
+/* ---- Lessons: the teach-first rung -------------------------------- */
+
+.lesson-intro {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #c3d2e6;
+  margin: 0 0 1rem;
+}
+
+.lesson-progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 0.85rem;
+}
+
+.lesson-dot {
+  width: 22px;
+  height: 4px;
+  border-radius: 999px;
+  background: #0d1626;
+  transition: background 0.25s;
+}
+
+.lesson-dot.on {
+  background: var(--accent);
+}
+
+.lesson-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lesson-card {
+  animation: step-in 0.24s ease-out;
+}
+
+.lesson-heading {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+.lesson-body {
+  margin: 0 0 0.7rem;
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
+.lesson-body:last-of-type {
+  margin-bottom: 0;
+}
+
+.lesson-example {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  background: #0f1b2e;
+  border-left: 3px solid var(--good);
+  border-radius: 0.4rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #c3d2e6;
+}
+
+.lesson-example strong {
+  display: block;
+  color: var(--good);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.lesson-done {
+  border-color: var(--good);
+}
+
+.lesson-done strong {
+  color: var(--good);
+}
