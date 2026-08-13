@@ -29,6 +29,41 @@ function SessionModeToggle({ value, onChange }) {
   )
 }
 
+/** A filled arc reads as an outcome; a bare fraction reads as data. */
+function ScoreRing({ pct }) {
+  const R = 42
+  const C = 2 * Math.PI * R
+  const color = pct >= 80 ? 'var(--good)' : pct >= 50 ? '#facc15' : 'var(--bad)'
+  return (
+    <svg viewBox="0 0 110 110" width="118" height="118" className="done-ring">
+      <circle className="track" cx="55" cy="55" r={R} fill="none" strokeWidth="8" />
+      <circle
+        className="fill"
+        cx="55"
+        cy="55"
+        r={R}
+        fill="none"
+        stroke={color}
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeDasharray={`${(pct / 100) * C} ${C}`}
+        transform="rotate(-90 55 55)"
+      />
+      <text className="done-pct" x="55" y="63" textAnchor="middle">
+        {pct}%
+      </text>
+    </svg>
+  )
+}
+
+/** Say something about the run rather than only scoring it. */
+function verdictFor(pct, missedCount) {
+  if (pct === 100) return 'Clean sweep — nothing missed.'
+  if (pct >= 80) return missedCount === 1 ? 'Strong run, one to revisit.' : `Strong run, ${missedCount} to revisit.`
+  if (pct >= 50) return 'Getting there — the misses below are where the work is.'
+  return 'Rough one. Worth reading the notes again before the next session.'
+}
+
 function correctAnswerText(q) {
   if (q.kind === 'numeric') return q.answer
   if (q.kind === 'multi') return q.correctIndices.map((n) => q.choices[n]).join(', ')
@@ -78,15 +113,19 @@ export default function StudySessionView({ mode, title, bank, sessionSize = 15 }
     const pct = answered ? Math.round((session.correctCount / answered) * 100) : 0
     return (
       <div>
-        <div className="card">
-          <h2 className="section-title">{title} complete</h2>
-          <p className="score">
-            {session.correctCount} / {answered} <span className="muted">({pct}%)</span>
+        <div className="card done-card">
+          <ScoreRing pct={pct} />
+          <p className="done-sub">
+            <strong>
+              {session.correctCount} / {answered}
+            </strong>{' '}
+            correct
           </p>
+          <p className="muted done-note">{verdictFor(pct, missed.length)}</p>
           <p className="muted">
             {streak.current}-day streak · {streak.answeredToday} answered today
           </p>
-          <button className="primary" onClick={session.restart}>
+          <button className="primary wide" onClick={session.restart} style={{ marginTop: '0.75rem' }}>
             New session
           </button>
         </div>

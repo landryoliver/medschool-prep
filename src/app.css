@@ -1149,3 +1149,124 @@ button.wide {
 .lesson-done strong {
   color: var(--good);
 }
+
+/* ---- Grouped home screen ------------------------------------------- */
+
+.stage-block {
+  margin-top: 1.5rem;
+}
+
+.stage-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 0.15rem 0.5rem;
+}
+
+.stage-title {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.stage-count {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.topic-card {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.topic-card:active {
+  transform: scale(0.995);
+}
+
+.ring-wrap {
+  position: relative;
+}
+
+.ring-check {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: var(--good);
+  color: #06121f;
+  font-size: 9px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--panel);
+}
+
+/* ---- Hero ---------------------------------------------------------- */
+
+.hero-card {
+  background: linear-gradient(160deg, #182740 0%, var(--panel) 60%);
+}
+
+.hero-streak {
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.hero-streak.lit {
+  color: var(--good);
+  text-shadow: 0 0 22px rgba(74, 222, 128, 0.35);
+}
+
+.hero-side strong.good {
+  color: var(--good);
+}
+
+/* ---- Session completion -------------------------------------------- */
+
+.done-card {
+  text-align: center;
+  background: linear-gradient(160deg, #182740 0%, var(--panel) 60%);
+}
+
+.done-ring {
+  display: block;
+  margin: 0.25rem auto 0.4rem;
+}
+
+.done-ring circle.track {
+  stroke: #0d1626;
+}
+
+.done-ring circle.fill {
+  transition: stroke-dasharray 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.done-pct {
+  font-size: 1.6rem;
+  font-weight: 750;
+  fill: var(--text);
+}
+
+.done-sub {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+}
+
+.done-note {
+  margin: 0.35rem 0 0.9rem;
+  font-size: 0.85rem;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.85); opacity: 0; }
+  70% { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.done-card {
+  animation: pop-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}

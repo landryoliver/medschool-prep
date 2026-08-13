@@ -1,7 +1,9 @@
+import fs from 'node:fs'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/topics.js'
 import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt, canonicalKey, isValidMolecule } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
 import { lookupGeometry } from '../src/lib/chem/vsepr.js'
+import { TOPIC_META } from '../src/lib/topicMeta.js'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
@@ -140,6 +142,50 @@ for (const topic of TOPICS) {
 
 // Render every diagram. Catches crashes, and catches NaN coordinates that
 // would silently produce an invisible or mangled SVG in the browser.
+// Every topic needs its own colour and icon. A missing entry silently
+// falls back to the default hue, so two cards end up looking identical —
+// which is invisible in code and obvious only on screen.
+{
+  const iconSrc = fs.readFileSync('src/components/TopicIcon.jsx', 'utf8')
+  const hues = new Map()
+  for (const t of TOPICS) {
+    const meta = TOPIC_META[t.id]
+    if (!meta) {
+      fail(`topic "${t.id}" has no entry in topicMeta, so it falls back to the default colour`)
+      continue
+    }
+    if (!iconSrc.includes(meta.icon + ':')) {
+      fail(`topic "${t.id}" uses icon "${meta.icon}" which TopicIcon does not draw`)
+    }
+    if (hues.has(meta.hue)) {
+      fail(`topics "${hues.get(meta.hue)}" and "${t.id}" share hue ${meta.hue} and will look alike`)
+    }
+    hues.set(meta.hue, t.id)
+  }
+}
+
+// Progression and roadmap must point at topics that exist, or a whole
+// stage renders empty with nothing reported.
+{
+  const progression = JSON.parse(fs.readFileSync('src/data/progression.json', 'utf8'))
+  const ids = new Set(TOPICS.map((t) => t.id))
+  const covered = new Set()
+  for (const stage of progression.stages) {
+    for (const t of stage.topics) {
+      if (!ids.has(t)) fail(`progression references unknown topic "${t}" in stage "${stage.title}"`)
+      covered.add(t)
+    }
+  }
+  for (const unit of progression.roadmap) {
+    for (const t of unit.prep) {
+      if (!ids.has(t)) fail(`roadmap references unknown topic "${t}" in unit "${unit.unit}"`)
+    }
+  }
+  for (const t of ids) {
+    if (!covered.has(t)) fail(`topic "${t}" appears in no progression stage, so it is unreachable from the grouped home screen`)
+  }
+}
+
 console.log('\n=== Rendering visuals ===')
 let rendered = 0
 for (const q of getMixedBank()) {
