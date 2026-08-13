@@ -3,6 +3,7 @@ import { getAllSessionLog } from '../lib/db.js'
 import { accuracyByTopic, overallAccuracy } from '../lib/scoring.js'
 import { getStreak } from '../lib/streaks.js'
 import TopicAccuracyBars from './TopicAccuracyBars.jsx'
+import BackupPanel from './BackupPanel.jsx'
 
 const TOPIC_LABELS = {
   'element-recall': 'Element recall',
@@ -72,6 +73,7 @@ export default function ProgressView() {
         <p className="muted hint-line">Sessions automatically pull more questions from the topics near the top.</p>
         <TopicAccuracyBars rows={byTopic} />
       </div>
+      <BackupPanel />
     </div>
   )
 }

@@ -1346,3 +1346,9 @@ button.wide {
 .stage-count {
   font-size: 0.72rem;
 }
+
+.backup-note {
+  font-size: 0.82rem;
+  margin: 0 0 0.7rem;
+  line-height: 1.5;
+}
