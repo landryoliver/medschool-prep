@@ -96,6 +96,17 @@ for (const topic of TOPICS) {
       fail(`${q.id}: unknown kind "${q.kind}"`)
     }
 
+    // An IMF diagram is captioned with the force it shows. When the
+    // answer IS that force, the caption hands it over, so the diagram has
+    // to wait until the question is answered.
+    if (q.visual?.type === 'imf' && !q.visualAfter) {
+      const IMF_LABEL = { hbond: 'hydrogen bond', dipole: 'dipole', dispersion: 'london dispersion' }
+      const answerText = (q.choices?.[q.correctIndex] ?? '').toLowerCase()
+      if (answerText.includes(IMF_LABEL[q.visual.kind])) {
+        fail(`${q.id}: IMF diagram is captioned "${IMF_LABEL[q.visual.kind]}" which is its own answer, but is not visualAfter`)
+      }
+    }
+
     // These two diagram types print the answer on their face — the amino
     // acid name, or which side of the pKa the pH falls on — so they must
     // stay hidden until the question has been answered.

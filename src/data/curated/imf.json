@@ -3,10 +3,20 @@
     "id": "imf-1",
     "topic": "imf",
     "prompt": "What is the STRONGEST intermolecular force between water molecules?",
-    "choices": ["Hydrogen bonding", "London dispersion only", "Ionic bonding", "Covalent bonding"],
+    "choices": [
+      "Hydrogen bonding",
+      "London dispersion only",
+      "Ionic bonding",
+      "Covalent bonding"
+    ],
     "correctIndex": 0,
     "explanation": "Each water molecule has O–H bonds (donors) and oxygen lone pairs (acceptors), giving an extensive hydrogen-bonding network — the reason water's boiling point is so anomalously high.",
-    "teach": "Intermolecular forces act BETWEEN molecules; covalent bonds act WITHIN them. Boiling breaks the forces, never the bonds."
+    "teach": "Intermolecular forces act BETWEEN molecules; covalent bonds act WITHIN them. Boiling breaks the forces, never the bonds.",
+    "visual": {
+      "type": "imf",
+      "kind": "hbond"
+    },
+    "visualAfter": true
   },
   {
     "id": "imf-2",
@@ -20,16 +30,31 @@
     ],
     "correctIndex": 0,
     "explanation": "Only H attached to a strongly electronegative atom (N, O, F) is positive enough to hydrogen-bond. C–H hydrogens don't count.",
-    "teach": "H-bond donor = H on N/O/F. H-bond acceptor = a lone pair on N, O, or F. A molecule can be one, both, or neither."
+    "teach": "H-bond donor = H on N/O/F. H-bond acceptor = a lone pair on N, O, or F. A molecule can be one, both, or neither.",
+    "visual": {
+      "type": "imf",
+      "kind": "hbond"
+    },
+    "visualAfter": true
   },
   {
     "id": "imf-3",
     "topic": "imf",
     "prompt": "Which intermolecular force is present in EVERY molecule, polar or not?",
-    "choices": ["London dispersion forces", "Hydrogen bonding", "Dipole-dipole attraction", "Ion-dipole attraction"],
+    "choices": [
+      "London dispersion forces",
+      "Hydrogen bonding",
+      "Dipole-dipole attraction",
+      "Ion-dipole attraction"
+    ],
     "correctIndex": 0,
     "explanation": "Dispersion arises from momentary electron fluctuations, which every molecule has. In large molecules it can outweigh everything else.",
-    "teach": "Dispersion scales with size and surface area — bigger molecules and longer chains stick together more."
+    "teach": "Dispersion scales with size and surface area — bigger molecules and longer chains stick together more.",
+    "visual": {
+      "type": "imf",
+      "kind": "dispersion"
+    },
+    "visualAfter": true
   },
   {
     "id": "imf-4",
@@ -91,10 +116,19 @@
     "id": "imf-8",
     "topic": "imf",
     "prompt": "Which molecule exhibits dipole-dipole attraction but NOT hydrogen bonding?",
-    "choices": ["Acetone (CH₃COCH₃)", "Water", "Methanol (CH₃OH)", "Methane (CH₄)"],
+    "choices": [
+      "Acetone (CH₃COCH₃)",
+      "Water",
+      "Methanol (CH₃OH)",
+      "Methane (CH₄)"
+    ],
     "correctIndex": 0,
     "explanation": "Acetone's C=O makes it polar, but every hydrogen sits on carbon, so it cannot donate a hydrogen bond. (It CAN accept one — which is why it mixes with water.)",
-    "teach": "Check for polarity first (dipole-dipole), then specifically for H on N/O/F (hydrogen bonding)."
+    "teach": "Check for polarity first (dipole-dipole), then specifically for H on N/O/F (hydrogen bonding).",
+    "visual": {
+      "type": "imf",
+      "kind": "dipole"
+    }
   },
   {
     "id": "imf-9",
@@ -108,7 +142,11 @@
     ],
     "correctIndex": 0,
     "explanation": "The lone pairs accept; donation would need an O–H, which an ether lacks. This is why ethers boil far below their isomeric alcohols.",
-    "teach": "Diethyl ether boils at 35 °C; its isomer butan-1-ol boils at 118 °C. Donor ability is worth a lot of boiling point."
+    "teach": "Diethyl ether boils at 35 °C; its isomer butan-1-ol boils at 118 °C. Donor ability is worth a lot of boiling point.",
+    "visual": {
+      "type": "imf",
+      "kind": "hbond"
+    }
   },
   {
     "id": "imf-10",
@@ -136,7 +174,12 @@
     ],
     "correctIndex": 0,
     "explanation": "At comparable size, H-bonding (a particularly strong dipole interaction) beats ordinary dipole-dipole, which beats dispersion.",
-    "teach": "The size caveat matters: a big enough nonpolar molecule (wax) out-sticks a small H-bonder (methanol) on dispersion alone."
+    "teach": "The size caveat matters: a big enough nonpolar molecule (wax) out-sticks a small H-bonder (methanol) on dispersion alone.",
+    "visual": {
+      "type": "imf",
+      "kind": "hbond"
+    },
+    "visualAfter": true
   },
   {
     "id": "imf-12",
@@ -178,6 +221,11 @@
     ],
     "correctIndex": 0,
     "explanation": "Bigger, more polarizable electron clouds fluctuate more strongly. Dispersion grows down the group: F₂ gas, Cl₂ gas, Br₂ liquid, I₂ solid.",
-    "teach": "Dispersion strength tracks polarizability, which tracks size. The halogen series is the textbook demonstration."
+    "teach": "Dispersion strength tracks polarizability, which tracks size. The halogen series is the textbook demonstration.",
+    "visual": {
+      "type": "imf",
+      "kind": "dispersion"
+    },
+    "visualAfter": true
   }
 ]
