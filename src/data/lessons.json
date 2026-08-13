@@ -41,7 +41,6 @@
       }
     ]
   },
-
   "polarity": {
     "intro": "Reactions happen where charge is uneven. Before you can predict where a molecule reacts, you need to see which atoms are electron-rich and which are electron-poor — and that comes almost entirely from comparing electronegativities.",
     "sections": [
@@ -84,7 +83,6 @@
       }
     ]
   },
-
   "lewis": {
     "intro": "A Lewis structure is a bookkeeping system for valence electrons. Getting fluent at drawing and reading them matters because every mechanism you'll ever push arrows through is drawn on top of one.",
     "sections": [
@@ -128,7 +126,6 @@
       }
     ]
   },
-
   "vsepr": {
     "intro": "Molecules are three-dimensional, and their shape decides how they pack, whether they're polar, and how reagents can approach them. VSEPR is a surprisingly simple way to predict that shape from a flat drawing.",
     "sections": [
@@ -168,7 +165,6 @@
       }
     ]
   },
-
   "imf": {
     "intro": "Intermolecular forces are the attractions BETWEEN molecules, and they explain the properties you can actually observe: what melts, what boils, what dissolves in what. Every extraction and purification you'll do in lab is this reasoning applied.",
     "sections": [
@@ -214,7 +210,6 @@
       }
     ]
   },
-
   "acidbase": {
     "intro": "Acid-base chemistry is the most reused idea in organic chemistry. Most mechanisms begin or end with a proton moving, and the reasoning that predicts acid strength is the same reasoning that predicts stability, reactivity, and leaving-group ability.",
     "sections": [
@@ -266,7 +261,6 @@
       }
     ]
   },
-
   "aminoacids": {
     "intro": "Biochemistry treats the twenty amino acids as vocabulary from the first lecture and never slows down for them again. Learning them properly beforehand is the single highest-return thing you can do for that course.",
     "sections": [
@@ -314,7 +308,6 @@
       }
     ]
   },
-
   "buffers": {
     "intro": "Biochemistry asks constantly whether a group is protonated, because that determines its charge, and charge determines whether an enzyme works. All of it reduces to comparing two numbers: the pH and the pKa.",
     "sections": [
@@ -351,6 +344,365 @@
         "body": [
           "The pI is the pH at which a molecule carries no NET charge — positive and negative contributions exactly cancel. For an amino acid with no ionizable side chain, it's the average of the two pKa values flanking the neutral form.",
           "It's worth knowing because proteins are least soluble at their pI. With no net charge, molecules stop repelling each other and clump together, which is the basis of isoelectric precipitation and of separating proteins by isoelectric focusing."
+        ]
+      }
+    ]
+  },
+  "skeletal": {
+    "intro": "Organic chemists stopped drawing every carbon and hydrogen a long time ago, because molecules got too big for it. Line-angle structures are the shorthand that replaced it, and lectures are drawn in it from the first week. If reading one takes conscious effort, you spend your attention decoding notation instead of following chemistry.",
+    "sections": [
+      {
+        "heading": "The convention",
+        "body": [
+          "Every corner and every free line end is a carbon atom. Nothing is written for them — the vertex IS the carbon.",
+          "Hydrogens attached to carbon are invisible too. You infer them: carbon always forms exactly four bonds, so however many bonds you can see, the rest are hydrogens. A vertex with two lines drawn to it has two hydrogens.",
+          "Everything that is not carbon or a carbon-bound hydrogen does get written out. Oxygens, nitrogens, halogens, and any hydrogen attached to those atoms all appear explicitly, because those are the reactive parts."
+        ],
+        "example": {
+          "label": "Why the hydrogens are hidden",
+          "text": "Cholesterol has 46 hydrogens. Drawing each one would bury the four rings and the one hydroxyl group that actually determine how it behaves. Hiding them is not laziness — it is emphasis."
+        }
+      },
+      {
+        "heading": "Counting hydrogens on any carbon",
+        "body": [
+          "Subtract the bonds you can see from four. A chain-end carbon shows one bond, so it carries three hydrogens. A carbon in the middle of a chain shows two, so it carries two.",
+          "Count bonds, not neighbours: a double bond counts as two. A carbon with a double bond and one single bond shows three bonds, so it has one hydrogen."
+        ]
+      },
+      {
+        "heading": "Degrees of unsaturation",
+        "body": [
+          "A saturated chain of n carbons holds 2n+2 hydrogens — the maximum possible. Every ring and every pi bond costs you two hydrogens against that maximum.",
+          "So comparing a molecular formula to the saturated maximum tells you how many rings plus pi bonds it must contain, before you have drawn anything. That number is the degrees of unsaturation.",
+          "Four degrees is worth recognizing on sight: it usually signals a benzene ring, which is one ring plus three double bonds."
+        ],
+        "example": {
+          "label": "Working it out for benzene",
+          "text": "C6H6. A saturated six-carbon chain would hold 2(6)+2 = 14 hydrogens. It has 6, a shortfall of 8, which is 4 pairs — so 4 degrees of unsaturation. One ring plus three double bonds accounts for exactly that."
+        }
+      },
+      {
+        "heading": "Why fluency here pays off more than anything else",
+        "body": [
+          "This is the least intellectually demanding topic in the course and the highest-leverage one to over-practise. It is pure pattern recognition, and it becomes automatic with repetition.",
+          "Every later topic assumes it. Mechanisms, spectroscopy, stereochemistry — all of them are drawn in this notation, and any effort you are still spending on decoding is effort not spent on the actual chemistry."
+        ]
+      }
+    ]
+  },
+  "functional": {
+    "intro": "Organic chemistry would be unmanageable if every molecule behaved uniquely. It is manageable because reactivity is concentrated in small recurring clusters of atoms — functional groups — and a molecule containing a given group behaves much like every other molecule containing it.",
+    "sections": [
+      {
+        "heading": "The organizing idea",
+        "body": [
+          "A functional group is a specific arrangement of atoms that reacts in a characteristic way. The hydrocarbon skeleton around it is largely inert scaffolding.",
+          "This is why a course can cover millions of compounds in a semester. You are not learning molecules; you are learning perhaps fifteen groups and how each behaves. Ethanol and hexadecanol differ enormously in size but share an alcohol group and undergo the same reactions at it."
+        ]
+      },
+      {
+        "heading": "Why the groups are reactive",
+        "body": [
+          "Nearly every functional group contains an electronegative atom — oxygen, nitrogen, a halogen — or a pi bond. Both create the uneven electron distribution that reactions require.",
+          "An electronegative atom pulls density away from its carbon, leaving that carbon electron-poor and open to attack. A pi bond does the opposite: its electrons are loosely held and exposed, so the pi bond itself attacks electron-poor things.",
+          "So identifying the functional group tells you where the molecule reacts and, usually, in which direction the electrons will flow."
+        ]
+      },
+      {
+        "heading": "The carbonyl family",
+        "body": [
+          "A carbon double-bonded to oxygen — the carbonyl — is the single most important group in the course, and several groups are just a carbonyl with different neighbours.",
+          "Carbonyl with two carbons attached is a ketone. With a hydrogen on one side, an aldehyde. Add an −OH and it becomes a carboxylic acid; an −OR gives an ester; an −NR2 gives an amide.",
+          "Learning them as one family with variations is far easier than as five separate facts, and it predicts their behaviour: all of them have the same electron-poor carbonyl carbon, modified by whatever is attached."
+        ],
+        "example": {
+          "label": "Alcohol versus ether",
+          "text": "An alcohol is R−OH; an ether is R−O−R. One difference — whether the oxygen carries a hydrogen — and it changes the boiling point by about 80 degrees, because only the alcohol can donate a hydrogen bond."
+        }
+      },
+      {
+        "heading": "How to identify them quickly",
+        "body": [
+          "Scan for the non-carbon atoms first. In a line-angle drawing they are the only things written out, so they are visually obvious, and they mark where every functional group is.",
+          "Then check what each is attached to. An oxygen with one bond to carbon and one to hydrogen is an alcohol; an oxygen bridging two carbons is an ether; an oxygen double-bonded to carbon is some kind of carbonyl, and its neighbours tell you which."
+        ]
+      }
+    ]
+  },
+  "nomenclature": {
+    "intro": "IUPAC naming is a system for turning a structure into a unique name and back. It looks like arbitrary rule-following, but it is really a small, consistent grammar, and you only need a fraction of it to handle everything an introductory course throws at you.",
+    "sections": [
+      {
+        "heading": "Three pieces to every name",
+        "body": [
+          "A name has a root telling you the longest carbon chain, a suffix telling you the principal functional group, and prefixes listing everything else hanging off it.",
+          "The roots are worth memorizing outright, because everything else is built on them: meth (1), eth (2), prop (3), but (4), pent (5), hex (6), hept (7), oct (8), non (9), dec (10).",
+          "So hexanol is a six-carbon chain (hex) that is an alcohol (-ol), and 2-chlorobutane is a four-carbon chain (but) with a chlorine on the second carbon."
+        ]
+      },
+      {
+        "heading": "Finding the parent chain",
+        "body": [
+          "The parent is the LONGEST continuous chain of carbons — and it does not have to be the one drawn horizontally. Molecules are often drawn so the longest chain turns a corner, which is a deliberate test of whether you are counting rather than eyeballing.",
+          "If two chains tie in length, choose the one with more substituents attached."
+        ]
+      },
+      {
+        "heading": "Numbering, and the lowest-locant rule",
+        "body": [
+          "Number the parent chain from whichever end gives the substituents the lowest possible numbers. Compare the full set of numbers, not just the first one, and pick the lower set.",
+          "A functional group suffix outranks substituents: if the chain contains an −OH, that gets the lowest number available regardless of where the halogens fall."
+        ],
+        "example": {
+          "label": "Which end to count from",
+          "text": "A five-carbon chain with a chlorine on the second carbon from the left. Counting from the left gives locant 2; from the right it gives 4. Lower wins, so it is 2-chloropentane, never 4-chloropentane."
+        }
+      },
+      {
+        "heading": "Assembling the name",
+        "body": [
+          "List substituents alphabetically, each with its locant. When a substituent appears more than once, use di, tri, or tetra — but ignore those multiplying prefixes when alphabetizing. Diethyl files under E, not D.",
+          "A common early error is naming a substituent that should have been part of the parent chain. If you find yourself writing \"1-methyl\" anything, stop: a methyl on carbon 1 just means the chain was one carbon longer than you counted."
+        ]
+      }
+    ]
+  },
+  "isomers": {
+    "intro": "Two compounds can share a molecular formula and still be completely different substances. Sorting out how they differ is the groundwork for stereochemistry, which is where a lot of students first get lost — largely because the vocabulary arrives faster than the ideas.",
+    "sections": [
+      {
+        "heading": "A decision tree, not a list",
+        "body": [
+          "Start with the formula. If two molecules have different molecular formulas, they are simply different compounds and not isomers at all.",
+          "Same formula, different connectivity — a different map of what is bonded to what — makes them constitutional isomers. Butane and 2-methylpropane are both C4H10 but wired differently.",
+          "Same formula AND same connectivity, differing only in three-dimensional arrangement, makes them stereoisomers. This is the branch that needs care."
+        ]
+      },
+      {
+        "heading": "The trap: conformations are not isomers",
+        "body": [
+          "Single bonds rotate freely at room temperature, millions of times a second. Two drawings of butane that differ only by rotation about a C−C bond are the same molecule caught in different poses, not two compounds.",
+          "The test is whether converting one into the other requires breaking a bond. If rotation alone does it, you have one compound.",
+          "Double bonds are the contrast: rotating one would tear the pi bond apart, which costs far too much energy. That is exactly why alkenes have cis and trans forms and alkanes do not."
+        ]
+      },
+      {
+        "heading": "Chirality and stereocenters",
+        "body": [
+          "A carbon bonded to four DIFFERENT groups is a stereocenter, and its mirror image cannot be superimposed on the original — like left and right hands.",
+          "Check every group all the way out, not just the first atom. Two groups that both start with carbon can still differ further along.",
+          "Molecules that are non-superimposable mirror images are enantiomers. Stereoisomers that are not mirror images are diastereomers, which includes every cis/trans pair."
+        ],
+        "example": {
+          "label": "Why this matters biologically",
+          "text": "Enantiomers have identical melting points, boiling points and solubilities. They differ only toward other chiral things — and enzymes are chiral. That is why one enantiomer of a drug can be therapeutic while its mirror image does nothing."
+        }
+      },
+      {
+        "heading": "Counting stereoisomers",
+        "body": [
+          "With n stereocenters there are at most 2^n stereoisomers. Glucose has four, giving a family of sixteen — which is why sugar chemistry has so many named members.",
+          "The maximum is not always reached. If a molecule has an internal mirror plane it is superimposable on its own reflection and achiral despite having stereocenters. Those are meso compounds, and they are a favourite exam trap."
+        ]
+      }
+    ]
+  },
+  "resonance": {
+    "intro": "Some molecules cannot be drawn correctly with a single Lewis structure. Resonance is the notation for that situation, and understanding what it does and does not claim prevents a specific misconception that causes trouble later.",
+    "sections": [
+      {
+        "heading": "What resonance actually says",
+        "body": [
+          "When several valid Lewis structures differ only in where the electrons sit, the real molecule is none of them. It is a single, unchanging blend of all of them, called the hybrid.",
+          "The molecule does NOT flip between the structures. This is the misconception worth killing early. Benzene is not rapidly alternating between two arrangements of double bonds — it is permanently one thing, with all six carbon-carbon bonds identical and intermediate in length between a single and a double bond.",
+          "The double-headed arrow between structures means \"is a blend of\", not \"turns into\". An equilibrium arrow would mean something completely different: two real, separate species interconverting."
+        ]
+      },
+      {
+        "heading": "The one rule for drawing them",
+        "body": [
+          "Only electrons move. Atoms stay exactly where they are. If you have moved an atom, you have drawn a different compound.",
+          "In practice the electrons move in a few recurring patterns: a lone pair swinging into a bond with an adjacent positive atom, a pi bond collapsing onto an adjacent atom as a lone pair, or a pi bond shifting one position along a conjugated chain.",
+          "It also requires geometry: the orbitals involved must be aligned so their p orbitals overlap side by side. Twist the system out of plane and the delocalization breaks."
+        ],
+        "example": {
+          "label": "Resonance versus tautomers",
+          "text": "Two drawings of acetate differing in which C−O bond is double are resonance forms — only electrons moved. Two drawings where a hydrogen has relocated are tautomers: genuinely different compounds in equilibrium, written with an equilibrium arrow."
+        }
+      },
+      {
+        "heading": "Not all structures contribute equally",
+        "body": [
+          "When the possible structures are equivalent, they contribute equally and the charge is shared evenly. Acetate has two equivalent forms, so each oxygen carries exactly half a negative charge.",
+          "When they are not equivalent, the more stable one dominates. Rank them: full octets first, then fewest formal charges, then charges on sensible atoms (negative on electronegative ones)."
+        ]
+      },
+      {
+        "heading": "Why delocalization stabilizes",
+        "body": [
+          "Spreading charge over several atoms is lower in energy than concentrating it on one. That is the entire reason resonance matters for reactivity.",
+          "It is why carboxylic acids are millions of times more acidic than alcohols: the carboxylate spreads its negative charge over two oxygens while an alkoxide is stuck with it on one. The same logic explains why benzylic and allylic carbocations are unusually stable, and why the amide bond in proteins cannot rotate."
+        ]
+      }
+    ]
+  },
+  "arrows": {
+    "intro": "Curved arrows are the language mechanisms are written in. They are not decoration on top of a reaction — they ARE the explanation, tracking where every electron goes. Learning to read them before mechanisms start in class removes most of the difficulty.",
+    "sections": [
+      {
+        "heading": "Arrows track electrons, nothing else",
+        "body": [
+          "A curved arrow shows a pair of electrons moving from where they are now to where they end up. It never shows an atom moving.",
+          "The tail must start on actual electrons: either a lone pair or an existing bond. It never starts on an atom symbol, and never on a positive charge — a positive charge is where electrons are going TO, not coming from.",
+          "The head shows the destination. Landing between two atoms means a new bond forms there. Landing on a single atom means that atom keeps the pair as a lone pair."
+        ]
+      },
+      {
+        "heading": "Rich to poor, always",
+        "body": [
+          "Electrons flow from electron-rich to electron-poor. The electron-rich species is the nucleophile — it has lone pairs, a negative charge, or an accessible pi bond. The electron-poor one is the electrophile: a positive charge, a partial positive, or an empty orbital.",
+          "This is why bond polarity matters so much. Identifying which carbon is δ+ tells you where the nucleophile will attack, and therefore where to point your arrow.",
+          "If you ever find yourself drawing an arrow that starts at a positive charge and points at something electron-rich, it is backwards."
+        ]
+      },
+      {
+        "heading": "Carbon can only hold four bonds",
+        "body": [
+          "This constraint generates most of the two-arrow patterns you will draw. If a nucleophile forms a new bond to a carbon that already has four, something else must leave at the same time — so the attack arrow needs a partner arrow breaking a bond.",
+          "That is precisely why SN2 is a single concerted step with two arrows: the nucleophile comes in as the leaving group departs, and carbon is never five-bonded."
+        ],
+        "example": {
+          "label": "A quick self-check",
+          "text": "After every step, verify three things: total charge is unchanged, no second-row atom exceeds an octet, and no carbon has five bonds. Almost every mechanism error shows up in one of those three."
+        }
+      },
+      {
+        "heading": "Reading a mechanism from its arrows",
+        "body": [
+          "The arrows tell you what kind of mechanism you have drawn. If a carbocation appears at any point, the pathway is stepwise — the leaving group departed before the nucleophile arrived. No intermediate means it was concerted.",
+          "That distinction has real consequences: a concerted backside attack inverts stereochemistry, while a flat carbocation can be attacked from either face and gives a mixture."
+        ]
+      }
+    ]
+  },
+  "energy": {
+    "intro": "Two questions get asked about every reaction, and they are independent: is it favourable, and is it fast? Keeping them separate is one of the most useful habits you can build, because a reaction can be enormously favourable and still not happen at any observable rate.",
+    "sections": [
+      {
+        "heading": "Thermodynamics: is it favourable?",
+        "body": [
+          "This is about where the reaction ends up, and it is answered by the free energy change, ΔG. Negative means products are lower in energy and favoured at equilibrium.",
+          "ΔG has two contributions: ΔH, the heat released or absorbed, and ΔS, the change in disorder, weighted by temperature. ΔG = ΔH − TΔS.",
+          "The temperature weighting is why heating a reaction can flip which product dominates. Elimination reactions produce more particles than substitution, so their ΔS is more positive, and raising T amplifies that advantage. \"Heat favours elimination\" is a consequence of this equation rather than a separate rule to memorize."
+        ]
+      },
+      {
+        "heading": "Kinetics: is it fast?",
+        "body": [
+          "This is about the barrier in between, the activation energy Ea. Getting from reactants to products requires passing through a high-energy arrangement called the transition state, and Ea is the height of that climb.",
+          "Ea and ΔG are independent. Diamond converting to graphite is thermodynamically favourable and takes geological time, because the barrier is enormous.",
+          "A catalyst lowers Ea by offering a different route. It never changes ΔG or where the equilibrium sits — only how quickly you get there. Enzymes work exactly this way."
+        ]
+      },
+      {
+        "heading": "Reading a reaction coordinate diagram",
+        "body": [
+          "Energy runs up the vertical axis and reaction progress along the horizontal. Every peak is a transition state and therefore one step, so counting peaks counts steps.",
+          "Every valley between two peaks is an intermediate: a real species with a genuine, if brief, lifetime. Carbocations live in these valleys. Transition states, sitting at maxima, can never be isolated.",
+          "The rate-determining step is the one with the tallest barrier measured from the valley BEFORE it — which is not always the highest point on the page."
+        ],
+        "example": {
+          "label": "A case where those differ",
+          "text": "A profile running 0 → 60 → −30 → 50 → −40. The first peak (60) is higher on the page, but step two climbs from −30 up to 50, a rise of 80 against step one’s 60. Step two is rate-determining."
+        }
+      },
+      {
+        "heading": "Why rate laws reveal mechanisms",
+        "body": [
+          "Only species involved at or before the slow step can affect the rate. That makes the rate law experimental evidence for what the mechanism must be.",
+          "SN2 is second order — doubling either the substrate or the nucleophile doubles the rate — which tells you both are present in a single concerted step. SN1 is first order in substrate only, because the nucleophile joins after the slow ionization has already happened. The names literally encode this: the 1 and 2 are the molecularity of the rate-determining step."
+        ]
+      }
+    ]
+  },
+  "biomolecules": {
+    "intro": "Biochemistry is organic chemistry applied to four families of molecule. The chemistry is the same chemistry — the same bonds, the same acid-base reasoning, the same intermolecular forces — assembled into larger structures with jobs to do.",
+    "sections": [
+      {
+        "heading": "Four families, one bond type each",
+        "body": [
+          "Proteins are built from amino acids joined by peptide bonds, which are amides. Nucleic acids are nucleotides joined by phosphodiester bonds. Carbohydrates are sugars joined by glycosidic bonds. Fats are glycerol joined to fatty acids by ester bonds.",
+          "Three of those four are polymers built from repeating units. Lipids are the odd one out: they are grouped by a physical property, being insoluble in water, rather than by any shared backbone. That is why fats, steroids and phospholipids look so different from each other.",
+          "All four are assembled by condensation, releasing a water molecule per bond, and taken apart by hydrolysis, consuming one. Digestion is hydrolysis across all four families."
+        ]
+      },
+      {
+        "heading": "Protein structure in four levels",
+        "body": [
+          "Primary structure is the sequence of amino acids — just the order, nothing about shape.",
+          "Secondary structure is local folding into alpha helices and beta sheets, held together by hydrogen bonds between BACKBONE atoms. Side chains are not involved, which is why these patterns look the same regardless of sequence.",
+          "Tertiary structure is the whole chain folded into its three-dimensional shape, held by SIDE-CHAIN interactions. Quaternary structure is several separate chains assembled together, as in hemoglobin’s four subunits."
+        ]
+      },
+      {
+        "heading": "What actually drives folding",
+        "body": [
+          "The dominant force is the hydrophobic effect, and the reason is counterintuitive: it is driven by WATER’s entropy, not the protein’s.",
+          "Water forced to surround a nonpolar group has to arrange itself into an ordered cage, which is entropically costly. Burying those nonpolar side chains in the protein’s core releases that structured water, and the resulting entropy gain drives folding.",
+          "So hydrophobic residues end up buried and polar ones face the water. In a membrane protein the logic inverts, because the surroundings are lipid rather than water."
+        ],
+        "example": {
+          "label": "The only covalent contribution",
+          "text": "Everything holding tertiary structure together is non-covalent except one: two cysteine side chains can oxidize into a disulfide bridge. Denaturation destroys the fold while leaving the sequence intact, which is why a cooked egg cannot be uncooked."
+        }
+      },
+      {
+        "heading": "Enzymes",
+        "body": [
+          "Enzymes are proteins that catalyze reactions, and catalysis means exactly what it meant in kinetics: they lower the activation energy without changing ΔG or the equilibrium position.",
+          "They work by binding the substrate in a small pocket, the active site, and stabilizing the transition state. The residues doing the work are usually the ones with useful chemistry available: histidine shuttling protons, serine acting as a nucleophile, aspartate and glutamate stabilizing charge.",
+          "This is why enzymes have a pH optimum. Change the pH and you change the protonation state of those active-site residues, and the catalysis stops working."
+        ]
+      }
+    ]
+  },
+  "orgopreview": {
+    "intro": "Substitution and elimination are the first big mechanism unit of the course, and they are where the foundations you have been building get used all at once. Seeing the shape of the problem now makes those weeks feel like a second exposure.",
+    "sections": [
+      {
+        "heading": "The situation",
+        "body": [
+          "A carbon carries a leaving group — typically a halogen — which makes that carbon electron-poor. Something electron-rich arrives. There are two things it can do.",
+          "It can attack the carbon and replace the leaving group, which is SUBSTITUTION. Or it can act as a base, pull off a hydrogen from the neighbouring carbon, and form a double bond as the leaving group departs — ELIMINATION.",
+          "Each of those happens by two possible mechanisms, one concerted and one stepwise, giving four pathways: SN1, SN2, E1, E2. Predicting which one operates is the whole game."
+        ]
+      },
+      {
+        "heading": "Concerted versus stepwise",
+        "body": [
+          "The 2 mechanisms happen in a single step. In SN2 the nucleophile attacks from the side opposite the leaving group as it leaves, so carbon is never five-bonded — and that backside approach inverts the stereochemistry, like an umbrella in the wind.",
+          "The 1 mechanisms happen in two steps. The leaving group departs first, producing a carbocation, and only then does the nucleophile or base act. Because that carbocation is flat, it can be attacked from either face, giving a mixture of stereochemistry.",
+          "The digits are not arbitrary: they are the molecularity of the rate-determining step, which is why SN2 rate depends on both reagents and SN1 rate depends only on the substrate."
+        ]
+      },
+      {
+        "heading": "Deciding, in three questions",
+        "body": [
+          "Ask the SUBSTRATE first, because it eliminates the most options fastest. Methyl and primary carbons cannot support a carbocation, so SN1 and E1 are out. Tertiary carbons are too crowded for backside attack, so SN2 is out. Secondary keeps everything open, and conditions decide.",
+          "Then ask about the REAGENT. A strong nucleophile drives SN2. A strong but bulky base — potassium tert-butoxide, LDA, DBU — cannot fit for backside attack, so it removes a proton instead and drives E2. A weak, neutral species, often the solvent itself, allows the slow ionization of SN1/E1.",
+          "Finally SOLVENT and TEMPERATURE break any remaining tie. Polar protic solvents stabilize ions and favour the stepwise routes; polar aprotic solvents leave the nucleophile bare and reactive, favouring SN2. Heat favours elimination."
+        ],
+        "example": {
+          "label": "What this looks like in practice",
+          "text": "2-bromobutane with potassium tert-butoxide and heat. Secondary substrate settles nothing. But the base is strong AND bulky, which blocks SN2 and points at E2 — and the heat reinforces elimination. Answer: E2."
+        }
+      },
+      {
+        "heading": "What to take from this now",
+        "body": [
+          "You are not expected to be fluent in these yet. The point is that when the unit arrives, it should feel like assembling parts you already own rather than learning something new.",
+          "Every ingredient is something you have already met: carbocation stability from resonance and induction, leaving-group ability from acid-base reasoning, rate laws from kinetics, backside attack from three-dimensional geometry, and the entropy argument for heat from thermodynamics."
         ]
       }
     ]
