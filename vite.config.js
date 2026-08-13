@@ -3,12 +3,20 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { execSync } from 'node:child_process'
 
-/** Commit date + short sha, so a given commit always builds identically. */
+/**
+ * Commit date + short sha, so a given commit always builds identically.
+ *
+ * The date format deliberately contains no space: execSync goes through a
+ * shell, and a space splits "%H:%M" into a second argument that git reads
+ * as a revision, failing with "invalid object name". That threw silently
+ * into the clock fallback and made builds nondeterministic again.
+ */
 function buildStamp() {
   try {
-    const date = execSync('git log -1 --format=%cd --date=format:%Y-%m-%d %H:%M', { encoding: 'utf8' }).trim()
+    const date = execSync('git log -1 --format=%cd --date=format:%Y-%m-%dT%H:%M', { encoding: 'utf8' }).trim()
     const sha = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
-    return `${date} · ${sha}`
+    if (!date || !sha) throw new Error('empty git output')
+    return `${date.replace('T', ' ')} · ${sha}`
   } catch {
     // No git (e.g. a tarball build) — fall back to the clock.
     return new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
