@@ -3,7 +3,7 @@ import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/top
 import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt, canonicalKey, isValidMolecule } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
 import { lookupGeometry, GEOMETRIES } from '../src/lib/chem/vsepr.js'
-import { TOPIC_META } from '../src/lib/topicMeta.js'
+import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
@@ -156,6 +156,13 @@ for (const topic of TOPICS) {
     }
     if (!iconSrc.includes(meta.icon + ':')) {
       fail(`topic "${t.id}" uses icon "${meta.icon}" which TopicIcon does not draw`)
+    }
+    // Topic colours carry near-black button text, and blue hues are much
+    // darker at the same lightness — two fell below the 4.5:1 needed for
+    // body text before the lightness was solved per hue.
+    const contrast = buttonContrast(t.id)
+    if (contrast < 4.5) {
+      fail(`topic "${t.id}" button colour has ${contrast.toFixed(2)}:1 against its text, below the 4.5:1 minimum`)
     }
     if (hues.has(meta.hue)) {
       fail(`topics "${hues.get(meta.hue)}" and "${t.id}" share hue ${meta.hue} and will look alike`)

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { TOPICS, getTopicBank, getMixedBank } from '../lib/topics.js'
 import { getAllProgress } from '../lib/db.js'
 import { getStreak } from '../lib/streaks.js'
-import { topicColor, topicTint } from '../lib/topicMeta.js'
+import { topicColor, topicTint, topicButtonColor } from '../lib/topicMeta.js'
 import TopicIcon from './TopicIcon.jsx'
 import lessons from '../data/lessons.json'
 import progression from '../data/progression.json'
@@ -74,6 +74,7 @@ function MasteryRing({ mastered, studied, total, topicId }) {
 function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed }) {
   const pct = stat?.seen ? Math.round((stat.correct / stat.seen) * 100) : 0
   const color = topicColor(topic.id)
+  const btnColor = topicButtonColor(topic.id)
 
   return (
     <div className="card topic-card" style={{ borderLeft: `3px solid ${color}`, background: topicTint(topic.id, 0.05) }}>
@@ -111,7 +112,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed }) {
         {hasLesson(topic.id) && (
           <button
             className={stat?.seen ? 'ghost' : 'primary'}
-            style={stat?.seen ? undefined : { background: color, color: '#06121f' }}
+            style={stat?.seen ? undefined : { background: btnColor, color: '#06121f' }}
             onClick={() => onLesson(topic.id)}
           >
             Learn
@@ -122,7 +123,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed }) {
         </button>
         <button
           className={stat?.seen ? 'primary' : 'ghost'}
-          style={stat?.seen ? { background: color, color: '#06121f' } : undefined}
+          style={stat?.seen ? { background: btnColor, color: '#06121f' } : undefined}
           onClick={() => onStudy(topic.id)}
         >
           Study
