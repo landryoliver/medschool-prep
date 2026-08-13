@@ -185,8 +185,12 @@ scripts/validate.js   the correctness gate
 Push to `main`; GitHub Actions runs validate, builds, and deploys to Pages.
 Pushing two commits in quick succession can make the older deploy job lose a
 concurrency race and report failure — check whether a later run superseded it
-before investigating. Verify a deploy landed by comparing the live bundle
-hash against `dist/`:
+before investigating.
+
+Builds are reproducible: the footer build stamp comes from the git commit
+rather than the clock, so the same commit always produces the same bundle
+hash. That is what makes this check meaningful — verify a deploy landed by
+building locally and comparing the live hash against `dist/`:
 
 ```bash
 curl -s https://landryoliver.github.io/medschool-prep/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js'

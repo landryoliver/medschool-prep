@@ -1,12 +1,30 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { execSync } from 'node:child_process'
+
+/** Commit date + short sha, so a given commit always builds identically. */
+function buildStamp() {
+  try {
+    const date = execSync('git log -1 --format=%cd --date=format:%Y-%m-%d %H:%M', { encoding: 'utf8' }).trim()
+    const sha = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
+    return `${date} · ${sha}`
+  } catch {
+    // No git (e.g. a tarball build) — fall back to the clock.
+    return new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
+  }
+}
 
 export default defineConfig({
   base: '/medschool-prep/',
   define: {
     // Shown in the footer so the user can tell whether an update landed.
-    __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC'),
+    //
+    // Taken from the COMMIT, not the clock: stamping build time made every
+    // build produce a different bundle hash from identical source, which
+    // broke the "does the live hash match dist?" deploy check. Keyed to the
+    // commit, the same source always builds to the same hash.
+    __BUILD_DATE__: JSON.stringify(buildStamp()),
   },
   plugins: [
     react(),
