@@ -4,11 +4,26 @@
       "title": "Rank these by acidity using ARIO",
       "problem": "Which is the strongest acid: ethane (CH₃CH₃), ethanol (CH₃CH₂OH), or acetic acid (CH₃COOH)?",
       "steps": [
-        { "label": "Deprotonate each one first", "detail": "Acidity is about the stability of what is LEFT BEHIND, not the acid itself. Conjugate bases: CH₃CH₂⁻ (carbanion), CH₃CH₂O⁻ (alkoxide), CH₃COO⁻ (carboxylate)." },
-        { "label": "A — Atom. Where does the charge sit?", "detail": "The carbanion puts its charge on CARBON; the other two put it on OXYGEN. Across a period, oxygen is far more electronegative, so it stabilizes the charge much better. Ethane loses immediately — and by a huge margin (pKa 50 vs ~16)." },
-        { "label": "A is a tie for the other two, so move to R", "detail": "Ethanol and acetic acid both put the charge on oxygen. Atom cannot separate them, so check Resonance next." },
-        { "label": "R — Resonance. Can either delocalize?", "detail": "The carboxylate spreads its charge over TWO equivalent oxygens. The alkoxide has nowhere to put it — the charge stays on one atom. Acetic acid wins." },
-        { "label": "Stop here", "detail": "R decided it, so Induction and Orbital cannot overturn the result and do not need checking." }
+        {
+          "label": "Deprotonate each one first",
+          "detail": "Acidity is about the stability of what is LEFT BEHIND, not the acid itself. Conjugate bases: CH₃CH₂⁻ (carbanion), CH₃CH₂O⁻ (alkoxide), CH₃COO⁻ (carboxylate)."
+        },
+        {
+          "label": "A — Atom. Where does the charge sit?",
+          "detail": "The carbanion puts its charge on CARBON; the other two put it on OXYGEN. Across a period, oxygen is far more electronegative, so it stabilizes the charge much better. Ethane loses immediately — and by a huge margin (pKa 50 vs ~16)."
+        },
+        {
+          "label": "A is a tie for the other two, so move to R",
+          "detail": "Ethanol and acetic acid both put the charge on oxygen. Atom cannot separate them, so check Resonance next."
+        },
+        {
+          "label": "R — Resonance. Can either delocalize?",
+          "detail": "The carboxylate spreads its charge over TWO equivalent oxygens. The alkoxide has nowhere to put it — the charge stays on one atom. Acetic acid wins."
+        },
+        {
+          "label": "Stop here",
+          "detail": "R decided it, so Induction and Orbital cannot overturn the result and do not need checking."
+        }
       ],
       "answer": "Acetic acid (pKa 4.8) > ethanol (16) > ethane (50). Atom eliminated ethane; resonance separated the other two."
     },
@@ -16,10 +31,22 @@
       "title": "Which direction does this proton transfer go?",
       "problem": "Acetic acid (pKa 4.8) is mixed with hydroxide, HO⁻. Does the reaction favor products?",
       "steps": [
-        { "label": "Identify the acid on each side", "detail": "Left side: acetic acid, pKa 4.8. If hydroxide takes the proton, the right side has water — whose pKa is 15.7." },
-        { "label": "Apply the rule", "detail": "Equilibrium always favors the side with the WEAKER acid, meaning the higher pKa." },
-        { "label": "Compare", "detail": "Water (15.7) is a much weaker acid than acetic acid (4.8) — about 11 pKa units, so roughly 10¹¹ in favour." },
-        { "label": "Conclude", "detail": "Products are strongly favored. The reaction essentially goes to completion." }
+        {
+          "label": "Identify the acid on each side",
+          "detail": "Left side: acetic acid, pKa 4.8. If hydroxide takes the proton, the right side has water — whose pKa is 15.7."
+        },
+        {
+          "label": "Apply the rule",
+          "detail": "Equilibrium always favors the side with the WEAKER acid, meaning the higher pKa."
+        },
+        {
+          "label": "Compare",
+          "detail": "Water (15.7) is a much weaker acid than acetic acid (4.8) — about 11 pKa units, so roughly 10¹¹ in favour."
+        },
+        {
+          "label": "Conclude",
+          "detail": "Products are strongly favored. The reaction essentially goes to completion."
+        }
       ],
       "answer": "Yes, products are heavily favored. Deprotonating with hydroxide works whenever your acid has a pKa well below 15.7."
     }
@@ -29,10 +56,22 @@
       "title": "Classify a bond without any numbers",
       "problem": "Classify the K–Br bond and the C–O bond as ionic, polar covalent, or nonpolar covalent.",
       "steps": [
-        { "label": "Locate each element on the periodic table", "detail": "Potassium is group 1, far left — a METAL. Bromine is group 17 — a NONMETAL. Carbon and oxygen both sit in the upper-right nonmetal block." },
-        { "label": "Apply the position rule", "detail": "Metal + nonmetal → IONIC. Nonmetal + nonmetal → COVALENT. So K–Br is ionic and C–O is covalent, decided without a single number." },
-        { "label": "For the covalent one, ask a second question", "detail": "Same atoms → nonpolar. Different atoms → polar. Carbon and oxygen differ, so C–O is POLAR covalent." },
-        { "label": "Which atom is δ−?", "detail": "Oxygen is more electronegative, so it takes the electron density: O is δ−, C is δ+. That δ+ carbon is where nucleophiles attack — the basis of most carbonyl chemistry." }
+        {
+          "label": "Locate each element on the periodic table",
+          "detail": "Potassium is group 1, far left — a METAL. Bromine is group 17 — a NONMETAL. Carbon and oxygen both sit in the upper-right nonmetal block."
+        },
+        {
+          "label": "Apply the position rule",
+          "detail": "Metal + nonmetal → IONIC. Nonmetal + nonmetal → COVALENT. So K–Br is ionic and C–O is covalent, decided without a single number."
+        },
+        {
+          "label": "For the covalent one, ask a second question",
+          "detail": "Same atoms → nonpolar. Different atoms → polar. Carbon and oxygen differ, so C–O is POLAR covalent."
+        },
+        {
+          "label": "Which atom is δ−?",
+          "detail": "Oxygen is more electronegative, so it takes the electron density: O is δ−, C is δ+. That δ+ carbon is where nucleophiles attack — the basis of most carbonyl chemistry."
+        }
       ],
       "answer": "K–Br is ionic; C–O is polar covalent with δ− on oxygen. Neither answer needed an electronegativity value."
     },
@@ -40,10 +79,22 @@
       "title": "The trend fails — now what?",
       "problem": "Which has higher electronegativity, lithium or iodine?",
       "steps": [
-        { "label": "Try the standard trend", "detail": "Electronegativity increases UP and to the RIGHT. Lithium is up (favoring Li) but far left (favoring I). Iodine is right (favoring I) but far down (favoring Li)." },
-        { "label": "Notice that it conflicts", "detail": "This is a DIAGONAL comparison — different row and different column — so the two halves of the trend point opposite ways. The rule cannot answer it." },
-        { "label": "Fall back to metal versus nonmetal", "detail": "Lithium is an alkali METAL. Iodine is a halogen — a NONMETAL. Nonmetals hold electrons far more tightly than metals do." },
-        { "label": "Conclude", "detail": "Iodine wins, 2.66 versus 0.98. This resolver holds for every metal/nonmetal pair with no exceptions for electronegativity or ionization energy." }
+        {
+          "label": "Try the standard trend",
+          "detail": "Electronegativity increases UP and to the RIGHT. Lithium is up (favoring Li) but far left (favoring I). Iodine is right (favoring I) but far down (favoring Li)."
+        },
+        {
+          "label": "Notice that it conflicts",
+          "detail": "This is a DIAGONAL comparison — different row and different column — so the two halves of the trend point opposite ways. The rule cannot answer it."
+        },
+        {
+          "label": "Fall back to metal versus nonmetal",
+          "detail": "Lithium is an alkali METAL. Iodine is a halogen — a NONMETAL. Nonmetals hold electrons far more tightly than metals do."
+        },
+        {
+          "label": "Conclude",
+          "detail": "Iodine wins, 2.66 versus 0.98. This resolver holds for every metal/nonmetal pair with no exceptions for electronegativity or ionization energy."
+        }
       ],
       "answer": "Iodine. When a comparison is diagonal, stop using up/right and ask metal or nonmetal instead."
     }
@@ -53,14 +104,59 @@
       "title": "Build a Lewis structure and check the charges",
       "problem": "Draw the Lewis structure for the nitrate ion, NO₃⁻, and find the formal charge on each atom.",
       "steps": [
-        { "label": "Count total valence electrons", "detail": "N contributes 5, each O contributes 6 (18 total), and the negative charge adds 1. Total = 5 + 18 + 1 = 24 electrons." },
-        { "label": "Connect the skeleton", "detail": "Nitrogen is the central atom with three oxygens attached. Three single bonds use 6 electrons, leaving 18." },
-        { "label": "Distribute the rest to the outer atoms", "detail": "Give each oxygen three lone pairs: 3 × 6 = 18 electrons. All 24 are now placed — but nitrogen only has 6 electrons around it." },
-        { "label": "Fix the octet with a double bond", "detail": "Move one lone pair from an oxygen into a bond with nitrogen. Nitrogen now has 8 electrons, and no electrons were added or removed." },
-        { "label": "Compute formal charges: FC = valence − lone pair electrons − bonds", "detail": "N: 5 − 0 − 4 = +1. Double-bonded O: 6 − 4 − 2 = 0. Each single-bonded O: 6 − 6 − 1 = −1." },
-        { "label": "Check the total", "detail": "+1 + 0 + (−1) + (−1) = −1, matching the ion's charge. If this sum does not match, something is wrong." }
+        {
+          "label": "Count total valence electrons",
+          "detail": "N contributes 5, each O contributes 6 (18 total), and the negative charge adds 1. Total = 5 + 18 + 1 = 24 electrons."
+        },
+        {
+          "label": "Connect the skeleton",
+          "detail": "Nitrogen is the central atom with three oxygens attached. Three single bonds use 6 electrons, leaving 18."
+        },
+        {
+          "label": "Distribute the rest to the outer atoms",
+          "detail": "Give each oxygen three lone pairs: 3 × 6 = 18 electrons. All 24 are now placed — but nitrogen only has 6 electrons around it."
+        },
+        {
+          "label": "Fix the octet with a double bond",
+          "detail": "Move one lone pair from an oxygen into a bond with nitrogen. Nitrogen now has 8 electrons, and no electrons were added or removed."
+        },
+        {
+          "label": "Compute formal charges: FC = valence − lone pair electrons − bonds",
+          "detail": "N: 5 − 0 − 4 = +1. Double-bonded O: 6 − 4 − 2 = 0. Each single-bonded O: 6 − 6 − 1 = −1."
+        },
+        {
+          "label": "Check the total",
+          "detail": "+1 + 0 + (−1) + (−1) = −1, matching the ion's charge. If this sum does not match, something is wrong."
+        }
       ],
       "answer": "N is +1, the double-bonded O is 0, and the two single-bonded O's are −1 each. Three equivalent resonance forms exist, so each oxygen really carries −⅔."
+    },
+    {
+      "title": "Find the formal charge without doing arithmetic",
+      "problem": "A nitrogen is drawn with four bonds and no lone pairs. An oxygen is drawn with one bond and three lone pairs. What are their formal charges?",
+      "steps": [
+        {
+          "label": "Recall the neutral patterns",
+          "detail": "These are worth knowing cold: carbon neutral at 4 bonds, nitrogen at 3 bonds plus 1 lone pair, oxygen at 2 bonds plus 2 lone pairs, halogens at 1 bond plus 3 lone pairs."
+        },
+        {
+          "label": "Compare the nitrogen to its pattern",
+          "detail": "Neutral nitrogen has 3 bonds. This one has 4 — one MORE bond than neutral. Each extra bond beyond the neutral pattern is +1. So this nitrogen is +1, which is ammonium."
+        },
+        {
+          "label": "Compare the oxygen to its pattern",
+          "detail": "Neutral oxygen has 2 bonds. This one has 1 — one FEWER than neutral. Each bond short of the pattern is −1. So this oxygen is −1, which is hydroxide."
+        },
+        {
+          "label": "Check against the formula if you like",
+          "detail": "FC = valence − lone pair electrons − bonds. Nitrogen: 5 − 0 − 4 = +1. Oxygen: 6 − 6 − 1 = −1. Same answers, more slowly."
+        },
+        {
+          "label": "Why the pattern method is worth it",
+          "detail": "Under exam time pressure you will scan dozens of structures. Recognizing \"nitrogen with four bonds\" as +1 on sight is far faster than computing, and it makes wrong structures leap out at you."
+        }
+      ],
+      "answer": "Nitrogen +1, oxygen −1. Count bonds against the neutral pattern: extra bonds are positive, missing bonds are negative."
     }
   ],
   "vsepr": [
@@ -68,11 +164,26 @@
       "title": "Predict a shape from the structure",
       "problem": "What is the molecular shape and bond angle of water, H₂O?",
       "steps": [
-        { "label": "Count ELECTRON GROUPS on the central atom", "detail": "Oxygen has 2 bonds to hydrogen plus 2 lone pairs. That is 4 electron groups. Remember: a double or triple bond would still count as ONE group." },
-        { "label": "Four groups gives the electron geometry", "detail": "Four groups arrange tetrahedrally, since that puts them as far apart as possible — the ideal angle is 109.5°." },
-        { "label": "Now describe only where the ATOMS are", "detail": "Molecular shape ignores lone pairs. With 2 bonds and 2 lone pairs, the atoms form a BENT shape, not a tetrahedron." },
-        { "label": "Adjust the angle for lone pair repulsion", "detail": "Lone pairs are held closer to the nucleus and repel harder than bonding pairs, squeezing the H–O–H angle below ideal — about 104.5°." },
-        { "label": "Read off the hybridization", "detail": "Hybridization follows the group count directly: 4 groups → sp³. No lone-pair bookkeeping needed for this part." }
+        {
+          "label": "Count ELECTRON GROUPS on the central atom",
+          "detail": "Oxygen has 2 bonds to hydrogen plus 2 lone pairs. That is 4 electron groups. Remember: a double or triple bond would still count as ONE group."
+        },
+        {
+          "label": "Four groups gives the electron geometry",
+          "detail": "Four groups arrange tetrahedrally, since that puts them as far apart as possible — the ideal angle is 109.5°."
+        },
+        {
+          "label": "Now describe only where the ATOMS are",
+          "detail": "Molecular shape ignores lone pairs. With 2 bonds and 2 lone pairs, the atoms form a BENT shape, not a tetrahedron."
+        },
+        {
+          "label": "Adjust the angle for lone pair repulsion",
+          "detail": "Lone pairs are held closer to the nucleus and repel harder than bonding pairs, squeezing the H–O–H angle below ideal — about 104.5°."
+        },
+        {
+          "label": "Read off the hybridization",
+          "detail": "Hybridization follows the group count directly: 4 groups → sp³. No lone-pair bookkeeping needed for this part."
+        }
       ],
       "answer": "Bent, roughly 104.5°, sp³ hybridized. Electron geometry is tetrahedral; molecular shape is bent."
     }
@@ -82,10 +193,22 @@
       "title": "Assign R or S, including the shortcut",
       "problem": "A stereocenter has Br, OH, CH₃ and H. The H is drawn on a WEDGE (toward you), and going OH → Br → CH₃ reads clockwise. Is it R or S?",
       "steps": [
-        { "label": "Rank the four groups by atomic number", "detail": "Br (35) is highest = 1. O (8) = 2. C (6) = 3. H (1) = lowest = 4. Priority is set by the atom directly attached, at the first point of difference." },
-        { "label": "Re-read the rotation in priority order", "detail": "The question gives OH → Br → CH₃, but the correct order is Br(1) → OH(2) → CH₃(3). Reversing the first two reverses the apparent direction, so 1→2→3 reads COUNTERCLOCKWISE." },
-        { "label": "Check where the lowest priority points", "detail": "The H is on a wedge, so it points TOWARD you. R/S is defined with priority 4 pointing AWAY, so you are viewing from the wrong side." },
-        { "label": "Apply the shortcut", "detail": "Assign as drawn, then REVERSE. Counterclockwise as drawn would be S, so flipping gives R. Never rotate the molecule mentally — that is where errors come from." }
+        {
+          "label": "Rank the four groups by atomic number",
+          "detail": "Br (35) is highest = 1. O (8) = 2. C (6) = 3. H (1) = lowest = 4. Priority is set by the atom directly attached, at the first point of difference."
+        },
+        {
+          "label": "Re-read the rotation in priority order",
+          "detail": "The question gives OH → Br → CH₃, but the correct order is Br(1) → OH(2) → CH₃(3). Reversing the first two reverses the apparent direction, so 1→2→3 reads COUNTERCLOCKWISE."
+        },
+        {
+          "label": "Check where the lowest priority points",
+          "detail": "The H is on a wedge, so it points TOWARD you. R/S is defined with priority 4 pointing AWAY, so you are viewing from the wrong side."
+        },
+        {
+          "label": "Apply the shortcut",
+          "detail": "Assign as drawn, then REVERSE. Counterclockwise as drawn would be S, so flipping gives R. Never rotate the molecule mentally — that is where errors come from."
+        }
       ],
       "answer": "R. Counterclockwise as drawn, but priority 4 pointed toward you, so the answer flips."
     }
@@ -95,10 +218,22 @@
       "title": "Is this side chain charged right now?",
       "problem": "At physiological pH 7.4, is the lysine side chain (pKa 10.5) protonated, and what charge does it carry?",
       "steps": [
-        { "label": "Compare pH to pKa", "detail": "pH 7.4 is BELOW the pKa of 10.5, by about 3 units." },
-        { "label": "Apply the rule", "detail": "Below the pKa, a group KEEPS its proton. Above the pKa, it has lost it. So lysine's side chain is protonated." },
-        { "label": "Translate that into charge", "detail": "Lysine's side chain is an amine. Protonated amine = –NH₃⁺, so it carries a +1 charge. Note this is the opposite of an acid: a protonated carboxylic acid is neutral." },
-        { "label": "Sanity-check with the ratio", "detail": "Henderson-Hasselbalch: pH − pKa = −3.1, so the base-to-acid ratio is about 10⁻³ — roughly 1 deprotonated for every 1000 protonated. Overwhelmingly protonated." }
+        {
+          "label": "Compare pH to pKa",
+          "detail": "pH 7.4 is BELOW the pKa of 10.5, by about 3 units."
+        },
+        {
+          "label": "Apply the rule",
+          "detail": "Below the pKa, a group KEEPS its proton. Above the pKa, it has lost it. So lysine's side chain is protonated."
+        },
+        {
+          "label": "Translate that into charge",
+          "detail": "Lysine's side chain is an amine. Protonated amine = –NH₃⁺, so it carries a +1 charge. Note this is the opposite of an acid: a protonated carboxylic acid is neutral."
+        },
+        {
+          "label": "Sanity-check with the ratio",
+          "detail": "Henderson-Hasselbalch: pH − pKa = −3.1, so the base-to-acid ratio is about 10⁻³ — roughly 1 deprotonated for every 1000 protonated. Overwhelmingly protonated."
+        }
       ],
       "answer": "Protonated and positively charged (+1). This is why lysine residues form salt bridges with aspartate and glutamate at physiological pH."
     }
@@ -108,11 +243,26 @@
       "title": "Read a two-step energy diagram",
       "problem": "A profile runs 0 → 60 → −30 → 50 → −40 kJ/mol. How many steps and intermediates, is it exothermic, and which step is rate-determining?",
       "steps": [
-        { "label": "Count the peaks", "detail": "The odd positions are peaks: 60 and 50. Two peaks means two transition states, so TWO STEPS." },
-        { "label": "Count the wells between peaks", "detail": "One valley sits between the peaks, at −30. That is ONE INTERMEDIATE — a real species, however short-lived." },
-        { "label": "Compare only start and finish for thermodynamics", "detail": "Starts at 0, ends at −40. Products are lower, so the reaction is EXOTHERMIC. The heights of the hills in between are irrelevant to this." },
-        { "label": "Measure each barrier from the valley BEFORE it", "detail": "Step 1 climbs from 0 to 60 = 60. Step 2 climbs from −30 to 50 = 80. Do not just compare peak heights." },
-        { "label": "Identify the rate-determining step", "detail": "Step 2 has the larger barrier (80 vs 60), so it is rate-determining — even though its peak (50) is LOWER on the page than step 1's peak (60)." }
+        {
+          "label": "Count the peaks",
+          "detail": "The odd positions are peaks: 60 and 50. Two peaks means two transition states, so TWO STEPS."
+        },
+        {
+          "label": "Count the wells between peaks",
+          "detail": "One valley sits between the peaks, at −30. That is ONE INTERMEDIATE — a real species, however short-lived."
+        },
+        {
+          "label": "Compare only start and finish for thermodynamics",
+          "detail": "Starts at 0, ends at −40. Products are lower, so the reaction is EXOTHERMIC. The heights of the hills in between are irrelevant to this."
+        },
+        {
+          "label": "Measure each barrier from the valley BEFORE it",
+          "detail": "Step 1 climbs from 0 to 60 = 60. Step 2 climbs from −30 to 50 = 80. Do not just compare peak heights."
+        },
+        {
+          "label": "Identify the rate-determining step",
+          "detail": "Step 2 has the larger barrier (80 vs 60), so it is rate-determining — even though its peak (50) is LOWER on the page than step 1's peak (60)."
+        }
       ],
       "answer": "Two steps, one intermediate, exothermic overall, with step 2 rate-determining. The tallest peak is not always the rate-determining step."
     }
@@ -122,10 +272,22 @@
       "title": "Decide the mechanism in three questions",
       "problem": "2-bromobutane is treated with potassium tert-butoxide in tert-butanol, with heat. SN1, SN2, E1 or E2?",
       "steps": [
-        { "label": "Question 1 — the substrate", "detail": "The bromine sits on a SECONDARY carbon. Secondary rules nothing out on its own: it can do all four. So the conditions will have to decide, and we keep going." },
-        { "label": "Question 2 — the reagent", "detail": "Potassium tert-butoxide is a strong base AND very bulky. Bulk is the deciding property: it cannot fit for the backside attack SN2 requires, so it removes a proton instead. This points hard at E2." },
-        { "label": "Question 3 — solvent and temperature", "detail": "Heat favours elimination, because elimination makes more particles and the −TΔS term grows with temperature. That reinforces E2 rather than changing the answer." },
-        { "label": "Rule out the rest", "detail": "SN2 is blocked by the bulky base. SN1 and E1 need a weak nucleophile to allow ionization, but a strong base is present. E2 it is." }
+        {
+          "label": "Question 1 — the substrate",
+          "detail": "The bromine sits on a SECONDARY carbon. Secondary rules nothing out on its own: it can do all four. So the conditions will have to decide, and we keep going."
+        },
+        {
+          "label": "Question 2 — the reagent",
+          "detail": "Potassium tert-butoxide is a strong base AND very bulky. Bulk is the deciding property: it cannot fit for the backside attack SN2 requires, so it removes a proton instead. This points hard at E2."
+        },
+        {
+          "label": "Question 3 — solvent and temperature",
+          "detail": "Heat favours elimination, because elimination makes more particles and the −TΔS term grows with temperature. That reinforces E2 rather than changing the answer."
+        },
+        {
+          "label": "Rule out the rest",
+          "detail": "SN2 is blocked by the bulky base. SN1 and E1 need a weak nucleophile to allow ionization, but a strong base is present. E2 it is."
+        }
       ],
       "answer": "E2. The bulky strong base was the decisive clue — recognizing KOtBu, LDA and DBU on sight is worth a lot of exam points."
     }
@@ -135,10 +297,22 @@
       "title": "Rank boiling points from structure alone",
       "problem": "Rank by boiling point: butane (C₄H₁₀), butan-1-ol (C₄H₉OH), and diethyl ether (C₄H₁₀O).",
       "steps": [
-        { "label": "Check size first", "detail": "All three are four-carbon molecules of similar mass, so London dispersion is roughly comparable. Size will not separate them, which means the strongest available force decides." },
-        { "label": "Look for hydrogen bond DONORS", "detail": "A donor needs H attached to N, O or F. Only butan-1-ol has an O–H. It both donates and accepts — the strongest situation here." },
-        { "label": "Check the others for polarity", "detail": "Diethyl ether has a polar C–O–C and lone pairs, so it can ACCEPT hydrogen bonds and has dipole-dipole forces — but with no O–H it cannot donate to another ether molecule. Butane is pure hydrocarbon: dispersion only." },
-        { "label": "Rank by strongest force available", "detail": "Hydrogen bonding beats dipole-dipole beats dispersion, at comparable size." }
+        {
+          "label": "Check size first",
+          "detail": "All three are four-carbon molecules of similar mass, so London dispersion is roughly comparable. Size will not separate them, which means the strongest available force decides."
+        },
+        {
+          "label": "Look for hydrogen bond DONORS",
+          "detail": "A donor needs H attached to N, O or F. Only butan-1-ol has an O–H. It both donates and accepts — the strongest situation here."
+        },
+        {
+          "label": "Check the others for polarity",
+          "detail": "Diethyl ether has a polar C–O–C and lone pairs, so it can ACCEPT hydrogen bonds and has dipole-dipole forces — but with no O–H it cannot donate to another ether molecule. Butane is pure hydrocarbon: dispersion only."
+        },
+        {
+          "label": "Rank by strongest force available",
+          "detail": "Hydrogen bonding beats dipole-dipole beats dispersion, at comparable size."
+        }
       ],
       "answer": "Butan-1-ol (118 °C) > diethyl ether (35 °C) > butane (0 °C). Same carbon count, ~118 degrees of spread — almost entirely hydrogen bonding."
     }
@@ -148,13 +322,258 @@
       "title": "Get a molecular formula off a skeletal drawing",
       "problem": "A six-carbon ring is drawn with three alternating double bonds. What is its molecular formula and degrees of unsaturation?",
       "steps": [
-        { "label": "Count carbons from the vertices", "detail": "Every corner and every line end is a carbon. A six-sided ring has 6 vertices, so 6 carbons." },
-        { "label": "Work out the hydrogens on each carbon", "detail": "Every carbon needs 4 bonds total. Each ring carbon has 2 bonds to neighbours plus 1 share of a double bond = 3 bonds shown, so it carries 1 hydrogen." },
-        { "label": "Total them up", "detail": "6 carbons × 1 hydrogen each = 6 hydrogens. The formula is C₆H₆ — this is benzene." },
-        { "label": "Count degrees of unsaturation", "detail": "Degrees of unsaturation = rings + pi bonds. One ring plus three double bonds = 4." },
-        { "label": "Use it as a recognition signal", "detail": "Four degrees of unsaturation in a formula is a strong hint that a benzene ring is present — a shortcut worth having automatic." }
+        {
+          "label": "Count carbons from the vertices",
+          "detail": "Every corner and every line end is a carbon. A six-sided ring has 6 vertices, so 6 carbons."
+        },
+        {
+          "label": "Work out the hydrogens on each carbon",
+          "detail": "Every carbon needs 4 bonds total. Each ring carbon has 2 bonds to neighbours plus 1 share of a double bond = 3 bonds shown, so it carries 1 hydrogen."
+        },
+        {
+          "label": "Total them up",
+          "detail": "6 carbons × 1 hydrogen each = 6 hydrogens. The formula is C₆H₆ — this is benzene."
+        },
+        {
+          "label": "Count degrees of unsaturation",
+          "detail": "Degrees of unsaturation = rings + pi bonds. One ring plus three double bonds = 4."
+        },
+        {
+          "label": "Use it as a recognition signal",
+          "detail": "Four degrees of unsaturation in a formula is a strong hint that a benzene ring is present — a shortcut worth having automatic."
+        }
       ],
       "answer": "C₆H₆ with 4 degrees of unsaturation. Seeing 4 degrees should make you suspect an aromatic ring immediately."
+    }
+  ],
+  "aminoacids": [
+    {
+      "title": "Work out a side chain’s charge at physiological pH",
+      "problem": "A protein has aspartate, histidine and lysine residues in its active site. What charge does each side chain carry at pH 7.4?",
+      "steps": [
+        {
+          "label": "Recall each side-chain pKa",
+          "detail": "Aspartate ≈ 3.9 (a carboxylic acid). Histidine ≈ 6.0 (an imidazole). Lysine ≈ 10.5 (a primary amine). These three span the physiological range, which is why they were chosen."
+        },
+        {
+          "label": "Aspartate: compare 7.4 to 3.9",
+          "detail": "The pH is well ABOVE the pKa, so the group has lost its proton. A carboxylic acid losing its proton goes from neutral −COOH to −COO⁻. Charge: −1."
+        },
+        {
+          "label": "Lysine: compare 7.4 to 10.5",
+          "detail": "The pH is BELOW the pKa, so the group keeps its proton. A protonated amine is −NH₃⁺. Charge: +1. Note this is the opposite direction from the acid — protonated means charged here."
+        },
+        {
+          "label": "Histidine: compare 7.4 to 6.0",
+          "detail": "Only 1.4 units apart, so both forms are meaningfully present — roughly 1 protonated for every 25 deprotonated. Conventionally counted as neutral, but it is genuinely on the fence."
+        },
+        {
+          "label": "Why that last one matters",
+          "detail": "Being able to sit in both states under normal conditions is exactly what acid-base catalysis needs: histidine can accept a proton in one step and donate it back in the next. That is why it appears in so many active sites."
+        }
+      ],
+      "answer": "Aspartate −1, lysine +1, histidine ~neutral but poised to switch. Aspartate and lysine can form a salt bridge; histidine does the catalysis."
+    },
+    {
+      "title": "Sort an unfamiliar residue into a class",
+      "problem": "A side chain is –CH₂–SH. Which amino acid is it, what class, and does it do anything special?",
+      "steps": [
+        {
+          "label": "Identify the functional group",
+          "detail": "An –SH is a thiol — sulfur’s equivalent of an alcohol’s –OH. Sulfur sits directly below oxygen in group 16, so it behaves similarly."
+        },
+        {
+          "label": "Classify from the group",
+          "detail": "A thiol is polar but carries no charge at neutral pH, so this is a POLAR, UNCHARGED residue — not acidic, despite sulfur being somewhat acidic in character."
+        },
+        {
+          "label": "Name it",
+          "detail": "A single CH₂ linking the backbone to an –SH is cysteine (Cys, C)."
+        },
+        {
+          "label": "The special property",
+          "detail": "Two cysteines can oxidize together to form a disulfide bridge, S–S. That is the ONLY covalent crosslink holding a folded protein together — everything else in tertiary structure is non-covalent."
+        },
+        {
+          "label": "And a pKa worth knowing",
+          "detail": "The thiol pKa is about 8.3, low enough that a meaningful fraction is deprotonated at physiological pH. A thiolate is strongly nucleophilic, which is why cysteine so often does the chemistry in an active site."
+        }
+      ],
+      "answer": "Cysteine — polar and uncharged, forms disulfide bridges, and unusually nucleophilic thanks to its low thiol pKa."
+    }
+  ],
+  "functional": [
+    {
+      "title": "Identify every functional group in one molecule",
+      "problem": "A molecule is drawn as: HO–CH₂–CH₂–C(=O)–NH–CH₃. Name the functional groups present.",
+      "steps": [
+        {
+          "label": "Scan for non-carbon atoms first",
+          "detail": "In line-angle notation these are the only atoms written out, so they mark every functional group. Here: an O with an H, another O double-bonded, and an N."
+        },
+        {
+          "label": "The –OH on a carbon",
+          "detail": "An oxygen with one bond to carbon and one to hydrogen is an ALCOHOL. It sits on a terminal CH₂, so it is a primary alcohol."
+        },
+        {
+          "label": "The C=O — but check its neighbours",
+          "detail": "A carbonyl alone is not enough to name the group. Look at what else is attached to that carbon: here it is a nitrogen. Carbonyl plus nitrogen is an AMIDE."
+        },
+        {
+          "label": "Rule out the near misses",
+          "detail": "Had that been an –OH it would be a carboxylic acid; an –OR would make it an ester; a carbon on both sides would make it a ketone. The neighbour is what decides."
+        },
+        {
+          "label": "Check the nitrogen separately",
+          "detail": "The N here is part of the amide, not a free amine. An amide nitrogen has its lone pair delocalized into the carbonyl, which is why amides are far less basic than amines — the lone pair is not freely available."
+        }
+      ],
+      "answer": "A primary alcohol and an amide. The nitrogen belongs to the amide rather than being a separate amine group."
+    }
+  ],
+  "resonance": [
+    {
+      "title": "Decide whether two drawings are resonance forms",
+      "problem": "Which of these pairs are resonance forms: (a) two drawings of acetate differing in which C–O is double, (b) two drawings where an H has moved from carbon to oxygen?",
+      "steps": [
+        {
+          "label": "Apply the single rule",
+          "detail": "Resonance forms differ ONLY in where electrons sit. Atoms must stay exactly where they are."
+        },
+        {
+          "label": "Check pair (a)",
+          "detail": "The carbon and both oxygens are in the same positions in both drawings. Only the double bond and the negative charge have swapped. Nothing moved but electrons — these are genuine resonance forms."
+        },
+        {
+          "label": "Check pair (b)",
+          "detail": "A hydrogen has relocated from one atom to another. That is an ATOM moving, so these are not resonance forms. They are tautomers: two genuinely different compounds in equilibrium."
+        },
+        {
+          "label": "Use the right arrow for each",
+          "detail": "Resonance forms are joined by a double-headed arrow ↔, meaning \"is a blend of\". Tautomers are joined by an equilibrium arrow ⇌, meaning \"interconverts with\"."
+        },
+        {
+          "label": "And what the hybrid looks like",
+          "detail": "Because acetate’s two forms are equivalent, the real ion is their exact average: both C–O bonds identical in length, each oxygen carrying −½. Not flipping between them — permanently in between."
+        }
+      ],
+      "answer": "(a) resonance forms; (b) tautomers. The test is whether any atom moved."
+    }
+  ],
+  "arrows": [
+    {
+      "title": "Push the arrows for a nucleophilic substitution",
+      "problem": "Hydroxide attacks the carbon of CH₃–Br. How many arrows, and where do they start and end?",
+      "steps": [
+        {
+          "label": "Identify who is rich and who is poor",
+          "detail": "Hydroxide has lone pairs and a negative charge: electron-rich, the nucleophile. The carbon is bonded to bromine, which pulls density away and leaves it δ+: electron-poor, the electrophile."
+        },
+        {
+          "label": "Draw the attack arrow",
+          "detail": "Start ON a lone pair of the oxygen — not on the atom symbol, not on the charge. End between the oxygen and the carbon, showing a new O–C bond forming."
+        },
+        {
+          "label": "Notice the problem that creates",
+          "detail": "That carbon already has four bonds: three hydrogens and the bromine. Adding a fifth is impossible, so something must leave at the same time."
+        },
+        {
+          "label": "Draw the partner arrow",
+          "detail": "Start on the C–Br BOND and end on the bromine. Both bonding electrons leave with bromine, so it departs as Br⁻ rather than as a neutral atom."
+        },
+        {
+          "label": "Check your work",
+          "detail": "Charge before: −1 on hydroxide. After: −1 on bromide. Balanced. No atom exceeds an octet, and carbon still has exactly four bonds throughout."
+        }
+      ],
+      "answer": "Two arrows, drawn simultaneously: lone pair → carbon, and C–Br bond → bromine. Concerted, so this is SN2 and the stereochemistry inverts."
+    }
+  ],
+  "nomenclature": [
+    {
+      "title": "Name a branched structure from scratch",
+      "problem": "Name a six-carbon chain carrying a methyl group on the second carbon and a chlorine on the fifth, counting from the left.",
+      "steps": [
+        {
+          "label": "Find the longest chain",
+          "detail": "Six continuous carbons, so the root is \"hex\". Always count rather than trusting how the molecule is drawn — the longest chain often turns a corner on the page."
+        },
+        {
+          "label": "Decide which end to number from",
+          "detail": "From the left the substituents land at 2 and 5. From the right they land at 2 and 5 as well — the positions are symmetric here, so compare what sits at each locant."
+        },
+        {
+          "label": "Break the tie",
+          "detail": "When locant sets tie, the alphabetically first substituent gets the lower number. \"Chloro\" precedes \"methyl\", so number from the end that puts chlorine at 2 — that is, from the right."
+        },
+        {
+          "label": "Assemble alphabetically",
+          "detail": "Substituents are listed alphabetically regardless of their numbers: chloro before methyl. That gives 2-chloro-5-methyl."
+        },
+        {
+          "label": "Add the root and suffix",
+          "detail": "No functional group suffix here — it is a plain alkane, so \"-ane\". Full name: 2-chloro-5-methylhexane."
+        }
+      ],
+      "answer": "2-chloro-5-methylhexane. Lowest locants first; alphabetical order breaks ties and always sets the listing order."
+    }
+  ],
+  "biomolecules": [
+    {
+      "title": "Predict what denaturation does and does not destroy",
+      "problem": "An enzyme is heated until it stops working. Which levels of its structure survive?",
+      "steps": [
+        {
+          "label": "List what holds each level together",
+          "detail": "Primary structure is peptide bonds — covalent. Secondary is backbone hydrogen bonds. Tertiary is side-chain interactions: hydrophobic effect, H-bonds, salt bridges, plus any disulfides. Quaternary is the same forces between separate chains."
+        },
+        {
+          "label": "Ask what heat can actually break",
+          "detail": "Heat supplies enough energy to disrupt non-covalent interactions, which are ten to a hundred times weaker than covalent bonds. It does not break peptide bonds."
+        },
+        {
+          "label": "Work down the levels",
+          "detail": "Quaternary, tertiary and secondary all depend on non-covalent forces, so all three are lost. Primary structure is covalent and survives completely intact."
+        },
+        {
+          "label": "The one asterisk",
+          "detail": "Disulfide bridges are covalent and survive ordinary heating. Fully unfolding a protein in the lab usually needs a reducing agent as well as heat, precisely to break those."
+        },
+        {
+          "label": "Why the enzyme stopped working",
+          "detail": "Function follows shape. The active site is a precise arrangement of residues that are far apart in sequence but brought together by folding. Lose the fold and that arrangement is gone, even though every amino acid is still present in the right order."
+        }
+      ],
+      "answer": "Primary structure survives; secondary, tertiary and quaternary are destroyed. A cooked egg has all its sequences intact and is still ruined."
+    }
+  ],
+  "periodic": [
+    {
+      "title": "Get everything you need about an element from its position",
+      "problem": "You are handed a bare periodic table and asked: how many bonds does nitrogen form, and why?",
+      "steps": [
+        {
+          "label": "Find it and read the group",
+          "detail": "Nitrogen sits in group 15, period 2. That position is all the information you need — nothing else about the element has to be recalled."
+        },
+        {
+          "label": "Convert group to valence electrons",
+          "detail": "For groups 13–18, subtract 10. Group 15 means 5 valence electrons. (Groups 1 and 2 are simply 1 and 2.)"
+        },
+        {
+          "label": "Work out how many it still needs",
+          "detail": "A full second shell holds 8. Nitrogen has 5, so it is 3 short. Each covalent bond supplies one more shared electron toward that octet."
+        },
+        {
+          "label": "Conclude the bonding pattern",
+          "detail": "Three bonds. And since 5 valence electrons minus the 3 used in bonding leaves 2, nitrogen also carries exactly one lone pair — which is the neutral pattern worth memorizing."
+        },
+        {
+          "label": "Sanity-check it against the others",
+          "detail": "The same reasoning gives carbon (group 14, 4 valence) 4 bonds and no lone pairs, oxygen (group 16, 6 valence) 2 bonds and 2 lone pairs, and the halogens (group 17, 7 valence) 1 bond and 3 lone pairs."
+        }
+      ],
+      "answer": "Three bonds and one lone pair, derived entirely from \"group 15\". This is why an exam can supply a bare periodic table and still expect you to draw correct structures."
     }
   ]
 }
