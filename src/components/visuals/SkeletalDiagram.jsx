@@ -122,6 +122,22 @@ export default function SkeletalDiagram({
       role="img"
       aria-label="skeletal structure"
     >
+      {/* Behind the bonds, not over them. A stroked ring drawn on top cut
+          across the very bonds the question asks you to count — which is
+          exactly what a hybridization or implicit-hydrogen question needs
+          you to see. A filled disc underneath marks the atom just as
+          clearly and hides nothing. */}
+      {highlightVertex != null && (
+        <circle
+          cx={pts[highlightVertex].x}
+          cy={pts[highlightVertex].y}
+          r="15"
+          fill="rgba(250, 204, 21, 0.16)"
+          stroke="rgba(250, 204, 21, 0.55)"
+          strokeWidth="1.5"
+        />
+      )}
+
       {pairs.map(([a, b], i) => {
         const p1 = pts[a]
         const p2 = pts[b]
@@ -173,8 +189,10 @@ export default function SkeletalDiagram({
         )
       })}
 
+      {/* A small dot at the marked atom, drawn last so the exact vertex is
+          unambiguous even where bonds converge on it. */}
       {highlightVertex != null && (
-        <circle cx={pts[highlightVertex].x} cy={pts[highlightVertex].y} r="11" fill="none" stroke="#facc15" strokeWidth="2.5" />
+        <circle cx={pts[highlightVertex].x} cy={pts[highlightVertex].y} r="2.6" fill="#facc15" />
       )}
 
       {showVertexNumbers &&
