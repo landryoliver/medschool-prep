@@ -2,6 +2,8 @@ import reference from '../data/reference.json'
 import ElementReference from './ElementReference.jsx'
 import PeriodicTable from './PeriodicTable.jsx'
 import walkthroughs from '../data/walkthroughs.json'
+import AminoAcidReference from './AminoAcidReference.jsx'
+import GroupPrimer from './GroupPrimer.jsx'
 
 /** Read-first cheat sheet for a topic — the "learn" half of learn-and-drill. */
 export default function ReferenceView({ topicId, title, onStudy, onWalk }) {
@@ -13,6 +15,8 @@ export default function ReferenceView({ topicId, title, onStudy, onWalk }) {
   return (
     <div>
       <h2 className="section-title">{title} — the essentials</h2>
+      {topicId === 'aminoacids' && <AminoAcidReference />}
+      {(topicId === 'functional' || topicId === 'biomolecules') && <GroupPrimer />}
       {topicId === 'periodic' && (
         <>
           <PeriodicTable />

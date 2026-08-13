@@ -1352,3 +1352,90 @@ button.wide {
   margin: 0 0 0.7rem;
   line-height: 1.5;
 }
+
+/* ---- Amino acid reference & flashcards ------------------------------ */
+
+.aa-grid {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.aa-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.85rem;
+}
+
+.aa-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.aa-head strong {
+  font-size: 1rem;
+}
+
+.aa-head .muted {
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.aa-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  font-size: 0.76rem;
+  margin-top: 0.25rem;
+}
+
+.aa-note {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0.45rem 0 0;
+}
+
+.aa-class-hint {
+  font-size: 0.8rem;
+  margin: -0.25rem 0 0.6rem;
+  line-height: 1.5;
+}
+
+.aa-reveal {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* ---- Functional group primer ---------------------------------------- */
+
+.group-card {
+  padding: 0.85rem;
+}
+
+.group-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.group-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.group-found {
+  font-size: 0.78rem;
+  margin: 0.2rem 0 0;
+  line-height: 1.45;
+}
+
+.group-why {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin: 0.6rem 0 0;
+  color: #c3d2e6;
+}

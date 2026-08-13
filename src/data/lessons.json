@@ -291,10 +291,16 @@
       {
         "heading": "One skeleton, twenty side chains",
         "body": [
-          "Every amino acid has the same backbone: a central carbon carrying an amino group, a carboxyl group, a hydrogen, and one variable group — the side chain, universally written R.",
-          "That's the whole design. Nineteen of the twenty differ ONLY in R. Proline is the single exception, because its side chain loops back and bonds to the backbone nitrogen, which makes it rigid and gives it unusual structural effects.",
-          "So learning amino acids means learning twenty side chains, not twenty molecules."
-        ]
+          "Every amino acid is built on the same small frame: a central carbon with four things attached. Two of those are the groups the name comes from — an AMINO group and a CARBOXYL group — plus a hydrogen, plus one variable group written R.",
+          "The amino group is –NH₂: a nitrogen carrying two hydrogens. Nitrogen has a spare lone pair, so it readily picks up a proton and becomes –NH₃⁺.",
+          "The carboxyl group is –COOH: a carbon double bonded to one oxygen and single bonded to an –OH. That hydroxyl hydrogen comes off easily, leaving –COO⁻. This is the acidic end, and it is where \"amino acid\" gets its second word.",
+          "That frame is identical in nineteen of the twenty. Only R changes. Proline is the exception — its side chain loops back and bonds to the backbone nitrogen, which locks its geometry.",
+          "So learning the amino acids means learning twenty side chains, not twenty molecules. The Notes tab has all twenty drawn out, browsable and as flashcards."
+        ],
+        "example": {
+          "label": "Reading the name off the structure",
+          "text": "Amino (–NH₂) + acid (–COOH) on the same carbon = amino acid. Everything that distinguishes one from another hangs below that carbon as R."
+        }
       },
       {
         "heading": "Why they're drawn charged",
@@ -313,6 +319,19 @@
         "example": {
           "label": "The amide trap",
           "text": "Asparagine and glutamine are the amide versions of aspartate and glutamate. Amides are NEUTRAL. Confusing them with the acids is one of the most common early biochem mistakes."
+        }
+      },
+      {
+        "heading": "The side-chain vocabulary you need",
+        "body": [
+          "Sorting the twenty is much easier once you can name what is hanging off them, and only a handful of groups appear.",
+          "A HYDROXYL (–OH) makes a residue polar: serine, threonine, tyrosine. A THIOL (–SH) is the sulfur version, in cysteine, more acidic and far more reactive. An AMIDE (–CONH₂) is a carbonyl bonded to a nitrogen and is NEUTRAL — asparagine and glutamine, which is the trap, since they look like the acids.",
+          "A CARBOXYL (–COOH) is what makes aspartate and glutamate acidic. An AMINE, a GUANIDINIUM, or an IMIDAZOLE ring makes lysine, arginine and histidine basic.",
+          "Everything else is either a plain hydrocarbon or an aromatic ring with nothing polar attached, and those are the nonpolar ones that bury themselves inside a folded protein."
+        ],
+        "example": {
+          "label": "The amide trap, concretely",
+          "text": "Aspartate ends in –COOH and is negative at pH 7.4. Asparagine ends in –CONH₂ and is neutral. One oxygen swapped for a nitrogen changes the charge entirely, and the names differ by two letters."
         }
       },
       {
