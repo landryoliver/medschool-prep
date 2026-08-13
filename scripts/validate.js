@@ -5,6 +5,7 @@ import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/gene
 import { lookupGeometry, GEOMETRIES } from '../src/lib/chem/vsepr.js'
 import { nextProgressState, selectSessionQuestions, BOX_INTERVALS_MS } from '../src/lib/srs.js'
 import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
+import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
@@ -311,6 +312,22 @@ console.log('\n=== Reference data ===')
     if (a.pKaR !== pka) { fail(`${a.name}: side-chain pKa ${a.pKaR} should be ${pka}`); aaBad++ }
     if (a.charge7 !== ch) { fail(`${a.name}: charge at pH 7.4 is ${a.charge7}, should be ${ch}`); aaBad++ }
   }
+  // The ladder's default view filters by these keys. A key that matches
+  // nothing drops that acid silently — which already happened once with a
+  // carboxylic acid written as CH3COOH when the table uses RCOOH.
+  {
+    const pka = JSON.parse(fs.readFileSync('src/data/genchem/pkaTable.json', 'utf8'))
+    const keys = new Set(pka.map((e) => e.acid))
+    let anchorBad = 0
+    for (const a of PKA_ANCHORS) {
+      if (!keys.has(a)) {
+        fail(`pKa anchor "${a}" matches no entry in pkaTable, so it never shows on the ladder`)
+        anchorBad++
+      }
+    }
+    if (!anchorBad) console.log(`  ok  ${PKA_ANCHORS.size} pKa anchors all resolve`)
+  }
+
   if (!aaBad) console.log('  ok  20 amino acids: codes, classes, pKa and charges')
 
   // VSEPR: shape and hybridization per (bonding, lone), and the drawing

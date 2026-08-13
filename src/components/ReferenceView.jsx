@@ -4,6 +4,9 @@ import PeriodicTable from './PeriodicTable.jsx'
 import walkthroughs from '../data/walkthroughs.json'
 import AminoAcidReference from './AminoAcidReference.jsx'
 import GroupPrimer from './GroupPrimer.jsx'
+import PkaLadder from './PkaLadder.jsx'
+import VseprChart from './VseprChart.jsx'
+import CompoundTable from './CompoundTable.jsx'
 
 /** Read-first cheat sheet for a topic — the "learn" half of learn-and-drill. */
 export default function ReferenceView({ topicId, title, onStudy, onWalk }) {
@@ -16,6 +19,9 @@ export default function ReferenceView({ topicId, title, onStudy, onWalk }) {
     <div>
       <h2 className="section-title">{title} — the essentials</h2>
       {topicId === 'aminoacids' && <AminoAcidReference />}
+      {topicId === 'acidbase' && <PkaLadder />}
+      {topicId === 'vsepr' && <VseprChart />}
+      {topicId === 'imf' && <CompoundTable />}
       {(topicId === 'functional' || topicId === 'biomolecules') && <GroupPrimer />}
       {topicId === 'periodic' && (
         <>
