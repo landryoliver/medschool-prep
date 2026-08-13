@@ -16,30 +16,54 @@ const DAILY_GOAL = 30
 // 25 mastered is "solid enough to move on", matching the progression view.
 const MASTERY_TARGET = 25
 
-function MasteryRing({ mastered, topicId }) {
-  const R = 15
+/**
+ * Two arcs, not one. The bright arc is mastery, which needs several
+ * spaced correct recalls and therefore stays empty for the first few
+ * days; the dim arc behind it is simply how much of the topic has been
+ * seen. Showing only mastery meant a card could read 94% correct beside
+ * an apparently empty ring, which looks broken and hides real work.
+ */
+function MasteryRing({ mastered, studied, total, topicId }) {
+  const R = 16
   const C = 2 * Math.PI * R
   const ratio = Math.min(1, mastered / MASTERY_TARGET)
+  const seenRatio = total ? Math.min(1, studied / Math.min(MASTERY_TARGET, total)) : 0
   const done = ratio >= 1
   const color = done ? 'var(--good)' : topicColor(topicId)
 
   return (
-    <div className="ring-wrap" title={`${mastered} of ${MASTERY_TARGET} mastered`}>
-      <svg viewBox="0 0 40 40" className="ring">
-        <circle cx="20" cy="20" r={R} fill="none" stroke="#0d1626" strokeWidth="3.5" />
-        <circle
-          cx="20"
-          cy="20"
-          r={R}
-          fill="none"
-          stroke={color}
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          strokeDasharray={`${ratio * C} ${C}`}
-          transform="rotate(-90 20 20)"
-        />
-        <g transform="translate(8 9)">
-          <TopicIcon topicId={topicId} size={24} />
+    <div className="ring-wrap" title={`${mastered} mastered · ${studied} seen`}>
+      <svg viewBox="0 0 44 44" className="ring">
+        <circle cx="22" cy="22" r={R} fill="none" stroke="var(--line)" strokeWidth="3" />
+        {seenRatio > 0 && (
+          <circle
+            cx="22"
+            cy="22"
+            r={R}
+            fill="none"
+            stroke={topicColor(topicId)}
+            strokeOpacity="0.32"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={`${seenRatio * C} ${C}`}
+            transform="rotate(-90 22 22)"
+          />
+        )}
+        {ratio > 0 && (
+          <circle
+            cx="22"
+            cy="22"
+            r={R}
+            fill="none"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={`${ratio * C} ${C}`}
+            transform="rotate(-90 22 22)"
+          />
+        )}
+        <g transform="translate(9 10)">
+          <TopicIcon topicId={topicId} size={26} />
         </g>
       </svg>
       {done && <span className="ring-check">✓</span>}
@@ -54,13 +78,23 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed }) {
   return (
     <div className="card topic-card" style={{ borderLeft: `3px solid ${color}`, background: topicTint(topic.id, 0.05) }}>
       <div className="topic-row">
-        <MasteryRing mastered={stat?.mastered ?? 0} topicId={topic.id} />
+        <MasteryRing
+          mastered={stat?.mastered ?? 0}
+          studied={stat?.studied ?? 0}
+          total={stat?.total ?? 0}
+          topicId={topic.id}
+        />
         <div className="topic-main">
           <div className="topic-head">
             <h3>{topic.label}</h3>
-            <span className="muted">{!stat?.seen ? 'Not started' : `${pct}%`}</span>
+            <span className="muted">{!stat?.seen ? 'New' : `${pct}%`}</span>
           </div>
           <p className="muted topic-blurb">{topic.blurb}</p>
+          {stat?.seen ? (
+            <p className="muted topic-stat">
+              {stat.mastered} mastered · {stat.studied} of {stat.total} seen
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -174,34 +208,41 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
         {goalHit && <p className="feedback good goal-hit">Daily goal hit — nice.</p>}
       </div>
 
-      <button className="ghost wide" onClick={onPlan}>
-        Progression — what I still need
+      {/* Compact two-line buttons: the explanation sits inside the control
+          rather than as a paragraph beneath it, which previously pushed the
+          first topic most of a screen down. */}
+      <button className="action-btn primary-action" onClick={onMixed}>
+        <span className="action-title">Mixed review</span>
+        <span className="action-sub">All topics, weighted toward your weak spots</span>
       </button>
-      <p className="muted hint-line">Prep stages with readiness, and how each maps onto the course.</p>
 
-      <button className="primary wide" onClick={onMixed}>
-        Mixed review — all topics
-      </button>
-      <p className="muted hint-line">Blends every topic and leans toward whatever you have been missing.</p>
-
-      {missedCount > 0 && (
-        <>
-          <button className="ghost wide" onClick={onReviewMisses}>
-            Review your misses ({missedCount})
+      <div className="action-row">
+        <button className="action-btn" onClick={onPlan}>
+          <span className="action-title">Progression</span>
+          <span className="action-sub">What's still needed</span>
+        </button>
+        {missedCount > 0 && (
+          <button className="action-btn" onClick={onReviewMisses}>
+            <span className="action-title">Your misses</span>
+            <span className="action-sub">{missedCount} to redo</span>
           </button>
-          <p className="muted hint-line">Only the questions you got wrong on your last attempt.</p>
-        </>
-      )}
+        )}
+      </div>
 
       {grouped.map((stage) => {
         if (!stage.items.length) return null
+        // Report topics STARTED rather than fully mastered. Mastery needs
+        // several spaced recalls, so an early-days count reads 0/5 next to
+        // 94% accuracy, which is both discouraging and misleading.
+        const started = stage.items.filter((t) => (stats?.[t.id]?.seen ?? 0) > 0).length
         const done = stage.items.filter((t) => (stats?.[t.id]?.mastered ?? 0) >= MASTERY_TARGET).length
         return (
           <section key={stage.id} className="stage-block">
             <div className="stage-head">
               <h2 className="stage-title">{stage.title}</h2>
               <span className="muted stage-count">
-                {done} / {stage.items.length}
+                {done > 0 ? `${done} mastered · ` : ''}
+                {started} / {stage.items.length} started
               </span>
             </div>
             {stage.items.map((topic) => (

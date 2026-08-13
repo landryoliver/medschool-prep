@@ -1270,3 +1270,79 @@ button.wide {
 .done-card {
   animation: pop-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
+/* ---- Compact action buttons ---------------------------------------- */
+
+.action-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.action-btn.primary-action {
+  background: linear-gradient(135deg, #3fc3fb 0%, #38bdf8 100%);
+  border-color: transparent;
+  color: #06121f;
+}
+
+.action-title {
+  display: block;
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+
+.action-sub {
+  display: block;
+  font-size: 0.76rem;
+  opacity: 0.72;
+  margin-top: 0.1rem;
+}
+
+.action-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-row .action-btn {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- Topic card refinements ---------------------------------------- */
+
+.topic-stat {
+  font-size: 0.75rem;
+  margin: 0.15rem 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.topic-actions {
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.topic-actions button {
+  padding: 0.5rem 0.3rem;
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+}
+
+.ring {
+  width: 46px;
+  height: 46px;
+}
+
+.ring-wrap {
+  width: 46px;
+  height: 46px;
+}
+
+.stage-count {
+  font-size: 0.72rem;
+}
