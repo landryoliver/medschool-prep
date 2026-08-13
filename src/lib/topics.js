@@ -12,6 +12,7 @@ import * as functionalGroups from '../generators/functionalGroups.js'
 
 import lewisStructures from '../data/genchem/lewisStructures.json'
 import electronConfig from '../data/genchem/electronConfig.json'
+import shellQuestions from '../data/genchem/shells.json'
 import metalCarbon from '../data/curated/metalCarbon.json'
 import bondTypeRule from '../data/curated/bondTypeRule.json'
 import arioFramework from '../data/curated/arioFramework.json'
@@ -90,6 +91,7 @@ export const TOPICS = [
       ...buildBank(elements.generateENRanking, 60),
       ...buildBank(elements.generateTrendDirection, 12),
       ...withKind(electronConfig),
+      ...withKind(shellQuestions),
     ],
   },
   {

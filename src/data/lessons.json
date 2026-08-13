@@ -14,6 +14,30 @@
         }
       },
       {
+        "heading": "Shells, and why the octet is eight",
+        "body": [
+          "Electrons occupy shells numbered outward from the nucleus, and each shell holds a fixed maximum: 2n², where n is the shell number. So shell 1 holds 2, shell 2 holds 8, shell 3 holds 18, shell 4 holds 32.",
+          "Shells are divided into subshells of different shapes. An s subshell is one orbital holding 2 electrons. A p subshell is three orbitals holding 6. A d subshell is five orbitals holding 10, and f is seven holding 14. Each orbital takes exactly two electrons, so the capacities are just the orbital counts doubled.",
+          "This is where the octet rule comes from. It is not a separate fact to memorize: the second shell contains one 2s orbital and three 2p orbitals, total capacity 8. Carbon, nitrogen, oxygen and fluorine all have the second shell as their valence shell, so a full valence shell for them means eight electrons. Hydrogen has only the first shell, capacity 2, which is why it wants a duet instead."
+        ],
+        "example": {
+          "label": "Why sulfur breaks the rule and nitrogen cannot",
+          "text": "Sulfur is in shell 3, which includes d orbitals and so has room beyond 8 — hence SF₆. Nitrogen is in shell 2, which has only s and p and caps at 8 permanently. There is no NF₅."
+        }
+      },
+      {
+        "heading": "Filling order, without memorizing a list",
+        "body": [
+          "Electrons fill from lowest energy upward, but subshell energies overlap between shells — the 4s actually sits below the 3d, so it fills first even though its shell number is higher. Filling order is therefore not simply 1s, 2s, 3s.",
+          "Rather than memorizing nineteen items in sequence, use the diagonal rule. Write the subshells in rows by shell number — 1s / 2s 2p / 3s 3p 3d / 4s 4p 4d 4f — then read the diagonals from top-right down to bottom-left. The order falls out of the geometry: 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d, 5p, 6s.",
+          "For organic chemistry the practical answer is much shorter. Everything you meet has its valence electrons in the first three shells, so you rarely need past 3p. Carbon is 1s² 2s² 2p². The full chart matters for transition metals and gen-chem exams."
+        ],
+        "example": {
+          "label": "Reading a configuration back",
+          "text": "1s² 2s² 2p⁶ 3s² 3p⁵ — the highest shell present is 3, holding 2 + 5 = 7 valence electrons. Seven valence electrons means group 17, and 17 total electrons means chlorine."
+        }
+      },
+      {
         "heading": "Electronegativity: the pull on shared electrons",
         "body": [
           "When two atoms share a pair of electrons, they rarely share equally. Electronegativity measures how hard an atom pulls on that shared pair. Fluorine pulls hardest of all elements; the metals at the bottom left pull least.",

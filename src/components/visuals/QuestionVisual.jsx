@@ -7,6 +7,7 @@ import EnergyDiagram from './EnergyDiagram.jsx'
 import AminoAcidDiagram from './AminoAcidDiagram.jsx'
 import PhScale from './PhScale.jsx'
 import HBondDiagram from './HBondDiagram.jsx'
+import AufbauDiagram from './AufbauDiagram.jsx'
 
 /** Renders whatever visual a question carries. `revealed` lets a diagram
  *  show its answer annotations once the question has been graded. */
@@ -44,6 +45,8 @@ export default function QuestionVisual({ visual, revealed = false }) {
       )
     case 'aminoAcid':
       return <AminoAcidDiagram sideChain={visual.sideChain} name={visual.name} cyclic={visual.cyclic} />
+    case 'aufbau':
+      return <AufbauDiagram highlightThrough={visual.highlightThrough} />
     case 'imf':
       return <HBondDiagram kind={visual.kind} />
     case 'phScale':

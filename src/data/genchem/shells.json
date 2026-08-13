@@ -1,0 +1,150 @@
+[
+  {
+    "id": "shell-1",
+    "topic": "electron-config",
+    "prompt": "How many electrons does shell n hold at maximum?",
+    "choices": [
+      "2n²",
+      "n²",
+      "2n",
+      "8 always"
+    ],
+    "correctIndex": 0,
+    "explanation": "Shell 1 holds 2(1)² = 2. Shell 2 holds 2(2)² = 8. Shell 3 holds 2(3)² = 18. Shell 4 holds 32.",
+    "teach": "Capacities to know: 2, 8, 18, 32. Only the first two matter for organic chemistry, because the octet IS the filled second shell."
+  },
+  {
+    "id": "shell-2",
+    "topic": "electron-config",
+    "prompt": "Why is the octet rule eight electrons rather than some other number?",
+    "choices": [
+      "The second shell holds exactly 8 — one s orbital (2) plus three p orbitals (6)",
+      "Eight is an arbitrary convention",
+      "All shells hold 8 electrons",
+      "Because carbon has 8 protons"
+    ],
+    "correctIndex": 0,
+    "explanation": "The octet is not a separate rule to memorize — it is the capacity of the second shell, which is the valence shell for C, N, O and F.",
+    "teach": "This is why hydrogen wants a DUET: its only shell is the first, which holds 2."
+  },
+  {
+    "id": "shell-3",
+    "topic": "electron-config",
+    "prompt": "How many orbitals does each subshell type contain?",
+    "choices": [
+      "s = 1, p = 3, d = 5, f = 7",
+      "s = 2, p = 6, d = 10, f = 14",
+      "s = 1, p = 2, d = 3, f = 4",
+      "All contain 3"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each orbital holds 2 electrons, so the capacities are s = 2, p = 6, d = 10, f = 14 — the orbital counts doubled.",
+    "teach": "Odd numbers going up: 1, 3, 5, 7 orbitals. Double each for electron capacity: 2, 6, 10, 14."
+  },
+  {
+    "id": "shell-4",
+    "topic": "electron-config",
+    "prompt": "Which fills FIRST, the 4s or the 3d subshell?",
+    "choices": [
+      "4s — it is lower in energy despite the higher shell number",
+      "3d, because 3 comes before 4",
+      "They fill simultaneously",
+      "Neither ever fills"
+    ],
+    "correctIndex": 0,
+    "explanation": "Subshell energies overlap between shells. The 4s sits just below the 3d, so it fills first — which is why potassium and calcium come before the transition metals.",
+    "teach": "Shell number alone does not give filling order. Use the diagonal rule: read the diagonals of the subshell chart from top-right down to bottom-left.",
+    "visual": {
+      "type": "aufbau",
+      "highlightThrough": "4s"
+    }
+  },
+  {
+    "id": "shell-5",
+    "topic": "electron-config",
+    "prompt": "Using the diagonal (aufbau) rule, what comes immediately after 3p?",
+    "choices": [
+      "4s",
+      "3d",
+      "4p",
+      "4d"
+    ],
+    "correctIndex": 0,
+    "explanation": "The order runs 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s… Reading the diagonals produces this without memorizing the sequence itself.",
+    "teach": "Write the subshells in rows by shell number, then read each diagonal from top-right to bottom-left. The order falls out of the geometry.",
+    "visual": {
+      "type": "aufbau",
+      "highlightThrough": "4s"
+    }
+  },
+  {
+    "id": "shell-6",
+    "topic": "electron-config",
+    "prompt": "Why does organic chemistry rarely need anything past the 3p subshell?",
+    "choices": [
+      "C, H, N, O and the common heteroatoms all have their valence electrons in the first three shells",
+      "Higher subshells do not exist",
+      "d orbitals hold no electrons",
+      "Because organic molecules are small"
+    ],
+    "correctIndex": 0,
+    "explanation": "Carbon, nitrogen and oxygen fill through 2p. Sulfur, phosphorus and chlorine reach 3p. Nothing in a typical organic molecule needs 3d or beyond.",
+    "teach": "The practical filling order for organic chemistry is short: 1s, 2s, 2p, 3s, 3p. The full diagonal chart matters for gen chem and transition metals."
+  },
+  {
+    "id": "shell-7",
+    "topic": "electron-config",
+    "prompt": "How many electrons can the SECOND shell hold in total?",
+    "choices": [
+      "8",
+      "2",
+      "18",
+      "32"
+    ],
+    "correctIndex": 0,
+    "explanation": "2n² with n = 2 gives 8: the 2s holds 2 and the three 2p orbitals hold 6.",
+    "teach": "Second shell = 8 = the octet. This single fact links electron configuration to Lewis structures."
+  },
+  {
+    "id": "shell-8",
+    "topic": "electron-config",
+    "prompt": "An atom has the configuration 1s² 2s² 2p⁶ 3s² 3p⁵. Which shell is its valence shell, and how many valence electrons does it have?",
+    "choices": [
+      "Shell 3, with 7 valence electrons",
+      "Shell 2, with 8 valence electrons",
+      "Shell 3, with 5 valence electrons",
+      "Shell 1, with 2 valence electrons"
+    ],
+    "correctIndex": 0,
+    "explanation": "The valence shell is the highest-numbered one occupied — here shell 3, holding 3s² plus 3p⁵ = 7 electrons. That makes this chlorine.",
+    "teach": "Add every superscript sharing the highest shell number. Everything in lower shells is core and does no chemistry."
+  },
+  {
+    "id": "shell-9",
+    "topic": "electron-config",
+    "prompt": "Why can sulfur and phosphorus exceed an octet while carbon and nitrogen cannot?",
+    "choices": [
+      "They are in shell 3, which has empty d orbitals available; shell 2 has none",
+      "They are more electronegative",
+      "They have more protons",
+      "They cannot — the octet is absolute"
+    ],
+    "correctIndex": 0,
+    "explanation": "Shell 3 contains 3d orbitals, giving room beyond 8. Shell 2 has only s and p, capping second-row atoms at 8 permanently.",
+    "teach": "This is why SF₆ and PCl₅ exist but NF₅ does not. The exception is available only from the third row down."
+  },
+  {
+    "id": "shell-10",
+    "topic": "electron-config",
+    "prompt": "What is the maximum number of electrons in the third shell?",
+    "choices": [
+      "18",
+      "8",
+      "2",
+      "32"
+    ],
+    "correctIndex": 0,
+    "explanation": "2n² with n = 3 gives 18: 3s (2) + 3p (6) + 3d (10).",
+    "teach": "Capacities: 2, 8, 18, 32. They are 2n², and the jumps come from adding d and then f subshells."
+  }
+]
