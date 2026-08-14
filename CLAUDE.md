@@ -154,9 +154,22 @@ actually learned: the pKa table as a ladder, because the spacing carries
 the meaning; the VSEPR shapes grouped by electron count, because that is
 where the electron-geometry/molecular-shape distinction becomes visible.
 
-Related: do not use a term the reader may not know without showing it. The
-amino acid lesson said "carboxyl group" and "amino group" repeatedly and
-never once wrote –COOH or –NH₂.
+### 9. Never use a term without showing what it means
+
+This is the single most repeated mistake in the project — caught by the
+user three separate times:
+
+- The amino acid lesson said "carboxyl group" and "amino group" throughout
+  and never once wrote –COOH or –NH₂.
+- A flashcard labelled a side chain "–CH₂SH (thiol)" with no indication of
+  what a thiol is or whether it mattered.
+- A three-way mode toggle labelled "Flip", whose explanation lived only in
+  a `title` attribute that no phone will ever surface.
+
+The reader is several years out of chemistry. A term that is not defined
+on the same screen is a wall, not a shortcut. Define it inline, show the
+structure, or say plainly why it matters — and put UI explanations on
+screen rather than in a tooltip.
 
 ## Adding questions
 
