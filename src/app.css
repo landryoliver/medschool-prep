@@ -1589,3 +1589,29 @@ button.wide {
   font-size: 0.8rem;
   margin: 0.5rem 0 0;
 }
+
+.fc-hint {
+  font-size: 0.8rem;
+  margin: -0.5rem 0 0.75rem;
+  line-height: 1.45;
+}
+
+.fc-group {
+  margin-top: 0.55rem;
+  padding: 0.6rem 0.7rem;
+  background: #0f1b2e;
+  border-left: 3px solid var(--accent);
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #c3d2e6;
+}
+
+.fc-group strong {
+  display: block;
+  color: var(--accent);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}

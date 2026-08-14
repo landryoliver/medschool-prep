@@ -360,6 +360,7 @@ console.log('\n=== Reference data ===')
     if (a.one !== one) { fail(`${a.name}: one-letter code "${a.one}" should be "${one}"`); aaBad++ }
     if (a.class !== cls) { fail(`${a.name}: class "${a.class}" should be "${cls}"`); aaBad++ }
     if (a.pKaR !== pka) { fail(`${a.name}: side-chain pKa ${a.pKaR} should be ${pka}`); aaBad++ }
+    if (!a.groupName || !a.groupWhat) { fail(a.name + ': no plain-language explanation of its side-chain group, which the flashcard renders'); aaBad++ }
     if (a.charge7 !== ch) { fail(`${a.name}: charge at pH 7.4 is ${a.charge7}, should be ${ch}`); aaBad++ }
   }
   // The ladder's default view filters by these keys. A key that matches

@@ -15,9 +15,9 @@ import AminoAcidDiagram from './visuals/AminoAcidDiagram.jsx'
  * cramming a set in one sitting; the SRS is for keeping it.
  */
 const MODES = [
-  { id: 'flip', label: 'Flip', hint: 'Study — turn each card over' },
-  { id: 'choice', label: 'Choose', hint: 'Recognise it among four' },
-  { id: 'type', label: 'Type', hint: 'Produce the name from memory' },
+  { id: 'flip', label: 'Study', hint: 'Look at each structure, guess, then tap the card to check.' },
+  { id: 'choice', label: 'Quiz', hint: 'Name the structure by picking from four options.' },
+  { id: 'type', label: 'Recall', hint: 'Hardest: type the name, or its three- or one-letter code.' },
 ]
 
 const CLASS_COLOR = { acidic: '#f87171', basic: '#38bdf8', polar: '#4ade80', nonpolar: '#facc15' }
@@ -128,6 +128,9 @@ export default function Flashcards({ onDone }) {
       <div className="progress-track">
         <div className="progress-fill" style={{ width: `${(i / deck.length) * 100}%` }} />
       </div>
+      {/* Say what the current mode does. A three-way toggle labelled with
+          single words is a guessing game otherwise. */}
+      <p className="muted fc-hint">{MODES.find((m) => m.id === mode).hint}</p>
 
       <div
         className={`card flashcard${flipped ? ' flipped' : ''}`}
@@ -153,11 +156,15 @@ export default function Flashcards({ onDone }) {
               <span className="muted">{card.pKaR != null ? `pKa ${card.pKaR}` : 'no ionizable side chain'}</span>
               <span className="muted">charge {card.charge7 > 0 ? '+1' : card.charge7 < 0 ? '−1' : '0'}</span>
             </div>
+            <div className="fc-group">
+              <strong>Side chain: {card.groupName}</strong>
+              {card.groupWhat}
+            </div>
             <p className="muted aa-note">{card.note}</p>
           </div>
         )}
 
-        {mode === 'flip' && !flipped && <p className="muted fc-tap">Tap the card to turn it over</p>}
+        {mode === 'flip' && !flipped && <p className="muted fc-tap">Tap to reveal the answer</p>}
       </div>
 
       {mode === 'flip' && (

@@ -62,8 +62,13 @@ export default function AminoAcidDiagram({ sideChain, name, cyclic = false }) {
         {cyclic ? 'ring to backbone N' : sideChain}
       </text>
 
+      {/* When the name is hidden for a flashcard, drop it from the caption
+          entirely rather than printing the placeholder — "? — backbone is
+          identical for all 20" reads as a rendering fault. */}
       <text x={CX} y={H - 6} fill="#93a3bb" fontSize="10" textAnchor="middle">
-        {cyclic ? `${name} — side chain bonds back to the nitrogen` : `${name} — backbone is identical for all 20`}
+        {[name && name !== '?' ? name : null, cyclic ? 'side chain bonds back to the nitrogen' : 'backbone is identical for all 20']
+          .filter(Boolean)
+          .join(' — ')}
       </text>
     </svg>
   )
