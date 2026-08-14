@@ -1,5 +1,5 @@
 import aminoAcids from '../data/genchem/aminoAcids.json'
-import AminoAcidDiagram from './visuals/AminoAcidDiagram.jsx'
+import AminoAcidFull from './visuals/AminoAcidFull.jsx'
 
 /**
  * The twenty laid out by class, to be read rather than answered.
@@ -32,7 +32,7 @@ const CLASS_COLOR = {
 function Card({ aa }) {
   return (
     <div className="aa-card" style={{ borderLeft: `3px solid ${CLASS_COLOR[aa.class]}` }}>
-      <AminoAcidDiagram sideChain={aa.sideChain} name={aa.name} cyclic={aa.name === 'Proline'} />
+      <AminoAcidFull aa={aa} />
       <div className="aa-head">
         <strong>{aa.name}</strong>
         <span className="muted">

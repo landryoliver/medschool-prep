@@ -1,0 +1,22 @@
+{
+  "Glycine": { "kind": "atom", "label": "H" },
+  "Alanine": { "kind": "chain", "carbons": 1 },
+  "Valine": { "kind": "chain", "carbons": 1, "branches": [{ "at": 0, "count": 2 }] },
+  "Leucine": { "kind": "chain", "carbons": 2, "branches": [{ "at": 1, "count": 2 }] },
+  "Isoleucine": { "kind": "chain", "carbons": 3, "branches": [{ "at": 0, "count": 1 }] },
+  "Methionine": { "kind": "chain", "carbons": 2, "hetero": { "at": 2, "label": "S" }, "afterHetero": 1 },
+  "Proline": { "kind": "proline" },
+  "Phenylalanine": { "kind": "chain", "carbons": 1, "ring": "benzene" },
+  "Tryptophan": { "kind": "chain", "carbons": 1, "ring": "indole" },
+  "Serine": { "kind": "chain", "carbons": 1, "terminal": "OH" },
+  "Threonine": { "kind": "chain", "carbons": 2, "branchLabels": [{ "at": 0, "label": "OH" }] },
+  "Cysteine": { "kind": "chain", "carbons": 1, "terminal": "SH" },
+  "Tyrosine": { "kind": "chain", "carbons": 1, "ring": "benzene", "ringSubstituent": "OH" },
+  "Asparagine": { "kind": "chain", "carbons": 1, "amide": true },
+  "Glutamine": { "kind": "chain", "carbons": 2, "amide": true },
+  "Aspartate": { "kind": "chain", "carbons": 1, "carboxylate": true },
+  "Glutamate": { "kind": "chain", "carbons": 2, "carboxylate": true },
+  "Lysine": { "kind": "chain", "carbons": 4, "terminal": "NH₃⁺" },
+  "Arginine": { "kind": "chain", "carbons": 3, "guanidinium": true },
+  "Histidine": { "kind": "chain", "carbons": 1, "ring": "imidazole" }
+}

@@ -10,6 +10,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
 import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
+import SideChainStructure from '../src/components/visuals/SideChainStructure.jsx'
 import Flashcards from '../src/components/Flashcards.jsx'
 import GroupPrimer from '../src/components/GroupPrimer.jsx'
 import PkaLadder from '../src/components/PkaLadder.jsx'
@@ -377,6 +378,20 @@ console.log('\n=== Reference data ===')
       }
     }
     if (!anchorBad) console.log(`  ok  ${PKA_ANCHORS.size} pKa anchors all resolve`)
+  }
+
+  // Every residue needs a drawable side chain. A missing shape renders
+  // nothing at all, leaving a card with a backbone and an empty R box.
+  {
+    let shapeBad = 0
+    for (const a of aa) {
+      const html = renderToStaticMarkup(createElement(SideChainStructure, { name: a.name }))
+      if (!html || html.includes('NaN')) {
+        fail(a.name + ': side-chain structure does not draw')
+        shapeBad++
+      }
+    }
+    if (!shapeBad) console.log('  ok  20 side-chain structures draw')
   }
 
   if (!aaBad) console.log('  ok  20 amino acids: codes, classes, pKa and charges')

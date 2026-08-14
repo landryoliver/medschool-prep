@@ -1645,3 +1645,35 @@ button.wide {
   font-size: 0.82rem;
   margin: 0.9rem 0 0;
 }
+
+/* ---- Amino acid: backbone plus drawn side chain ---------------------- */
+
+.aaf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aaf-side {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-top: -0.3rem;
+  padding: 0.5rem 0.7rem 0.6rem;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.07);
+  border-radius: 0.6rem;
+}
+
+.aaf-eq {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding-top: 0.15rem;
+}
+
+.aaf-formula {
+  align-self: flex-end;
+  font-size: 0.72rem;
+  padding-bottom: 0.1rem;
+}

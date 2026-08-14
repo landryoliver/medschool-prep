@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import aminoAcids from '../data/genchem/aminoAcids.json'
-import AminoAcidDiagram from './visuals/AminoAcidDiagram.jsx'
+import AminoAcidFull from './visuals/AminoAcidFull.jsx'
 
 /**
  * A real flashcard deck: flip to study, then drill at two difficulties.
@@ -190,11 +190,7 @@ export default function Flashcards({ onDone }) {
             <p className="muted fc-prompt-ask">Picture the side chain, then tap to check.</p>
           </div>
         ) : (
-          <AminoAcidDiagram
-            sideChain={card.sideChain}
-            name={flipped || result || reversed ? card.name : '?'}
-            cyclic={card.name === 'Proline'}
-          />
+          <AminoAcidFull aa={card} hideName={!(flipped || result || reversed)} />
         )}
 
         {(flipped || result) && (
