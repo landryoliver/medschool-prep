@@ -380,6 +380,32 @@ console.log('\n=== Reference data ===')
     if (!anchorBad) console.log(`  ok  ${PKA_ANCHORS.size} pKa anchors all resolve`)
   }
 
+  // The sorting phrases must keep matching the data. A mnemonic that
+  // drifts out of sync teaches a wrong classification, which is worse than
+  // having none — one was already removed this project for being wrong.
+  {
+    const mn = JSON.parse(fs.readFileSync('src/data/genchem/aminoAcidMnemonics.json', 'utf8'))
+    let mnBad = 0
+    for (const m of mn) {
+      const claimed = [...m.letters].sort().join('')
+      const real = aa
+        .filter((x) => (m.cls === 'charged' ? x.class === 'acidic' || x.class === 'basic' : x.class === m.cls))
+        .map((x) => x.one)
+        .sort()
+        .join('')
+      if (claimed !== real) {
+        fail('mnemonic for ' + m.cls + ' gives ' + claimed + ' but the data has ' + real)
+        mnBad++
+      }
+    }
+    const all = mn.flatMap((m) => [...m.letters])
+    if (all.length !== 20 || new Set(all).size !== 20) {
+      fail('the sorting phrases cover ' + new Set(all).size + ' distinct residues, not all 20')
+      mnBad++
+    }
+    if (!mnBad) console.log('  ok  3 sorting mnemonics match the data and cover all 20')
+  }
+
   // Every residue needs a drawable side chain. A missing shape renders
   // nothing at all, leaving a card with a backbone and an empty R box.
   {

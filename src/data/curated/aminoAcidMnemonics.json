@@ -1,0 +1,58 @@
+[
+  {
+    "id": "aamnem-nonpolar",
+    "topic": "amino-acids",
+    "prompt": "The mnemonic \"Grandma Always Visits London In May For Winston's Party\" gives which group of amino acids?",
+    "choices": [
+      "The nonpolar ones — G, A, V, L, I, M, F, W, P",
+      "The polar ones — S, T, C, N, Q, Y",
+      "The charged ones — D, E, K, R, H",
+      "The essential amino acids only"
+    ],
+    "correctIndex": 0,
+    "explanation": "Its initials are the one-letter codes for the 9 NONPOLAR residues: Glycine (G), Alanine (A), Valine (V), Leucine (L), Isoleucine (I), Methionine (M), Phenylalanine (F), Tryptophan (W), Proline (P).",
+    "teach": "Three phrases cover all twenty: nonpolar \"Grandma Always Visits London In May For Winston's Party\" (9), polar \"Santa's Team Crafts New Quilts Yearly\" (6), charged \"Dragons Eat Knights Riding Horses\" (5)."
+  },
+  {
+    "id": "aamnem-polar",
+    "topic": "amino-acids",
+    "prompt": "The mnemonic \"Santa's Team Crafts New Quilts Yearly\" gives which group of amino acids?",
+    "choices": [
+      "The polar ones — S, T, C, N, Q, Y",
+      "The nonpolar ones — G, A, V, L, I, M, F, W, P",
+      "The charged ones — D, E, K, R, H",
+      "The essential amino acids only"
+    ],
+    "correctIndex": 0,
+    "explanation": "Its initials are the one-letter codes for the 6 POLAR residues: Serine (S), Threonine (T), Cysteine (C), Asparagine (N), Glutamine (Q), Tyrosine (Y).",
+    "teach": "Three phrases cover all twenty: nonpolar \"Grandma Always Visits London In May For Winston's Party\" (9), polar \"Santa's Team Crafts New Quilts Yearly\" (6), charged \"Dragons Eat Knights Riding Horses\" (5)."
+  },
+  {
+    "id": "aamnem-charged",
+    "topic": "amino-acids",
+    "prompt": "The mnemonic \"Dragons Eat Knights Riding Horses\" gives which group of amino acids?",
+    "choices": [
+      "The charged ones — D, E, K, R, H",
+      "The nonpolar ones — G, A, V, L, I, M, F, W, P",
+      "The polar ones — S, T, C, N, Q, Y",
+      "The essential amino acids only"
+    ],
+    "correctIndex": 0,
+    "explanation": "Its initials are the one-letter codes for the 5 CHARGED residues: Aspartate (D), Glutamate (E), Lysine (K), Arginine (R), Histidine (H).",
+    "teach": "Three phrases cover all twenty: nonpolar \"Grandma Always Visits London In May For Winston's Party\" (9), polar \"Santa's Team Crafts New Quilts Yearly\" (6), charged \"Dragons Eat Knights Riding Horses\" (5)."
+  },
+  {
+    "id": "aamnem-count",
+    "topic": "amino-acids",
+    "prompt": "Using the three sorting phrases, how do the twenty amino acids split?",
+    "choices": [
+      "9 nonpolar, 6 polar uncharged, 5 charged",
+      "10 nonpolar, 5 polar, 5 charged",
+      "8 nonpolar, 7 polar, 5 charged",
+      "9 nonpolar, 7 polar, 4 charged"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grandma's phrase holds 9, Santa's holds 6, and Dragons holds 5. They add to 20 with nothing counted twice.",
+    "teach": "Only five residues carry charge, and only two of those are acidic. That is the fastest way into the set."
+  }
+]

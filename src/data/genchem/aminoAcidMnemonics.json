@@ -1,0 +1,17 @@
+[
+  {
+    "cls": "nonpolar",
+    "phrase": "Grandma Always Visits London In May For Winston's Party",
+    "letters": "GAVLIMFWP"
+  },
+  {
+    "cls": "polar",
+    "phrase": "Santa's Team Crafts New Quilts Yearly",
+    "letters": "STCNQY"
+  },
+  {
+    "cls": "charged",
+    "phrase": "Dragons Eat Knights Riding Horses",
+    "letters": "DEKRH"
+  }
+]

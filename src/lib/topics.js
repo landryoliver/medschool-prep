@@ -13,6 +13,7 @@ import * as functionalGroups from '../generators/functionalGroups.js'
 import lewisStructures from '../data/genchem/lewisStructures.json'
 import electronConfig from '../data/genchem/electronConfig.json'
 import shellQuestions from '../data/genchem/shells.json'
+import aminoAcidMnemonics from '../data/curated/aminoAcidMnemonics.json'
 import metalCarbon from '../data/curated/metalCarbon.json'
 import bondTypeRule from '../data/curated/bondTypeRule.json'
 import arioFramework from '../data/curated/arioFramework.json'
@@ -189,6 +190,7 @@ export const TOPICS = [
       ...buildBank(aminoAcidGen.generatePickFromClass, 60),
       ...buildBank(aminoAcidGen.generateFromSideChain, 40),
       ...buildBank(aminoAcidGen.generateSpecial, 10),
+      ...withKind(aminoAcidMnemonics),
     ],
   },
   {

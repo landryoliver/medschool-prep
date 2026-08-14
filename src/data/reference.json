@@ -493,6 +493,16 @@
   ],
   "aminoacids": [
     {
+      "heading": "Three phrases that sort all twenty",
+      "points": [
+        "NONPOLAR (9) — \"Grandma Always Visits London In May For Winston's Party\": G A V L I M F W P. Glycine, Alanine, Valine, Leucine, Isoleucine, Methionine, Phenylalanine, Tryptophan, Proline.",
+        "POLAR, uncharged (6) — \"Santa's Team Crafts New Quilts Yearly\": S T C N Q Y. Serine, Threonine, Cysteine, Asparagine, Glutamine, Tyrosine.",
+        "CHARGED (5) — \"Dragons Eat Knights Riding Horses\": D E K R H. Aspartate and Glutamate are the acidic two; Lysine, Arginine and Histidine are the basic three.",
+        "The initials are the ONE-LETTER codes, so learning the phrases drills the codes at the same time — including the awkward ones (W, Q, Y, K, R) that do not match their names.",
+        "9 + 6 + 5 = 20, with nothing counted twice. If you can recite the three phrases you can classify any residue."
+      ]
+    },
+    {
       "heading": "The only five with charged side chains",
       "points": [
         "Acidic (negative at pH 7.4): Aspartate (Asp, D) pKa 3.9, Glutamate (Glu, E) pKa 4.3.",
