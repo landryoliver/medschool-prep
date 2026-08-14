@@ -71,7 +71,7 @@ function MasteryRing({ mastered, studied, total, topicId }) {
   )
 }
 
-function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed }) {
+function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards }) {
   const pct = stat?.seen ? Math.round((stat.correct / stat.seen) * 100) : 0
   const color = topicColor(topic.id)
   const btnColor = topicButtonColor(topic.id)
@@ -133,12 +133,17 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed }) {
             Speed
           </button>
         )}
+        {topic.id === 'aminoacids' && (
+          <button className="ghost" onClick={onCards}>
+            Cards
+          </button>
+        )}
       </div>
     </div>
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onReviewMisses, onPlan }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onReviewMisses, onPlan }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -182,7 +187,7 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
   const groupedIds = new Set(grouped.flatMap((g) => g.items.map((t) => t.id)))
   const ungrouped = TOPICS.filter((t) => !groupedIds.has(t.id))
 
-  const cardProps = { onLesson, onLearn, onStudy, onSpeed }
+  const cardProps = { onLesson, onLearn, onStudy, onSpeed, onCards }
 
   return (
     <div>

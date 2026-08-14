@@ -1,7 +1,7 @@
 const W = 300
-const H = 150
+const H = 176
 const CX = 150
-const CY = 78
+const CY = 72
 
 /**
  * The shared amino acid backbone, drawn as the zwitterion that exists at

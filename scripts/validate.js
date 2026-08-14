@@ -9,6 +9,15 @@ import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
+import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
+import Flashcards from '../src/components/Flashcards.jsx'
+import GroupPrimer from '../src/components/GroupPrimer.jsx'
+import PkaLadder from '../src/components/PkaLadder.jsx'
+import VseprChart from '../src/components/VseprChart.jsx'
+import CompoundTable from '../src/components/CompoundTable.jsx'
+import LessonView from '../src/components/LessonView.jsx'
+import Walkthroughs from '../src/components/Walkthroughs.jsx'
+import BackupPanel from '../src/components/BackupPanel.jsx'
 
 let errors = 0
 const fail = (msg) => {
@@ -234,6 +243,47 @@ for (const t of TOPICS.filter((t) => t.speedRound)) {
 // === SPACED REPETITION ===
 // The scheduler decides what appears in every session, and a mistake here
 // is invisible in the UI: questions simply come back at the wrong time.
+// === REFERENCE VIEWS ===
+// Everything that is not a question. These render nowhere else in this
+// script, so a component that throws only when opened would ship unnoticed
+// — which already happened once when an edit removed state a view still
+// referenced, and both validate and build stayed green.
+console.log('\n=== Reference views ===')
+{
+  const noop = () => {}
+  const views = [
+    ['AminoAcidReference', createElement(AminoAcidReference)],
+    ['Flashcards', createElement(Flashcards, { onDone: noop })],
+    ['GroupPrimer', createElement(GroupPrimer)],
+    ['PkaLadder', createElement(PkaLadder)],
+    ['VseprChart', createElement(VseprChart)],
+    ['CompoundTable', createElement(CompoundTable)],
+    ['BackupPanel', createElement(BackupPanel)],
+    ...TOPICS.map((t) => [
+      `LessonView(${t.id})`,
+      createElement(LessonView, { topicId: t.id, title: t.label, onNotes: noop, onStudy: noop }),
+    ]),
+    ...TOPICS.map((t) => [
+      `Walkthroughs(${t.id})`,
+      createElement(Walkthroughs, { topicId: t.id, title: t.label, onStudy: noop }),
+    ]),
+  ]
+  let viewBad = 0
+  for (const [name, el] of views) {
+    try {
+      const html = renderToStaticMarkup(el)
+      if (!html || html.length < 40) {
+        fail(`view ${name} rendered essentially empty`)
+        viewBad++
+      }
+    } catch (e) {
+      fail(`view ${name} threw while rendering — ${e.message}`)
+      viewBad++
+    }
+  }
+  if (!viewBad) console.log(`  ok  ${views.length} reference views render`)
+}
+
 console.log('\n=== Spaced repetition ===')
 {
   const DAY = 86400000

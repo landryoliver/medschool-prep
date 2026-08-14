@@ -1565,3 +1565,27 @@ button.wide {
   font-variant-numeric: tabular-nums;
   font-size: 0.85rem;
 }
+
+/* ---- Flashcards ------------------------------------------------------ */
+
+.flashcard {
+  text-align: center;
+  padding: 1rem 0.9rem;
+  transition: transform 0.15s ease;
+}
+
+.flashcard.flipped {
+  animation: step-in 0.2s ease-out;
+}
+
+.fc-back {
+  text-align: left;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.fc-tap {
+  font-size: 0.8rem;
+  margin: 0.5rem 0 0;
+}

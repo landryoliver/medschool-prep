@@ -1,0 +1,213 @@
+import { useMemo, useState } from 'react'
+import aminoAcids from '../data/genchem/aminoAcids.json'
+import AminoAcidDiagram from './visuals/AminoAcidDiagram.jsx'
+
+/**
+ * A real flashcard deck: flip to study, then drill at two difficulties.
+ *
+ * The reference view can be browsed but never asks anything, and the
+ * question banks ask constantly but cannot be flipped through. This is the
+ * middle: see the structure, try to name it, turn it over. Then the same
+ * deck as recall — recognition first, production second, which is the
+ * order the two actually get easier in.
+ *
+ * Deliberately separate from the spaced-repetition engine. This is for
+ * cramming a set in one sitting; the SRS is for keeping it.
+ */
+const MODES = [
+  { id: 'flip', label: 'Flip', hint: 'Study — turn each card over' },
+  { id: 'choice', label: 'Choose', hint: 'Recognise it among four' },
+  { id: 'type', label: 'Type', hint: 'Produce the name from memory' },
+]
+
+const CLASS_COLOR = { acidic: '#f87171', basic: '#38bdf8', polar: '#4ade80', nonpolar: '#facc15' }
+
+function shuffled(list) {
+  const a = [...list]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+/** Accepts the full name, the three-letter code, or the one-letter code. */
+function matches(input, aa) {
+  const v = input.trim().toLowerCase()
+  if (!v) return false
+  return v === aa.name.toLowerCase() || v === aa.three.toLowerCase() || v === aa.one.toLowerCase()
+}
+
+export default function Flashcards({ onDone }) {
+  const [mode, setMode] = useState('flip')
+  const [deck, setDeck] = useState(() => shuffled(aminoAcids))
+  const [i, setI] = useState(0)
+  const [flipped, setFlipped] = useState(false)
+  const [typed, setTyped] = useState('')
+  const [result, setResult] = useState(null) // null | 'right' | 'wrong'
+  const [score, setScore] = useState({ right: 0, wrong: 0 })
+
+  const card = deck[i]
+  const done = i >= deck.length
+
+  // Four options for the recognition mode, drawn from the same class where
+  // possible so the choice is not settled by the class label alone.
+  const options = useMemo(() => {
+    if (!card || mode !== 'choice') return []
+    const sameClass = aminoAcids.filter((a) => a.class === card.class && a.name !== card.name)
+    const others = aminoAcids.filter((a) => a.class !== card.class)
+    const pool = shuffled([...sameClass, ...shuffled(others)]).slice(0, 3)
+    return shuffled([card, ...pool])
+  }, [card, mode])
+
+  function restart(nextMode = mode) {
+    setMode(nextMode)
+    setDeck(shuffled(aminoAcids))
+    setI(0)
+    setFlipped(false)
+    setTyped('')
+    setResult(null)
+    setScore({ right: 0, wrong: 0 })
+  }
+
+  function advance() {
+    setI((n) => n + 1)
+    setFlipped(false)
+    setTyped('')
+    setResult(null)
+  }
+
+  function grade(correct) {
+    setResult(correct ? 'right' : 'wrong')
+    setScore((s) => ({ right: s.right + (correct ? 1 : 0), wrong: s.wrong + (correct ? 0 : 1) }))
+  }
+
+  if (done) {
+    const total = score.right + score.wrong
+    const pct = total ? Math.round((score.right / total) * 100) : 0
+    return (
+      <div className="card done-card">
+        <h2 className="section-title">Deck finished</h2>
+        {total > 0 ? (
+          <>
+            <p className="score">{pct}%</p>
+            <p className="muted">
+              {score.right} right · {score.wrong} missed out of {total}
+            </p>
+          </>
+        ) : (
+          <p className="muted">All twenty seen.</p>
+        )}
+        <button className="primary wide" onClick={() => restart()} style={{ marginTop: '0.75rem' }}>
+          Shuffle and go again
+        </button>
+        <button className="ghost wide" onClick={onDone}>
+          Back to topics
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <div className="session-bar">
+        <span className="muted">
+          {i + 1} / {deck.length}
+          {mode !== 'flip' && score.right + score.wrong > 0 && (
+            <span className="muted"> · {score.right} right</span>
+          )}
+        </span>
+        <div className="seg">
+          {MODES.map((m) => (
+            <button key={m.id} className={mode === m.id ? 'active' : ''} title={m.hint} onClick={() => restart(m.id)}>
+              {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="progress-track">
+        <div className="progress-fill" style={{ width: `${(i / deck.length) * 100}%` }} />
+      </div>
+
+      <div
+        className={`card flashcard${flipped ? ' flipped' : ''}`}
+        style={{ borderTop: `3px solid ${CLASS_COLOR[card.class]}` }}
+        onClick={mode === 'flip' ? () => setFlipped((f) => !f) : undefined}
+      >
+        <AminoAcidDiagram
+          sideChain={card.sideChain}
+          name={flipped || result ? card.name : '?'}
+          cyclic={card.name === 'Proline'}
+        />
+
+        {(flipped || result) && (
+          <div className="fc-back">
+            <div className="aa-head">
+              <strong>{card.name}</strong>
+              <span className="muted">
+                {card.three} · {card.one}
+              </span>
+            </div>
+            <div className="aa-facts">
+              <span style={{ color: CLASS_COLOR[card.class] }}>{card.class}</span>
+              <span className="muted">{card.pKaR != null ? `pKa ${card.pKaR}` : 'no ionizable side chain'}</span>
+              <span className="muted">charge {card.charge7 > 0 ? '+1' : card.charge7 < 0 ? '−1' : '0'}</span>
+            </div>
+            <p className="muted aa-note">{card.note}</p>
+          </div>
+        )}
+
+        {mode === 'flip' && !flipped && <p className="muted fc-tap">Tap the card to turn it over</p>}
+      </div>
+
+      {mode === 'flip' && (
+        <button className="primary wide" onClick={advance}>
+          Next card →
+        </button>
+      )}
+
+      {mode === 'choice' && !result && (
+        <div>
+          {options.map((o) => (
+            <button key={o.name} className="choice-btn" onClick={() => grade(o.name === card.name)}>
+              {o.name} <span className="muted">({o.three})</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {mode === 'type' && !result && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (typed.trim()) grade(matches(typed, card))
+          }}
+        >
+          <input
+            className="text-input"
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            placeholder="Name, three-letter, or one-letter code"
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+          />
+          <button className="primary wide" type="submit">
+            Check
+          </button>
+        </form>
+      )}
+
+      {result && (
+        <>
+          <p className={`feedback ${result === 'right' ? 'good' : 'bad'}`}>
+            {result === 'right' ? 'Correct' : `Not quite — that was ${card.name} (${card.three}, ${card.one})`}
+          </p>
+          <button className="primary wide" onClick={advance}>
+            Next card →
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
