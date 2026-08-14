@@ -135,6 +135,29 @@ were all found from a single screenshot after six rounds of blind work.
 When changing anything visual, say plainly that it is unverified rather
 than implying it was checked.
 
+### 8. A drilled set must also be browsable
+
+Questions can *test* a fixed set but cannot *teach* it. Meeting the twenty
+amino acids one at a time in random order never builds the picture that
+"only five carry charge" describes — for that you have to see them laid
+out together.
+
+The user caught this directly: the lesson talked about amino acids, the
+notes summarized them, and nothing showed them. Auditing the rest of the
+data found the same gap in three more places — the pKa table, the VSEPR
+geometries and the boiling-point compounds all drove hundreds of questions
+with no browsable view at all.
+
+So whenever a table in `src/data/` backs a generator, it also needs a
+reference view under that topic's Notes. Present the set the way it is
+actually learned: the pKa table as a ladder, because the spacing carries
+the meaning; the VSEPR shapes grouped by electron count, because that is
+where the electron-geometry/molecular-shape distinction becomes visible.
+
+Related: do not use a term the reader may not know without showing it. The
+amino acid lesson said "carboxyl group" and "amino group" repeatedly and
+never once wrote –COOH or –NH₂.
+
 ## Adding questions
 
 Generated questions take an integer seed and return the same question every
