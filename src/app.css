@@ -1615,3 +1615,33 @@ button.wide {
   text-transform: uppercase;
   margin-bottom: 0.2rem;
 }
+
+.fc-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.fc-nav button {
+  flex: 1;
+  min-height: 44px;
+}
+
+.fc-nav button:disabled {
+  opacity: 0.35;
+}
+
+.fc-prompt {
+  padding: 1.4rem 0.5rem 0.6rem;
+}
+
+.fc-prompt-name {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.fc-prompt-ask {
+  font-size: 0.82rem;
+  margin: 0.9rem 0 0;
+}

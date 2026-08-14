@@ -40,6 +40,10 @@ function matches(input, aa) {
 
 export default function Flashcards({ onDone }) {
   const [mode, setMode] = useState('flip')
+  // 'toName' shows the structure and asks for the name; 'toStructure'
+  // shows the name and asks you to picture the structure — the direction
+  // that matters if your course expects you to draw them.
+  const [dir, setDir] = useState('toName')
   const [deck, setDeck] = useState(() => shuffled(aminoAcids))
   const [i, setI] = useState(0)
   const [flipped, setFlipped] = useState(false)
@@ -47,6 +51,9 @@ export default function Flashcards({ onDone }) {
   const [result, setResult] = useState(null) // null | 'right' | 'wrong'
   const [score, setScore] = useState({ right: 0, wrong: 0 })
 
+  // Reverse only applies to Study; the graded modes always ask for the
+  // name, because that is the direction an exam tests.
+  const reversed = mode === 'flip' && dir === 'toStructure'
   const card = deck[i]
   const done = i >= deck.length
 
@@ -72,6 +79,14 @@ export default function Flashcards({ onDone }) {
 
   function advance() {
     setI((n) => n + 1)
+    setFlipped(false)
+    setTyped('')
+    setResult(null)
+  }
+
+  function back() {
+    if (i === 0) return
+    setI((n) => n - 1)
     setFlipped(false)
     setTyped('')
     setResult(null)
@@ -130,18 +145,57 @@ export default function Flashcards({ onDone }) {
       </div>
       {/* Say what the current mode does. A three-way toggle labelled with
           single words is a guessing game otherwise. */}
-      <p className="muted fc-hint">{MODES.find((m) => m.id === mode).hint}</p>
+      <p className="muted fc-hint">
+        {reversed
+          ? 'Read the name, picture the side chain, then tap to check what it looks like.'
+          : MODES.find((m) => m.id === mode).hint}
+      </p>
+
+      {mode === 'flip' && (
+        <div className="seg wide-seg">
+          <button
+            className={dir === 'toName' ? 'active' : ''}
+            onClick={() => {
+              setDir('toName')
+              setFlipped(false)
+            }}
+          >
+            Structure → name
+          </button>
+          <button
+            className={dir === 'toStructure' ? 'active' : ''}
+            onClick={() => {
+              setDir('toStructure')
+              setFlipped(false)
+            }}
+          >
+            Name → structure
+          </button>
+        </div>
+      )}
 
       <div
         className={`card flashcard${flipped ? ' flipped' : ''}`}
         style={{ borderTop: `3px solid ${CLASS_COLOR[card.class]}` }}
         onClick={mode === 'flip' ? () => setFlipped((f) => !f) : undefined}
       >
-        <AminoAcidDiagram
-          sideChain={card.sideChain}
-          name={flipped || result ? card.name : '?'}
-          cyclic={card.name === 'Proline'}
-        />
+        {reversed && !flipped ? (
+          // Name first: the prompt is the word, and the structure is what
+          // you are trying to produce from memory.
+          <div className="fc-prompt">
+            <strong className="fc-prompt-name">{card.name}</strong>
+            <span className="muted">
+              {card.three} · {card.one}
+            </span>
+            <p className="muted fc-prompt-ask">Picture the side chain, then tap to check.</p>
+          </div>
+        ) : (
+          <AminoAcidDiagram
+            sideChain={card.sideChain}
+            name={flipped || result || reversed ? card.name : '?'}
+            cyclic={card.name === 'Proline'}
+          />
+        )}
 
         {(flipped || result) && (
           <div className="fc-back">
@@ -168,9 +222,14 @@ export default function Flashcards({ onDone }) {
       </div>
 
       {mode === 'flip' && (
-        <button className="primary wide" onClick={advance}>
-          Next card →
-        </button>
+        <div className="fc-nav">
+          <button className="ghost" onClick={back} disabled={i === 0}>
+            ← Back
+          </button>
+          <button className="primary" onClick={advance}>
+            Next card →
+          </button>
+        </div>
       )}
 
       {mode === 'choice' && !result && (
@@ -210,9 +269,14 @@ export default function Flashcards({ onDone }) {
           <p className={`feedback ${result === 'right' ? 'good' : 'bad'}`}>
             {result === 'right' ? 'Correct' : `Not quite — that was ${card.name} (${card.three}, ${card.one})`}
           </p>
-          <button className="primary wide" onClick={advance}>
-            Next card →
-          </button>
+          <div className="fc-nav">
+            <button className="ghost" onClick={back} disabled={i === 0}>
+              ← Back
+            </button>
+            <button className="primary" onClick={advance}>
+              Next card →
+            </button>
+          </div>
         </>
       )}
     </div>
