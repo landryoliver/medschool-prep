@@ -1646,6 +1646,18 @@ button.wide {
   margin: 0.9rem 0 0;
 }
 
+/* ---- Skeletal vs written-out notation -------------------------------- */
+
+.notation {
+  margin-bottom: 0.7rem;
+}
+
+.notation-hint {
+  margin: 0.3rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
 /* ---- Ladder: build the set one residue at a time --------------------- */
 
 .fc-modes {

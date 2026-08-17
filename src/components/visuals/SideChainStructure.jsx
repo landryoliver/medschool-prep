@@ -1,4 +1,5 @@
 import SHAPES from '../../data/genchem/sideChainShapes.json'
+import { parseFormula, EMPTY, addCounts } from '../../lib/chem/formula.js'
 
 /**
  * The side chain drawn as an actual structure rather than a formula.
@@ -372,9 +373,164 @@ function collectSideChain(name) {
   return parts
 }
 
+/**
+ * The same side chain written out: a vertical stack with every carbon named.
+ *
+ * This is how the twenty appear in a biochemistry amino acid chart, and in
+ * the amino acid chapter of an organic textbook — CH₂ spelled out rather
+ * than implied at a vertex. Organic chemistry drills the skeletal form
+ * everywhere else, so both are worth recognising and the card can switch.
+ *
+ * Rings stay drawn as rings in both notations; nobody writes a benzene ring
+ * out as a chain.
+ */
+const VSTEP = 30
+const HSTEP = 34
+
+function collectWritten(name) {
+  const spec = SHAPES[name]
+  if (!spec) return null
+
+  const bonds = []
+  const labels = []
+  const circles = []
+  const labelled = new Map()
+  const bond = (a, b, opts = {}) => bonds.push({ a, b, double: !!opts.double, inner: !!opts.inner })
+  const label = (p, text, opts = {}) => {
+    const size = opts.size ?? LABEL_SIZE
+    labels.push({ x: p.x, y: p.y, text, size, muted: !!opts.muted })
+    labelled.set(key(p), { box: labelBox(text, size), text })
+  }
+
+  const alpha = { x: 0, y: 0 }
+  const parts = { spec, bonds, labels, circles, labelled, bond, label, alpha }
+
+  if (spec.kind === 'atom') {
+    const h = { x: 0, y: VSTEP }
+    bond(alpha, h)
+    label(h, spec.label)
+    return parts
+  }
+
+  if (spec.kind === 'proline') {
+    // A ring cannot be written out as a chain, so this is identical in both
+    // notations.
+    const { pts } = ringAt(alpha, rot(DOWN, 19), 5)
+    for (let i = 0; i < 5; i++) bond(pts[i], pts[(i + 1) % 5])
+    label(pts[4], 'N')
+    parts.prolineN = pts[4]
+    return parts
+  }
+
+  const branchAt = new Map((spec.branches ?? []).map((b) => [b.at + 1, b.count]))
+  const branchLabelAt = new Map((spec.branchLabels ?? []).map((b) => [b.at + 1, b.label]))
+  const tail = spec.terminal || spec.carboxylate || spec.amide || spec.guanidinium || spec.ring || spec.hetero
+
+  let prev = alpha
+  let y = 0
+  const chain = []
+  for (let i = 1; i <= spec.carbons; i++) {
+    y += VSTEP
+    const v = { x: 0, y }
+    chain.push(v)
+    bond(prev, v)
+
+    const isLast = i === spec.carbons
+    const branches = branchAt.get(i) ?? 0
+    const hasLabelBranch = branchLabelAt.has(i)
+    // CH if something hangs off it, CH₃ if the chain simply stops here,
+    // CH₂ otherwise. This is the whole point of the written form: the
+    // hydrogen count is stated rather than inferred from the valence.
+    const text = branches || hasLabelBranch ? 'CH' : isLast && !tail ? 'CH₃' : 'CH₂'
+    label(v, text)
+
+    // A carbon the chain continues past puts its branches out sideways; one
+    // the chain ends on splays them below, the way an isopropyl is drawn.
+    const terminalVertex = isLast && !tail
+    if (branches) {
+      const dirs =
+        branches === 2
+          ? terminalVertex
+            ? [{ x: -0.6, y: 0.8 }, { x: 0.6, y: 0.8 }]
+            : [LEFT, RIGHT]
+          : [RIGHT]
+      for (const d of dirs) {
+        const p = { x: d.x * HSTEP, y: v.y + d.y * VSTEP }
+        bond(v, p)
+        label(p, 'CH₃')
+      }
+    }
+    if (hasLabelBranch) {
+      const p = { x: HSTEP, y: v.y }
+      bond(v, p)
+      label(p, branchLabelAt.get(i))
+    }
+    prev = v
+  }
+
+  const down = (text, opts) => {
+    y += VSTEP
+    const p = { x: 0, y }
+    bond(prev, p)
+    label(p, text, opts)
+    prev = p
+    return p
+  }
+
+  if (spec.hetero) {
+    down(spec.hetero.label)
+    for (let i = 0; i < (spec.afterHetero ?? 0); i++) down('CH₃')
+  } else if (spec.terminal) {
+    down(spec.terminal)
+  } else if (spec.carboxylate) {
+    down('COO⁻')
+  } else if (spec.amide) {
+    down('CONH₂')
+  } else if (spec.guanidinium) {
+    down('NH')
+    down('C(NH₂)₂⁺', { size: 12 })
+  } else if (spec.ring) {
+    // The ring hangs below the last CH₂, drawn exactly as in skeletal form.
+    const attach = { x: 0, y: y + VSTEP }
+    bond(prev, attach)
+    const sides = spec.ring === 'benzene' ? 6 : 5
+    const { pts, centre, r } = ringAt(attach, DOWN, sides)
+    for (let i = 0; i < sides; i++) bond(pts[i], pts[(i + 1) % sides])
+
+    if (spec.ring === 'benzene') {
+      circles.push({ x: centre.x, y: centre.y, r: r * 0.55 })
+      if (spec.ringSubstituent) {
+        const p = step(pts[3], dirTo(centre, pts[3]))
+        bond(pts[3], p)
+        label(p, spec.ringSubstituent)
+      }
+    }
+    if (spec.ring === 'imidazole') {
+      bond(pts[1], pts[2], { inner: true, double: true })
+      bond(pts[4], pts[0], { inner: true, double: true })
+      label(pts[1], 'N')
+      label(pts[3], 'N')
+    }
+    if (spec.ring === 'indole') {
+      bond(pts[0], pts[1], { inner: true, double: true })
+      label(pts[2], 'NH')
+      const { pts: hex, centre: hc, r: hr } = fusedRing(pts[3], pts[4], centre, 6)
+      for (let i = 0; i < 6; i++) {
+        const a = hex[i]
+        const b = hex[(i + 1) % 6]
+        const shared = (near(a, pts[3]) && near(b, pts[4])) || (near(a, pts[4]) && near(b, pts[3]))
+        if (!shared) bond(a, b)
+      }
+      circles.push({ x: hc.x, y: hc.y, r: hr * 0.55 })
+    }
+  }
+
+  return parts
+}
+
 /** The side chain on its own, alpha carbon at the origin. */
-export function buildSideChain(name) {
-  const p = collectSideChain(name)
+export function buildSideChain(name, notation = 'skeletal') {
+  const p = notation === 'written' ? collectWritten(name) : collectSideChain(name)
   if (!p) return null
   return finish(name, p.bonds, p.labels, p.circles, p.labelled)
 }
@@ -390,8 +546,8 @@ export function buildSideChain(name) {
  * mentally — and the fitted viewBox meant alanine's one-bond side chain was
  * magnified until its label dwarfed the card.
  */
-export function buildAminoAcid(name) {
-  const p = collectSideChain(name)
+export function buildAminoAcid(name, notation = 'skeletal') {
+  const p = notation === 'written' ? collectWritten(name) : collectSideChain(name)
   if (!p) return null
   const { alpha, bond, label, labelled } = p
 
@@ -476,12 +632,19 @@ function finish(name, bonds, labels, circles, labelled) {
   const ALPHA = key({ x: 0, y: 0 })
   const atoms = []
   const seen = new Set()
+  const composition = EMPTY()
   for (const { a, b } of bonds) {
     for (const p of [a, b]) {
       const k = key(p)
       if (seen.has(k)) continue
       seen.add(k)
-      atoms.push({ x: p.x, y: p.y, element: k === ALPHA ? 'Cα' : elementOf(labelled.get(k)?.text) })
+      const text = labelled.get(k)?.text
+      atoms.push({ x: p.x, y: p.y, element: k === ALPHA ? 'Cα' : elementOf(text) })
+      if (k === ALPHA) continue
+      // A vertex contributes whatever its label says, so "CH₂", "COO⁻" and
+      // "C(NH₂)₂⁺" each count correctly. An unlabelled vertex is one carbon,
+      // which is what skeletal notation means by a bare corner.
+      addCounts(composition, text ? parseFormula(text) : { C: 1, H: 0, N: 0, O: 0, S: 0 })
     }
   }
 
@@ -492,6 +655,7 @@ function finish(name, bonds, labels, circles, labelled) {
     labels,
     circles,
     atoms,
+    composition,
     view: { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 },
   }
 }
@@ -598,15 +762,15 @@ function draw(g) {
  * The complete residue: amino group, carboxylate, alpha hydrogen and the
  * real side chain, in one drawing at the scale every other residue uses.
  */
-export function AminoAcidStructure({ name, className = 'aa-structure' }) {
-  const g = buildAminoAcid(name)
+export function AminoAcidStructure({ name, notation = 'skeletal', className = 'aa-structure' }) {
+  const g = buildAminoAcid(name, notation)
   if (!g) return null
   // Shared width fixes the scale; own height keeps the card from being
   // mostly blank for the small residues.
   const s = aminoSpan()
   return (
     <svg
-      viewBox={`${s.x} ${g.view.y} ${s.w} ${g.view.h}`}
+      viewBox={`${Math.min(s.x, g.view.x)} ${g.view.y} ${Math.max(s.w, g.view.w)} ${g.view.h}`}
       className={className}
       preserveAspectRatio="xMidYMid meet"
       role="img"

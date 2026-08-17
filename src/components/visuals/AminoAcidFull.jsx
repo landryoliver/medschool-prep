@@ -1,22 +1,28 @@
 import { AminoAcidStructure } from './SideChainStructure.jsx'
 
 /**
- * The whole residue, drawn once.
+ * The whole residue, drawn once, in whichever notation is selected.
  *
  * This used to be a generic backbone diagram with a boxed "R", stacked above
  * a second box containing the side chain drawn at its own scale in its own
  * style. One molecule shown as two disconnected pictures, and the reader had
- * to mentally paste R into the slot. Now the side chain is drawn where it
- * actually attaches, in the same coordinate space and at the same size as
- * everything else, and every residue shares one frame so they are comparable.
+ * to mentally paste R into the slot.
  *
- * The condensed formula stays as a caption: it is still the fastest way to
- * confirm what you are looking at once you have recognised the shape.
+ * Two notations, because the two courses use two:
+ *
+ *   skeletal  vertices are carbons, hydrogens on carbon implied. What
+ *             organic chemistry drills everywhere, and what the MCAT puts
+ *             on the page alongside Fischer projections.
+ *   written   every carbon spelled out, CH₂ stacked vertically. How the
+ *             twenty appear in a biochemistry chart, and in the amino acid
+ *             chapter of an organic textbook.
+ *
+ * Rings are drawn as rings either way; nobody writes benzene out as a chain.
  */
-export default function AminoAcidFull({ aa, hideName = false }) {
+export default function AminoAcidFull({ aa, hideName = false, notation = 'skeletal' }) {
   return (
     <figure className="aaf">
-      <AminoAcidStructure name={aa.name} />
+      <AminoAcidStructure name={aa.name} notation={notation} />
       <figcaption className="aaf-caption">
         {!hideName && <span className="aaf-name">{aa.name}</span>}
         {/* The condensed formula, not the group's name. "isopropyl" and

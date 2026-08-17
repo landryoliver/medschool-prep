@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import aminoAcids from '../data/genchem/aminoAcids.json'
 import AminoAcidFull from './visuals/AminoAcidFull.jsx'
 import LadderDrill from './LadderDrill.jsx'
+import { useNotation } from '../lib/useNotation.js'
+import NotationToggle from './NotationToggle.jsx'
 
 /**
  * A real flashcard deck: flip to study, then drill at two difficulties.
@@ -55,6 +57,7 @@ export default function Flashcards({ onDone }) {
   const [typed, setTyped] = useState('')
   const [result, setResult] = useState(null) // null | 'right' | 'wrong'
   const [score, setScore] = useState({ right: 0, wrong: 0 })
+  const [notation, setNotation] = useNotation()
 
   // Reverse only applies to Study; the graded modes always ask for the
   // name, because that is the direction an exam tests.
@@ -170,6 +173,7 @@ export default function Flashcards({ onDone }) {
           ? 'Read the name, picture the side chain, then tap to check what it looks like.'
           : MODES.find((m) => m.id === mode).hint}
       </p>
+      <NotationToggle notation={notation} onChange={setNotation} />
 
       {mode === 'flip' && (
         <div className="seg wide-seg">
@@ -210,7 +214,7 @@ export default function Flashcards({ onDone }) {
             <p className="muted fc-prompt-ask">Picture the side chain, then tap to check.</p>
           </div>
         ) : (
-          <AminoAcidFull aa={card} hideName={!(flipped || result || reversed)} />
+          <AminoAcidFull aa={card} hideName={!(flipped || result || reversed)} notation={notation} />
         )}
 
         {(flipped || result) && (

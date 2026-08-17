@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import aminoAcids from '../data/genchem/aminoAcids.json'
 import MNEMONICS from '../data/genchem/aminoAcidMnemonics.json'
 import AminoAcidFull from './visuals/AminoAcidFull.jsx'
+import { useNotation } from '../lib/useNotation.js'
+import NotationToggle from './NotationToggle.jsx'
 
 /**
  * Learn one, identify it, learn the next, identify both — and so on to
@@ -55,6 +57,7 @@ export default function LadderDrill({ onDone }) {
   const [missed, setMissed] = useState([])
   const [result, setResult] = useState(null)
   const [retry, setRetry] = useState(false)
+  const [notation, setNotation] = useNotation()
 
   useEffect(() => {
     try {
@@ -173,6 +176,7 @@ export default function LadderDrill({ onDone }) {
             ? 'Start with one. Learn it, name it, then a second one joins it — and so on to twenty.'
             : `Number ${stage}. Learn this one, then name it against the ${stage - 1} you already have.`}
         </p>
+        <NotationToggle notation={notation} onChange={setNotation} />
         <div className="card ladder-learn" style={{ borderTop: `3px solid ${CLASS_COLOR[fresh.class]}` }}>
           <div className="ladder-new">New</div>
           <div className="aa-head">
@@ -181,7 +185,7 @@ export default function LadderDrill({ onDone }) {
               {fresh.three} · {fresh.one}
             </span>
           </div>
-          <AminoAcidFull aa={fresh} />
+          <AminoAcidFull aa={fresh} notation={notation} />
           <div className="aa-facts">
             <span style={{ color: CLASS_COLOR[fresh.class] }}>{fresh.class}</span>
             <span className="muted">{fresh.pKaR != null ? `pKa ${fresh.pKaR}` : 'no ionizable side chain'}</span>
@@ -212,7 +216,7 @@ export default function LadderDrill({ onDone }) {
           : `Which of your ${stage} is this?`}
       </p>
       <div className="card flashcard" style={{ borderTop: `3px solid ${CLASS_COLOR[card.class]}` }}>
-        <AminoAcidFull aa={card} hideName={!result} />
+        <AminoAcidFull aa={card} hideName={!result} notation={notation} />
       </div>
 
       {!result && (

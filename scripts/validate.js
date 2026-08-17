@@ -11,6 +11,7 @@ import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
 import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
 import SideChainStructure, { buildSideChain, buildAminoAcid, labelBox, aminoSpan } from '../src/components/visuals/SideChainStructure.jsx'
+import { parseFormula as parseFormulaLib } from '../src/lib/chem/formula.js'
 import Flashcards from '../src/components/Flashcards.jsx'
 import GroupPrimer from '../src/components/GroupPrimer.jsx'
 import PkaLadder from '../src/components/PkaLadder.jsx'
@@ -536,10 +537,12 @@ console.log('\n=== Reference data ===')
     // Both geometries: the side chain alone, and the whole residue that the
     // cards actually display. Adding the backbone to the same space can
     // create a crossing or a cramped angle that the side chain never had.
-    const geometries = aa.flatMap((a) => [
-      [a.name, buildSideChain(a.name)],
-      [`${a.name} (whole residue)`, buildAminoAcid(a.name)],
-    ])
+    const geometries = aa.flatMap((a) =>
+      ['skeletal', 'written'].flatMap((n) => [
+        [`${a.name} side chain, ${n}`, buildSideChain(a.name, n)],
+        [`${a.name} whole residue, ${n}`, buildAminoAcid(a.name, n)],
+      ]),
+    )
     for (const [label, g] of geometries) {
       const a = { name: label }
       if (!g) { fail(label + ': no geometry'); crossBad++; continue }
@@ -583,7 +586,7 @@ console.log('\n=== Reference data ===')
         }
       }
     }
-    if (!crossBad) console.log('  ok  40 structures (side chain + whole residue): no crossings, no bond pair under 45°, no label over a bond')
+    if (!crossBad) console.log('  ok  80 structures (side chain + residue, skeletal + written): no crossings, no bond pair under 45°, no label over a bond')
   }
 
   // Clean geometry is not the same as correct chemistry: a drawing with one
@@ -623,18 +626,36 @@ console.log('\n=== Reference data ===')
     for (const a of aa) {
       const exp = EXPECTED[a.name]
       if (!exp) { fail(`no expected composition for ${a.name}`); compBad++; continue }
-      const g = buildSideChain(a.name)
-      const got = { C: 0, N: 0, O: 0, S: 0, H: 0 }
-      for (const at of g.atoms) {
-        if (at.element === 'Cα') continue // backbone, drawn only for context
-        if (got[at.element] === undefined) { fail(`${a.name}: drawn atom "${at.element}" is not an element this check knows`); compBad++; continue }
-        got[at.element]++
-      }
-      for (const el of ['C', 'N', 'O', 'S', 'H']) {
-        const want = exp[el] ?? 0
-        if (got[el] !== want) {
-          fail(`${a.name}: structure draws ${got[el]} ${el}, but the side chain has ${want}`)
-          compBad++
+      // Both notations must depict the same molecule. The written-out form
+      // states hydrogens that the skeletal form leaves implied, so only
+      // C/N/O/S are comparable across the two — but those are exactly the
+      // atoms that tell the residues apart.
+      for (const notation of ['skeletal', 'written']) {
+        // The side chain alone — the composed residue would also count the
+        // backbone's own C, N and two O, which are not part of R.
+        const g = buildSideChain(a.name, notation)
+        for (const el of ['C', 'N', 'O', 'S']) {
+          const want = exp[el] ?? 0
+          if (g.composition[el] !== want) {
+            fail(`${a.name} (${notation}): structure draws ${g.composition[el]} ${el}, but the side chain has ${want}`)
+            compBad++
+          }
+        }
+
+        // Two atoms in the same place means the structure has folded back
+        // onto itself. The atom count still comes out right, so the
+        // composition check above passes and the drawing is still nonsense.
+        for (let i = 0; i < g.atoms.length; i++) {
+          for (let j = i + 1; j < g.atoms.length; j++) {
+            const d = Math.hypot(g.atoms[i].x - g.atoms[j].x, g.atoms[i].y - g.atoms[j].y)
+            if (d < 13) {
+              fail(
+                `${a.name} (${notation}): two atoms only ${d.toFixed(1)} apart at ` +
+                  `(${g.atoms[i].x.toFixed(0)},${g.atoms[i].y.toFixed(0)}) — the structure overlaps itself`,
+              )
+              compBad++
+            }
+          }
         }
       }
 
@@ -669,21 +690,6 @@ console.log('\n=== Reference data ===')
         }
       }
 
-      // Two atoms in the same place means the structure has folded back onto
-      // itself. The atom count still comes out right, so the composition
-      // check above passes and the drawing is still nonsense.
-      for (let i = 0; i < g.atoms.length; i++) {
-        for (let j = i + 1; j < g.atoms.length; j++) {
-          const d = Math.hypot(g.atoms[i].x - g.atoms[j].x, g.atoms[i].y - g.atoms[j].y)
-          if (d < 13) {
-            fail(
-              `${a.name}: two atoms only ${d.toFixed(1)} apart at ` +
-                `(${g.atoms[i].x.toFixed(0)},${g.atoms[i].y.toFixed(0)}) — the structure overlaps itself`,
-            )
-            compBad++
-          }
-        }
-      }
     }
     if (!compBad) console.log('  ok  20 structures and their captions match the residue formulas atom for atom')
   }
