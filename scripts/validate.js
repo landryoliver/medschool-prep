@@ -10,7 +10,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
 import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
-import SideChainStructure, { buildSideChain, labelBox } from '../src/components/visuals/SideChainStructure.jsx'
+import SideChainStructure, { buildSideChain, buildAminoAcid, labelBox, aminoSpan } from '../src/components/visuals/SideChainStructure.jsx'
 import Flashcards from '../src/components/Flashcards.jsx'
 import GroupPrimer from '../src/components/GroupPrimer.jsx'
 import PkaLadder from '../src/components/PkaLadder.jsx'
@@ -491,9 +491,16 @@ console.log('\n=== Reference data ===')
     }
 
     let crossBad = 0
-    for (const a of aa) {
-      const g = buildSideChain(a.name)
-      if (!g) { fail(a.name + ': no side-chain geometry'); crossBad++; continue }
+    // Both geometries: the side chain alone, and the whole residue that the
+    // cards actually display. Adding the backbone to the same space can
+    // create a crossing or a cramped angle that the side chain never had.
+    const geometries = aa.flatMap((a) => [
+      [a.name, buildSideChain(a.name)],
+      [`${a.name} (whole residue)`, buildAminoAcid(a.name)],
+    ])
+    for (const [label, g] of geometries) {
+      const a = { name: label }
+      if (!g) { fail(label + ': no geometry'); crossBad++; continue }
       for (let i = 0; i < g.bonds.length; i++) {
         for (let j = i + 1; j < g.bonds.length; j++) {
           const s = g.bonds[i]
@@ -534,7 +541,7 @@ console.log('\n=== Reference data ===')
         }
       }
     }
-    if (!crossBad) console.log('  ok  20 side-chain structures: no crossing bonds, no bond pair under 45°, no label over a bond')
+    if (!crossBad) console.log('  ok  40 structures (side chain + whole residue): no crossings, no bond pair under 45°, no label over a bond')
   }
 
   // Clean geometry is not the same as correct chemistry: a drawing with one

@@ -47,6 +47,15 @@ function trimFor(box, d) {
 
 const DOWN_RIGHT = { x: 0.5, y: 0.866 }
 const DOWN_LEFT = { x: -0.5, y: 0.866 }
+const DOWN = { x: 0, y: 1 }
+const UP = { x: 0, y: -1 }
+const LEFT = { x: -1, y: 0 }
+const RIGHT = { x: 1, y: 0 }
+
+// The written groups either side of the alpha carbon need a longer bond than
+// a skeletal one, because the text itself eats most of the length.
+const BACKBONE = BOND * 2.1
+const LABEL_SIZE = 13
 
 const unit = (x, y) => {
   const m = Math.hypot(x, y) || 1
@@ -122,11 +131,16 @@ function fusedRing(a, b, awayFrom, sides) {
   return { pts, centre, r }
 }
 
+export const key = (p) => `${Math.round(p.x)},${Math.round(p.y)}`
+
 /**
- * Builds the drawing as plain data: bonds and labels in one coordinate
- * space, plus the viewBox that fits them.
+ * Collects the side chain as raw parts, alpha carbon at the origin, so the
+ * backbone can be added to the SAME coordinate space before anything is
+ * trimmed or measured. Drawing R separately from the molecule it belongs to
+ * produced two pictures at two different scales sitting in one card, which
+ * is exactly what these cards exist to avoid.
  */
-export function buildSideChain(name) {
+function collectSideChain(name) {
   const spec = SHAPES[name]
   if (!spec) return null
 
@@ -139,49 +153,61 @@ export function buildSideChain(name) {
   // Bond lengths are trimmed at labelled atoms so the line stops at the
   // letter instead of running through it.
   const labelled = new Map()
-  const key = (p) => `${Math.round(p.x)},${Math.round(p.y)}`
   const label = (p, text, opts = {}) => {
-    const size = opts.size ?? 13
+    const size = opts.size ?? LABEL_SIZE
     labels.push({ x: p.x, y: p.y, text, size, muted: !!opts.muted })
     labelled.set(key(p), { box: labelBox(text, size), text })
   }
 
+  // The alpha carbon is a bare vertex, as any carbon is in skeletal
+  // notation. It used to carry a "Cα" label, which on a viewBox fitted to
+  // alanine's tiny structure scaled up to something the size of the card.
   const alpha = { x: 0, y: 0 }
-  label(alpha, 'Cα', { size: 11, muted: true })
+  const parts = { spec, bonds, labels, circles, labelled, bond, label, alpha }
 
   if (spec.kind === 'atom') {
     // Glycine: the whole side chain is one hydrogen.
-    const h = step(alpha, DOWN_RIGHT)
+    const h = step(alpha, DOWN)
     bond(alpha, h)
     label(h, spec.label)
-    return finish(name, bonds, labels, circles, labelled, key)
+    return parts
   }
 
   if (spec.kind === 'proline') {
     // The side chain closes back onto the backbone nitrogen, so the alpha
-    // carbon is IN the ring rather than hanging off it.
-    const { pts } = ringAt(alpha, DOWN_RIGHT, 5)
+    // carbon is IN the ring rather than hanging off it. The ring nitrogen is
+    // therefore the backbone amine — the composer labels it, and skips the
+    // separate amine group it draws for every other residue.
+    // Tilted off vertical, because proline is the one residue whose alpha
+    // carbon carries TWO ring bonds. Hanging the ring straight down puts one
+    // of them 36° from the carboxylate, where the two lines read as one. The
+    // tilt swings the ring into the space the amino group occupies on every
+    // other residue — which is where it belongs, since proline's ring
+    // nitrogen IS that amino group.
+    const { pts } = ringAt(alpha, rot(DOWN, 19), 5)
     for (let i = 0; i < 5; i++) bond(pts[i], pts[(i + 1) % 5])
-    // Labelling both Cα and N inside the ring is the whole point: proline is
-    // the only residue whose side chain loops back onto the backbone
-    // nitrogen, which is why it kinks a helix.
     label(pts[4], 'N')
-    return finish(name, bonds, labels, circles, labelled, key)
+    parts.prolineN = pts[4]
+    return parts
   }
 
-  // --- the zigzag backbone of the side chain ---------------------------
+  // --- the side chain proper -------------------------------------------
+  // The first bond drops straight down from the alpha carbon, so the four
+  // things attached to it sit at 0/90/180/270 degrees. Starting the zigzag
+  // immediately put the side chain 30 degrees from the carboxylate and the
+  // alpha carbon looked like a fan.
   const chain = [alpha]
   const dirs = []
   for (let i = 0; i < spec.carbons; i++) {
-    const d = i % 2 === 0 ? DOWN_RIGHT : DOWN_LEFT
+    const d = i === 0 ? DOWN : i % 2 === 1 ? DOWN_RIGHT : DOWN_LEFT
     dirs.push(d)
     chain.push(step(chain[chain.length - 1], d))
   }
   for (let i = 0; i < chain.length - 1; i++) bond(chain[i], chain[i + 1])
 
   let last = chain[chain.length - 1]
-  let lastDir = dirs[dirs.length - 1] ?? DOWN_RIGHT
-  const nextDir = () => flip(lastDir)
+  let lastDir = dirs[dirs.length - 1] ?? DOWN
+  const nextDir = () => (lastDir === DOWN ? DOWN_RIGHT : flip(lastDir))
 
   // Methyl branches: a bare line end IS a methyl in skeletal notation, so
   // these get a bond and nothing written.
@@ -323,13 +349,65 @@ export function buildSideChain(name) {
     }
   }
 
-  return finish(name, bonds, labels, circles, labelled, key)
+  return parts
+}
+
+/** The side chain on its own, alpha carbon at the origin. */
+export function buildSideChain(name) {
+  const p = collectSideChain(name)
+  if (!p) return null
+  return finish(name, p.bonds, p.labels, p.circles, p.labelled)
+}
+
+/**
+ * The whole residue as ONE structure: amino group, carboxylate, the alpha
+ * hydrogen and the real side chain, all in a single coordinate space at a
+ * single scale.
+ *
+ * This replaces a generic backbone diagram with a boxed "R" sitting above a
+ * separately drawn, separately scaled side chain. Two pictures of one
+ * molecule, in different sizes and styles, made the reader assemble them
+ * mentally — and the fitted viewBox meant alanine's one-bond side chain was
+ * magnified until its label dwarfed the card.
+ */
+export function buildAminoAcid(name) {
+  const p = collectSideChain(name)
+  if (!p) return null
+  const { alpha, bond, label, labelled } = p
+
+  // The alpha hydrogen, straight up, and the carboxylate to the right. Both
+  // are written rather than drawn out: every residue shares them, so they
+  // are context for the side chain, not the thing being learned.
+  const h = step(alpha, UP, BOND * 0.95)
+  bond(alpha, h)
+  label(h, 'H')
+
+  const coo = step(alpha, RIGHT, BACKBONE)
+  bond(alpha, coo)
+  label(coo, 'COO⁻')
+
+  if (p.prolineN) {
+    // Proline's ring nitrogen IS the backbone amine, so the existing "N" is
+    // upgraded in place rather than a second amine being drawn beside it.
+    // It is a secondary amine — two carbons, one hydrogen — which is why
+    // proline cannot donate the backbone N–H that a helix needs.
+    const k = key(p.prolineN)
+    const existing = p.labels.find((l) => key(l) === k)
+    existing.text = 'H₂N⁺'
+    labelled.set(k, { box: labelBox(existing.text, existing.size), text: existing.text })
+  } else {
+    const n = step(alpha, LEFT, BACKBONE)
+    bond(alpha, n)
+    label(n, 'H₃N⁺')
+  }
+
+  return finish(name, p.bonds, p.labels, p.circles, labelled)
 }
 
 const near = (a, b) => Math.hypot(a.x - b.x, a.y - b.y) < 1
 
 /** Trims bonds at labelled atoms and computes the fitted viewBox. */
-function finish(name, bonds, labels, circles, labelled, key) {
+function finish(name, bonds, labels, circles, labelled) {
   const trimmed = bonds.map(({ a, b, double, inner }) => {
     const d = dirTo(a, b)
     const boxA = labelled.get(key(a))?.box
@@ -372,6 +450,10 @@ function finish(name, bonds, labels, circles, labelled, key) {
   // that IS skeletal notation — so this recovers what the drawing actually
   // claims the side chain is made of, which validation then checks against
   // the residue's known composition.
+  // The alpha carbon sits at the origin and belongs to the backbone, not the
+  // side chain, so it is tagged rather than counted. It carries no label now
+  // that the whole residue is drawn as one structure.
+  const ALPHA = key({ x: 0, y: 0 })
   const atoms = []
   const seen = new Set()
   for (const { a, b } of bonds) {
@@ -379,7 +461,7 @@ function finish(name, bonds, labels, circles, labelled, key) {
       const k = key(p)
       if (seen.has(k)) continue
       seen.add(k)
-      atoms.push({ x: p.x, y: p.y, element: elementOf(labelled.get(k)?.text) })
+      atoms.push({ x: p.x, y: p.y, element: k === ALPHA ? 'Cα' : elementOf(labelled.get(k)?.text) })
     }
   }
 
@@ -399,6 +481,33 @@ function elementOf(text) {
   if (!text) return 'C'
   if (text.startsWith('Cα')) return 'Cα'
   return text[0]
+}
+
+/**
+ * The horizontal extent shared by all twenty.
+ *
+ * A per-residue fitted box scales every card differently: alanine's single
+ * bond gets magnified until its label is the size of the card, tryptophan's
+ * ring system gets shrunk, and no two cards can be compared. Sharing the
+ * WIDTH fixes the scale — the backbone is identical on all twenty, so it
+ * dominates the width — which keeps text one size everywhere and lets
+ * glycine genuinely look smaller than tryptophan.
+ *
+ * Height stays per-residue. Sharing that too left a small residue sitting in
+ * a card that was 60% empty, since the frame had to fit arginine.
+ */
+let SPAN = null
+export function aminoSpan() {
+  if (SPAN) return SPAN
+  let minX = Infinity
+  let maxX = -Infinity
+  for (const n of Object.keys(SHAPES)) {
+    const v = buildAminoAcid(n).view
+    minX = Math.min(minX, v.x)
+    maxX = Math.max(maxX, v.x + v.w)
+  }
+  SPAN = { x: minX, w: maxX - minX }
+  return SPAN
 }
 
 /** Two parallel lines for a double bond; `inner` keeps one inside a ring. */
@@ -422,25 +531,10 @@ function doubleBondLines(s) {
   return [{ x1: ax, y1: ay, x2: bx, y2: by }]
 }
 
-/**
- * Sized by CSS unless a caller asks for something specific. A fixed 128px
- * box left the structure as a thumbnail floating in a card several times
- * wider than itself, which is exactly the thing these cards exist to show.
- */
-export default function SideChainStructure({ name, width, height, className = 'side-chain' }) {
-  const g = buildSideChain(name)
-  if (!g) return null
-
+/** The bonds, rings and labels of a finished geometry, as SVG. */
+function draw(g) {
   return (
-    <svg
-      viewBox={`${g.view.x} ${g.view.y} ${g.view.w} ${g.view.h}`}
-      width={width}
-      height={height}
-      className={className}
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-      aria-label={`Skeletal structure of the ${name} side chain`}
-    >
+    <>
       {g.bonds.map((s, i) =>
         s.double ? (
           doubleBondLines(s).map((l, k) => (
@@ -476,6 +570,48 @@ export default function SideChainStructure({ name, width, height, className = 's
           {l.text}
         </text>
       ))}
+    </>
+  )
+}
+
+/**
+ * The complete residue: amino group, carboxylate, alpha hydrogen and the
+ * real side chain, in one drawing at the scale every other residue uses.
+ */
+export function AminoAcidStructure({ name, className = 'aa-structure' }) {
+  const g = buildAminoAcid(name)
+  if (!g) return null
+  // Shared width fixes the scale; own height keeps the card from being
+  // mostly blank for the small residues.
+  const s = aminoSpan()
+  return (
+    <svg
+      viewBox={`${s.x} ${g.view.y} ${s.w} ${g.view.h}`}
+      className={className}
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label={`Skeletal structure of ${name}`}
+    >
+      {draw(g)}
+    </svg>
+  )
+}
+
+/** The side chain alone, fitted to its own box — used where R is the subject. */
+export default function SideChainStructure({ name, width, height, className = 'side-chain' }) {
+  const g = buildSideChain(name)
+  if (!g) return null
+  return (
+    <svg
+      viewBox={`${g.view.x} ${g.view.y} ${g.view.w} ${g.view.h}`}
+      width={width}
+      height={height}
+      className={className}
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label={`Skeletal structure of the ${name} side chain`}
+    >
+      {draw(g)}
     </svg>
   )
 }

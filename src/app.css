@@ -1690,36 +1690,38 @@ button.ghost.small {
   align-items: center;
 }
 
-.aaf-side {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  justify-items: center;
+/* One structure, one frame. Height comes from the shared viewBox aspect
+   ratio, so every residue is drawn at the same scale and glycine genuinely
+   looks smaller than tryptophan instead of being magnified to match it. */
+.aa-structure {
+  display: block;
   width: 100%;
-  gap: 0.15rem;
-  margin-top: -0.3rem;
-  padding: 0.5rem 0.7rem 0.6rem;
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  background: rgba(56, 189, 248, 0.07);
-  border-radius: 0.6rem;
+  max-width: 340px;
+  height: auto;
+  margin: 0 auto;
 }
 
-/* The structure is the point of the card, so it takes the width it can get
-   rather than sitting as a thumbnail between two labels. */
 .side-chain {
   display: block;
   width: 100%;
-  max-width: 250px;
-  height: 200px;
+  max-width: 220px;
+  height: 150px;
 }
 
-.aaf-eq {
-  justify-self: start;
+.aaf-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin-top: 0.35rem;
+}
+
+.aaf-name {
   color: var(--accent);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .aaf-formula {
-  justify-self: end;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
 }

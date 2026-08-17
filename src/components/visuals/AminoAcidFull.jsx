@@ -1,28 +1,29 @@
-import AminoAcidDiagram from './AminoAcidDiagram.jsx'
-import SideChainStructure from './SideChainStructure.jsx'
+import { AminoAcidStructure } from './SideChainStructure.jsx'
 
 /**
- * The backbone with R, then R drawn out properly.
+ * The whole residue, drawn once.
  *
- * Showing the side chain as "–CH₂CH₂COO⁻" gave a formula to read rather
- * than a shape to recognise, which is the wrong currency: exams put
- * skeletal structures on the page, and a course that asks you to draw the
- * twenty is asking for shapes. The formula stays underneath as a caption,
- * since it is still the fastest way to check what you are looking at.
+ * This used to be a generic backbone diagram with a boxed "R", stacked above
+ * a second box containing the side chain drawn at its own scale in its own
+ * style. One molecule shown as two disconnected pictures, and the reader had
+ * to mentally paste R into the slot. Now the side chain is drawn where it
+ * actually attaches, in the same coordinate space and at the same size as
+ * everything else, and every residue shares one frame so they are comparable.
+ *
+ * The condensed formula stays as a caption: it is still the fastest way to
+ * confirm what you are looking at once you have recognised the shape.
  */
 export default function AminoAcidFull({ aa, hideName = false }) {
   const cyclic = aa.name === 'Proline'
   return (
-    <div className="aaf">
-      <AminoAcidDiagram sideChain="R" name={hideName ? '?' : aa.name} cyclic={false} />
-      {/* Label, structure and caption stack instead of sitting in a row, so
-          the drawing gets the full width of the card rather than whatever is
-          left over between two pieces of text. */}
-      <div className="aaf-side">
-        <span className="aaf-eq">R =</span>
-        <SideChainStructure name={aa.name} />
-        <span className="muted aaf-formula">{cyclic ? 'ring closes onto the backbone N' : aa.sideChain}</span>
-      </div>
-    </div>
+    <figure className="aaf">
+      <AminoAcidStructure name={aa.name} />
+      <figcaption className="aaf-caption">
+        {!hideName && <span className="aaf-name">{aa.name}</span>}
+        <span className="muted aaf-formula">
+          R = {cyclic ? 'ring closes onto the backbone N' : aa.sideChain}
+        </span>
+      </figcaption>
+    </figure>
   )
 }
