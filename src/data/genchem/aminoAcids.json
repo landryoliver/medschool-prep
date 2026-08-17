@@ -10,7 +10,8 @@
     "essential": false,
     "note": "The smallest amino acid, and the only achiral one — its alpha carbon carries two hydrogens. Its tiny side chain gives backbones unusual flexibility.",
     "groupName": "just a hydrogen",
-    "groupWhat": "There is no side chain at all — only an H, which is why glycine is the smallest and the only achiral one."
+    "groupWhat": "There is no side chain at all — only an H, which is why glycine is the smallest and the only achiral one.",
+    "formula": "–H"
   },
   {
     "name": "Alanine",
@@ -23,7 +24,8 @@
     "essential": false,
     "note": "A simple methyl group — the reference point for a small hydrophobic side chain.",
     "groupName": "a methyl group",
-    "groupWhat": "One carbon with its hydrogens. The simplest possible side chain, and completely unreactive."
+    "groupWhat": "One carbon with its hydrogens. The simplest possible side chain, and completely unreactive.",
+    "formula": "–CH₃"
   },
   {
     "name": "Valine",
@@ -36,7 +38,8 @@
     "essential": true,
     "note": "Branched at the beta carbon. Branched hydrophobics cluster in protein cores.",
     "groupName": "a branched alkyl",
-    "groupWhat": "Three carbons branching at the first one. Pure hydrocarbon, so it hides from water."
+    "groupWhat": "Three carbons branching at the first one. Pure hydrocarbon, so it hides from water.",
+    "formula": "–CH(CH₃)₂"
   },
   {
     "name": "Leucine",
@@ -49,7 +52,8 @@
     "essential": true,
     "note": "Branched and strongly hydrophobic; very common in membrane-spanning helices.",
     "groupName": "a branched alkyl",
-    "groupWhat": "Four carbons with a branch near the end. Pure hydrocarbon and strongly water-avoiding."
+    "groupWhat": "Four carbons with a branch near the end. Pure hydrocarbon and strongly water-avoiding.",
+    "formula": "–CH₂CH(CH₃)₂"
   },
   {
     "name": "Isoleucine",
@@ -62,7 +66,8 @@
     "essential": true,
     "note": "One of two amino acids with a second stereocenter in the side chain (threonine is the other).",
     "groupName": "a branched alkyl",
-    "groupWhat": "Four carbons branched at the first. Like valine and leucine, hydrocarbon only."
+    "groupWhat": "Four carbons branched at the first. Like valine and leucine, hydrocarbon only.",
+    "formula": "–CH(CH₃)CH₂CH₃"
   },
   {
     "name": "Methionine",
@@ -75,7 +80,8 @@
     "essential": true,
     "note": "Contains sulfur as a thioether. Always the first amino acid of a new protein — AUG is the start codon.",
     "groupName": "a thioether",
-    "groupWhat": "A sulfur sitting BETWEEN two carbons. Unlike a thiol it has no S–H, so it cannot form disulfides."
+    "groupWhat": "A sulfur sitting BETWEEN two carbons. Unlike a thiol it has no S–H, so it cannot form disulfides.",
+    "formula": "–CH₂CH₂SCH₃"
   },
   {
     "name": "Proline",
@@ -88,7 +94,8 @@
     "essential": false,
     "note": "Its side chain loops back to the backbone nitrogen, making it a secondary amine. That ring locks rotation, so proline kinks helices and breaks sheets.",
     "groupName": "a ring back to the backbone",
-    "groupWhat": "The side chain loops around and bonds to the backbone nitrogen, locking the geometry rigid."
+    "groupWhat": "The side chain loops around and bonds to the backbone nitrogen, locking the geometry rigid.",
+    "formula": "–CH₂CH₂CH₂–"
   },
   {
     "name": "Phenylalanine",
@@ -101,7 +108,8 @@
     "essential": true,
     "note": "Aromatic and hydrophobic — a plain benzene ring with no polar group on it.",
     "groupName": "a benzene ring",
-    "groupWhat": "A flat six-carbon aromatic ring with nothing polar on it, so it behaves as pure grease."
+    "groupWhat": "A flat six-carbon aromatic ring with nothing polar on it, so it behaves as pure grease.",
+    "formula": "–CH₂C₆H₅"
   },
   {
     "name": "Tryptophan",
@@ -114,7 +122,8 @@
     "essential": true,
     "note": "The largest amino acid. Its indole ring dominates a protein's UV absorbance at 280 nm, which is how protein concentration is measured.",
     "groupName": "an indole",
-    "groupWhat": "Two fused aromatic rings — the largest side chain of the twenty."
+    "groupWhat": "Two fused aromatic rings — the largest side chain of the twenty.",
+    "formula": "–CH₂C₈H₆N"
   },
   {
     "name": "Serine",
@@ -127,7 +136,8 @@
     "essential": false,
     "note": "A small hydroxyl. Serine is a common active-site nucleophile and a frequent phosphorylation site.",
     "groupName": "a hydroxyl, –OH",
-    "groupWhat": "An oxygen carrying a hydrogen: the same group that makes something an alcohol. It hydrogen bonds, and enzymes often use it as a nucleophile."
+    "groupWhat": "An oxygen carrying a hydrogen: the same group that makes something an alcohol. It hydrogen bonds, and enzymes often use it as a nucleophile.",
+    "formula": "–CH₂OH"
   },
   {
     "name": "Threonine",
@@ -140,7 +150,8 @@
     "essential": true,
     "note": "A hydroxyl on a secondary carbon; like isoleucine it has a second stereocenter. Also phosphorylated.",
     "groupName": "a hydroxyl, –OH",
-    "groupWhat": "The same alcohol group as serine, but on a carbon that also carries a methyl."
+    "groupWhat": "The same alcohol group as serine, but on a carbon that also carries a methyl.",
+    "formula": "–CH(OH)CH₃"
   },
   {
     "name": "Cysteine",
@@ -153,7 +164,8 @@
     "essential": false,
     "note": "Two cysteines oxidize to form a disulfide bridge — the only covalent crosslink in tertiary structure. Its thiol pKa of ~8.3 is low enough to be partly deprotonated and highly nucleophilic.",
     "groupName": "a thiol, –SH",
-    "groupWhat": "A sulfur carrying a hydrogen — sulfur sits directly below oxygen, so a thiol is the sulfur version of an alcohol. More acidic and far more reactive, and two of them join into a disulfide bridge."
+    "groupWhat": "A sulfur carrying a hydrogen — sulfur sits directly below oxygen, so a thiol is the sulfur version of an alcohol. More acidic and far more reactive, and two of them join into a disulfide bridge.",
+    "formula": "–CH₂SH"
   },
   {
     "name": "Tyrosine",
@@ -166,7 +178,8 @@
     "essential": false,
     "note": "Aromatic AND polar, because of the ring hydroxyl. Also a phosphorylation site, and contributes to absorbance at 280 nm.",
     "groupName": "a phenol",
-    "groupWhat": "A benzene ring carrying an –OH. Aromatic AND polar, because of that hydroxyl."
+    "groupWhat": "A benzene ring carrying an –OH. Aromatic AND polar, because of that hydroxyl.",
+    "formula": "–CH₂C₆H₄OH"
   },
   {
     "name": "Asparagine",
@@ -179,7 +192,8 @@
     "essential": false,
     "note": "The amide of aspartate. Amides are neutral — do not confuse it with the acidic form. Common N-linked glycosylation site.",
     "groupName": "an amide, –CONH₂",
-    "groupWhat": "A C=O bonded to a nitrogen. Amides are NEUTRAL — this is the amide version of aspartate, not an acid."
+    "groupWhat": "A C=O bonded to a nitrogen. Amides are NEUTRAL — this is the amide version of aspartate, not an acid.",
+    "formula": "–CH₂CONH₂"
   },
   {
     "name": "Glutamine",
@@ -192,7 +206,8 @@
     "essential": false,
     "note": "The amide of glutamate, and likewise neutral.",
     "groupName": "an amide, –CONH₂",
-    "groupWhat": "The same neutral amide as asparagine, one carbon further out. The amide version of glutamate."
+    "groupWhat": "The same neutral amide as asparagine, one carbon further out. The amide version of glutamate.",
+    "formula": "–CH₂CH₂CONH₂"
   },
   {
     "name": "Aspartate",
@@ -205,7 +220,8 @@
     "essential": false,
     "note": "Carboxylate side chain, pKa ~3.9 — well below physiological pH, so it is deprotonated and negative in the body.",
     "groupName": "a carboxylate, –COO⁻",
-    "groupWhat": "A carboxyl (–COOH) that has lost its proton. That is what makes it acidic and negatively charged in the body."
+    "groupWhat": "A carboxyl (–COOH) that has lost its proton. That is what makes it acidic and negatively charged in the body.",
+    "formula": "–CH₂COO⁻"
   },
   {
     "name": "Glutamate",
@@ -218,7 +234,8 @@
     "essential": false,
     "note": "One carbon longer than aspartate, otherwise the same story: negative at physiological pH.",
     "groupName": "a carboxylate, –COO⁻",
-    "groupWhat": "The same acidic group as aspartate, one carbon further from the backbone."
+    "groupWhat": "The same acidic group as aspartate, one carbon further from the backbone.",
+    "formula": "–CH₂CH₂COO⁻"
   },
   {
     "name": "Lysine",
@@ -231,7 +248,8 @@
     "essential": true,
     "note": "A long flexible chain ending in a primary amine, pKa ~10.5 — protonated and positive at physiological pH.",
     "groupName": "an amine, –NH₃⁺",
-    "groupWhat": "A long flexible chain ending in a nitrogen. Nitrogen grabs a proton, so it carries a positive charge at body pH."
+    "groupWhat": "A long flexible chain ending in a nitrogen. Nitrogen grabs a proton, so it carries a positive charge at body pH.",
+    "formula": "–(CH₂)₄NH₃⁺"
   },
   {
     "name": "Arginine",
@@ -244,7 +262,8 @@
     "essential": false,
     "note": "The most basic side chain, pKa ~12.5. Its guanidinium group is resonance-stabilized, so it stays positive under essentially all physiological conditions.",
     "groupName": "a guanidinium",
-    "groupWhat": "A nitrogen-rich group whose positive charge is spread over three nitrogens by resonance, so it stays charged under essentially all conditions."
+    "groupWhat": "A nitrogen-rich group whose positive charge is spread over three nitrogens by resonance, so it stays charged under essentially all conditions.",
+    "formula": "–(CH₂)₃NHC(NH₂)₂⁺"
   },
   {
     "name": "Histidine",
@@ -257,6 +276,7 @@
     "essential": true,
     "note": "The one to know cold: pKa ~6.0 sits near physiological pH, so histidine can gain or lose a proton under normal conditions. That makes it the workhorse of enzyme active sites and the only side chain that buffers well at pH 7.",
     "groupName": "an imidazole",
-    "groupWhat": "A five-membered ring containing two nitrogens. Its pKa of 6.0 sits near body pH, so it can pick up or hand off a proton — which is why it does the chemistry in so many enzymes."
+    "groupWhat": "A five-membered ring containing two nitrogens. Its pKa of 6.0 sits near body pH, so it can pick up or hand off a proton — which is why it does the chemistry in so many enzymes.",
+    "formula": "–CH₂C₃H₃N₂"
   }
 ]

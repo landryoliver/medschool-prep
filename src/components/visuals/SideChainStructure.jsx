@@ -209,12 +209,18 @@ function collectSideChain(name) {
   let lastDir = dirs[dirs.length - 1] ?? DOWN
   const nextDir = () => (lastDir === DOWN ? DOWN_RIGHT : flip(lastDir))
 
-  // Methyl branches: a bare line end IS a methyl in skeletal notation, so
-  // these get a bond and nothing written.
+  // A bare line end IS a methyl in skeletal notation — but only if you
+  // already read skeletal notation. To someone coming back to chemistry it
+  // looks like a line going nowhere, so every methyl is written out.
+  const branchedAt = new Set([...(spec.branches ?? []), ...(spec.branchLabels ?? [])].map((b) => b.at + 1))
   for (const b of spec.branches ?? []) {
     const v = chain[b.at + 1]
     const nbrs = [chain[b.at], chain[b.at + 2]].filter(Boolean)
-    for (const d of freeDirs(v, nbrs, b.count)) bond(v, step(v, d))
+    for (const d of freeDirs(v, nbrs, b.count)) {
+      const p = step(v, d)
+      bond(v, p)
+      label(p, 'CH₃')
+    }
   }
 
   // Labelled branches, e.g. threonine's hydroxyl.
@@ -348,6 +354,20 @@ function collectSideChain(name) {
       circles.push({ x: hc.x, y: hc.y, r: hr * 0.55 })
     }
   }
+
+  // Whatever the chain ends on, if nothing was attached to it, is a methyl.
+  // A vertex carrying branches is NOT one — valine's last chain carbon bears
+  // two methyls and is itself a CH.
+  let openEnd = null
+  if (spec.hetero) {
+    // Methionine: the chain resumes past the sulfur and ends on a methyl.
+    // Guarded on there actually being carbon after it, or the sulfur itself
+    // would get written CH₃.
+    if ((spec.afterHetero ?? 0) > 0) openEnd = last
+  } else if (!spec.terminal && !spec.carboxylate && !spec.amide && !spec.guanidinium && !spec.ring) {
+    if (!branchedAt.has(chain.length - 1)) openEnd = last
+  }
+  if (openEnd) label(openEnd, 'CH₃')
 
   return parts
 }

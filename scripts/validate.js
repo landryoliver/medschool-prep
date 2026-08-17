@@ -27,6 +27,48 @@ const fail = (msg) => {
   console.log('  FAIL: ' + msg)
 }
 
+const SUBSCRIPT = { '₀': 0, '₁': 1, '₂': 2, '₃': 3, '₄': 4, '₅': 5, '₆': 6, '₇': 7, '₈': 8, '₉': 9 }
+
+/**
+ * Counts C/H/N/O/S in a condensed formula like "–(CH₂)₃NHC(NH₂)₂⁺",
+ * handling parenthesised groups and their multipliers. The side-chain
+ * captions are checked against the structures with this, so a caption and
+ * a drawing cannot drift apart the way a hand-written pair would.
+ */
+function parseFormula(src) {
+  const s = [...src].filter((c) => !'–-⁺⁻ '.includes(c)).join('')
+  let i = 0
+  const readCount = () => {
+    let n = ''
+    while (i < s.length && SUBSCRIPT[s[i]] !== undefined) n += String(SUBSCRIPT[s[i++]])
+    return n === '' ? 1 : Number(n)
+  }
+  const parse = (depth) => {
+    const acc = { C: 0, H: 0, N: 0, O: 0, S: 0 }
+    while (i < s.length) {
+      const c = s[i]
+      if (c === '(') {
+        i++
+        const inner = parse(depth + 1)
+        const mult = readCount()
+        for (const k of Object.keys(acc)) acc[k] += inner[k] * mult
+      } else if (c === ')') {
+        if (depth === 0) throw new Error(`unbalanced ) in ${src}`)
+        i++
+        return acc
+      } else if ('CHNOS'.includes(c)) {
+        i++
+        acc[c] += readCount()
+      } else {
+        throw new Error(`unexpected "${c}" in ${src}`)
+      }
+    }
+    if (depth !== 0) throw new Error(`unbalanced ( in ${src}`)
+    return acc
+  }
+  return parse(0)
+}
+
 /**
  * Does a bond pass through the box a text label occupies? Sampled along the
  * segment rather than solved analytically — a label box is small and the
@@ -596,6 +638,37 @@ console.log('\n=== Reference data ===')
         }
       }
 
+      // The caption under each card states the condensed formula. It is
+      // written by hand, so it gets parsed and checked against the same
+      // composition the drawing is checked against — otherwise the picture
+      // and the words underneath it drift apart silently.
+      if (!a.formula) {
+        fail(`${a.name}: no condensed side-chain formula for the card caption`)
+        compBad++
+      } else {
+        let counted
+        try {
+          counted = parseFormula(a.formula)
+        } catch (e) {
+          fail(`${a.name}: formula "${a.formula}" will not parse — ${e.message}`)
+          compBad++
+        }
+        if (counted) {
+          // Proline is the one residue where the drawing and the formula
+          // legitimately differ: the nitrogen in its ring is the BACKBONE
+          // amine, so the structure shows an N that the side-chain formula
+          // has no business listing. Stated here rather than loosening the
+          // check, so any OTHER mismatch still fails.
+          const captionExp = a.name === 'Proline' ? { ...exp, N: 0 } : exp
+          for (const el of ['C', 'N', 'O', 'S']) {
+            if (counted[el] !== (captionExp[el] ?? 0)) {
+              fail(`${a.name}: caption "${a.formula}" has ${counted[el]} ${el}, but the side chain has ${captionExp[el] ?? 0}`)
+              compBad++
+            }
+          }
+        }
+      }
+
       // Two atoms in the same place means the structure has folded back onto
       // itself. The atom count still comes out right, so the composition
       // check above passes and the drawing is still nonsense.
@@ -612,7 +685,7 @@ console.log('\n=== Reference data ===')
         }
       }
     }
-    if (!compBad) console.log('  ok  20 side-chain structures match the residue formulas atom for atom')
+    if (!compBad) console.log('  ok  20 structures and their captions match the residue formulas atom for atom')
   }
 
   // The ladder introduces residues one at a time, in the order the three

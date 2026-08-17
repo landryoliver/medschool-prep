@@ -14,14 +14,17 @@ import { AminoAcidStructure } from './SideChainStructure.jsx'
  * confirm what you are looking at once you have recognised the shape.
  */
 export default function AminoAcidFull({ aa, hideName = false }) {
-  const cyclic = aa.name === 'Proline'
   return (
     <figure className="aaf">
       <AminoAcidStructure name={aa.name} />
       <figcaption className="aaf-caption">
         {!hideName && <span className="aaf-name">{aa.name}</span>}
+        {/* The condensed formula, not the group's name. "isopropyl" and
+            "benzyl (aromatic)" name a thing without saying what is in it,
+            which is no use to a reader who does not already know the word. */}
         <span className="muted aaf-formula">
-          R = {cyclic ? 'ring closes onto the backbone N' : aa.sideChain}
+          R = {aa.formula}
+          {aa.name === 'Proline' && ' , closing onto the backbone N'}
         </span>
       </figcaption>
     </figure>
