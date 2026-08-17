@@ -220,6 +220,18 @@ for (const topic of TOPICS) {
   for (const t of ids) {
     if (!covered.has(t)) fail(`topic "${t}" appears in no progression stage, so it is unreachable from the grouped home screen`)
   }
+  // Each subtitle hardcodes "Stage N", and the home screen renders the
+  // stages in array order. Reordering the array without renumbering leaves
+  // a block reading "Stage 4" sitting second on the page, which nothing
+  // else would catch — both the order and the label are individually valid.
+  progression.stages.forEach((stage, i) => {
+    const claimed = /^Stage (\d+)/.exec(stage.subtitle ?? '')
+    if (!claimed) {
+      fail(`progression stage "${stage.id}" has no "Stage N" subtitle to check against its position`)
+    } else if (Number(claimed[1]) !== i + 1) {
+      fail(`progression stage "${stage.id}" sits at position ${i + 1} but its subtitle says Stage ${claimed[1]}`)
+    }
+  })
 }
 
 console.log('\n=== Rendering visuals ===')

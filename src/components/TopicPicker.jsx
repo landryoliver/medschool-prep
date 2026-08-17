@@ -135,7 +135,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards }
         )}
         {topic.id === 'aminoacids' && (
           <button className="ghost" onClick={onCards}>
-            Cards
+            Flashcards
           </button>
         )}
       </div>
@@ -220,6 +220,15 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
       <button className="action-btn primary-action" onClick={onMixed}>
         <span className="action-title">Mixed review</span>
         <span className="action-sub">All topics, weighted toward your weak spots</span>
+      </button>
+
+      {/* The amino acid deck is the daily driver while biochemistry is
+          running, and it used to sit four stage-blocks down the page behind
+          a button labelled only "Cards". Pinned here so it costs no
+          scrolling and says what it actually does. */}
+      <button className="action-btn primary-action" onClick={onCards}>
+        <span className="action-title">Build the twenty</span>
+        <span className="action-sub">Learn one amino acid, name it, then add the next</span>
       </button>
 
       <div className="action-row">

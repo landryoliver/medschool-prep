@@ -14,9 +14,20 @@
       ]
     },
     {
+      "id": "biochem",
+      "title": "Before Biochem",
+      "subtitle": "Stage 2 — what biochemistry assumes on day one",
+      "why": "Biochemistry opens by using the twenty amino acids as vocabulary and never slows down for them again, and it reasons about protonation state constantly — whether a side chain is charged decides whether an enzyme works. Learn these before the course rather than alongside it, because lecture will assume them from the first week.",
+      "topics": [
+        "aminoacids",
+        "buffers",
+        "biomolecules"
+      ]
+    },
+    {
       "id": "language",
       "title": "Reading Organic Structures",
-      "subtitle": "Stage 2 — the notation the whole course is written in",
+      "subtitle": "Stage 3 — the notation the whole course is written in",
       "why": "From week one, lectures are drawn in line-angle structures with the carbons and hydrogens invisible. If decoding a drawing takes conscious effort, you spend your attention on notation instead of chemistry. This stage is mostly repetition, and it pays off more than any other.",
       "topics": [
         "skeletal",
@@ -28,24 +39,13 @@
     {
       "id": "reactivity",
       "title": "How Reactions Work",
-      "subtitle": "Stage 3 — the reasoning engine",
+      "subtitle": "Stage 4 — the reasoning engine",
       "why": "These four are what orgo actually tests. Almost every mechanism opens or closes with a proton transfer, is drawn with curved arrows, is explained by delocalization, and is argued over with energy diagrams. Get here and lecture becomes a second exposure rather than a first.",
       "topics": [
         "acidbase",
         "energy",
         "resonance",
         "arrows"
-      ]
-    },
-    {
-      "id": "biochem",
-      "title": "Before Biochem",
-      "subtitle": "Stage 4 — what biochemistry assumes on day one",
-      "why": "Biochemistry opens by using the twenty amino acids as vocabulary and never slows down for them again, and it reasons about protonation state constantly — whether a side chain is charged decides whether an enzyme works. Learn these before the course rather than alongside it, because lecture will assume them from the first week.",
-      "topics": [
-        "aminoacids",
-        "buffers",
-        "biomolecules"
       ]
     },
     {
