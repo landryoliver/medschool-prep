@@ -125,6 +125,16 @@ passed *vacuously* five separate times in one session:
 
 Corrupt the data, watch the check fail, restore. It costs a minute.
 
+**Break it with the real bug, not a plausible one.** A guard can fire
+correctly on damage you invent and still miss the thing it was written for.
+The side-chain drawings were fixed by adding a bonds-must-not-cross check;
+replaying the exact coordinates that had shipped showed it would have passed
+them, because the offending C=O never intersected the chain bond — it left
+the same atom 25° away and merely looked like one line. The check that
+actually catches it is a minimum angle between bonds at a shared atom. When
+fixing a bug, reconstruct the broken input and assert the new guard rejects
+*it*, not a substitute.
+
 ### 7. Verify appearance claims differently from correctness claims
 
 Validation proves diagram geometry is sound and answers are derivable. It
@@ -134,6 +144,16 @@ were all found from a single screenshot after six rounds of blind work.
 
 When changing anything visual, say plainly that it is unverified rather
 than implying it was checked.
+
+Line art is a partial exception, and worth exploiting. Where a diagram is
+built as geometry data rather than hand-written SVG, it can be rasterised to
+a character grid and *looked at* — `SideChainStructure` exports
+`buildSideChain`, and a throwaway script that plots its segments to ASCII
+(correcting for a terminal cell being twice as tall as it is wide, or every
+ring comes out stretched and reads as broken when it is not) shows the shape
+directly. That is how tryptophan's fused indole was confirmed. It settles
+topology and proportion; it still says nothing about colour, contrast,
+stroke weight, or size on a phone.
 
 ### 8. A drilled set must also be browsable
 
@@ -258,7 +278,14 @@ before investigating.
 Builds are reproducible: the footer build stamp comes from the git commit
 rather than the clock, so the same commit always produces the same bundle
 hash. That is what makes this check meaningful — verify a deploy landed by
-building locally and comparing the live hash against `dist/`:
+building locally and comparing the live hash against `dist/`.
+
+**Build after committing, not before.** The stamp reads `git rev-parse HEAD`,
+so a `dist/` produced before the commit carries the *parent* commit's stamp
+and can never match what CI built. This has already produced one false
+"deploy failed" report — the deploy was fine and the comparison was wrong.
+If the hashes differ, re-run `npm run build` at the pushed commit and compare
+again before investigating anything else.
 
 ```bash
 curl -s https://landryoliver.github.io/medschool-prep/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js'
