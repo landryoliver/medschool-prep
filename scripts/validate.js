@@ -10,7 +10,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
 import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
-import SideChainStructure from '../src/components/visuals/SideChainStructure.jsx'
+import SideChainStructure, { buildSideChain, labelBox } from '../src/components/visuals/SideChainStructure.jsx'
 import Flashcards from '../src/components/Flashcards.jsx'
 import GroupPrimer from '../src/components/GroupPrimer.jsx'
 import PkaLadder from '../src/components/PkaLadder.jsx'
@@ -19,11 +19,28 @@ import CompoundTable from '../src/components/CompoundTable.jsx'
 import LessonView from '../src/components/LessonView.jsx'
 import Walkthroughs from '../src/components/Walkthroughs.jsx'
 import BackupPanel from '../src/components/BackupPanel.jsx'
+import LadderDrill, { ladderOrder } from '../src/components/LadderDrill.jsx'
 
 let errors = 0
 const fail = (msg) => {
   errors++
   console.log('  FAIL: ' + msg)
+}
+
+/**
+ * Does a bond pass through the box a text label occupies? Sampled along the
+ * segment rather than solved analytically — a label box is small and the
+ * sampling step is well under its size, so anything crossing it is hit.
+ */
+function segmentHitsBox(seg, cx, cy, halfW, halfH) {
+  const steps = 40
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps
+    const x = seg.a.x + (seg.b.x - seg.a.x) * t
+    const y = seg.a.y + (seg.b.y - seg.a.y) * t
+    if (Math.abs(x - cx) < halfW && Math.abs(y - cy) < halfH) return true
+  }
+  return false
 }
 
 const seenIds = new Map()
@@ -260,6 +277,7 @@ console.log('\n=== Reference views ===')
     ['VseprChart', createElement(VseprChart)],
     ['CompoundTable', createElement(CompoundTable)],
     ['BackupPanel', createElement(BackupPanel)],
+    ['LadderDrill', createElement(LadderDrill, { onDone: noop })],
     ...TOPICS.map((t) => [
       `LessonView(${t.id})`,
       createElement(LessonView, { topicId: t.id, title: t.label, onNotes: noop, onStudy: noop }),
@@ -418,6 +436,204 @@ console.log('\n=== Reference data ===')
       }
     }
     if (!shapeBad) console.log('  ok  20 side-chain structures draw')
+  }
+
+  // A drawing can render cleanly, contain no NaN, and still be unreadable.
+  // Asparagine's C=O was placed at a hand-picked angle that folded back over
+  // the bond arriving at the carbonyl carbon, and the card showed a scribble
+  // rather than an amide. Two separate things make that happen, and only
+  // checking both catches it:
+  //
+  //   1. bonds that cross somewhere in the middle
+  //   2. bonds that LEAVE THE SAME ATOM at too small an angle
+  //
+  // The shipped asparagine bug was (2), not (1) — the C=O sat 25° off the
+  // incoming chain bond, so the lines nearly coincided without ever properly
+  // intersecting. A crossing check alone would have passed it.
+  {
+    const cross = (p, q, r) => (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x)
+    const sign = (v) => (v > 1e-9 ? 1 : v < -1e-9 ? -1 : 0)
+    const same = (a, b) => Math.hypot(a.x - b.x, a.y - b.y) < 1.5
+    const shareEnd = (s, t) => same(s.a, t.a) || same(s.a, t.b) || same(s.b, t.a) || same(s.b, t.b)
+    const crosses = (s, t) => {
+      if (shareEnd(s, t)) return false
+      const d1 = sign(cross(s.a, s.b, t.a))
+      const d2 = sign(cross(s.a, s.b, t.b))
+      const d3 = sign(cross(t.a, t.b, s.a))
+      const d4 = sign(cross(t.a, t.b, s.b))
+      return d1 !== d2 && d3 !== d4 && d1 !== 0 && d2 !== 0 && d3 !== 0 && d4 !== 0
+    }
+
+    // Smallest angle a real structure here needs: a five-membered ring's
+    // interior angle is 108°, a trigonal centre 120°, and the widest pair of
+    // hand-placed branches 100°. 45° leaves room under all of them and well
+    // above the 25° that produced the scribble.
+    const MIN_ANGLE = 45
+    const angleAt = (v, s) => {
+      const far = same(v, s.a) ? s.b : s.a
+      return (Math.atan2(far.y - v.y, far.x - v.x) * 180) / Math.PI
+    }
+    const sharedVertex = (s, t) => {
+      for (const p of [s.a, s.b]) for (const q of [t.a, t.b]) if (same(p, q)) return p
+      return null
+    }
+
+    let crossBad = 0
+    for (const a of aa) {
+      const g = buildSideChain(a.name)
+      if (!g) { fail(a.name + ': no side-chain geometry'); crossBad++; continue }
+      for (let i = 0; i < g.bonds.length; i++) {
+        for (let j = i + 1; j < g.bonds.length; j++) {
+          const s = g.bonds[i]
+          const t = g.bonds[j]
+          if (crosses(s, t)) {
+            fail(
+              `${a.name}: bonds cross — (${s.a.x.toFixed(0)},${s.a.y.toFixed(0)})–` +
+                `(${s.b.x.toFixed(0)},${s.b.y.toFixed(0)}) over ` +
+                `(${t.a.x.toFixed(0)},${t.a.y.toFixed(0)})–(${t.b.x.toFixed(0)},${t.b.y.toFixed(0)})`,
+            )
+            crossBad++
+          }
+          // An inner ring line runs parallel to the edge it doubles, so it is
+          // exempt — that near-zero angle is exactly what a double bond is.
+          if (s.inner || t.inner) continue
+          const v = sharedVertex(s, t)
+          if (!v) continue
+          let d = Math.abs(angleAt(v, s) - angleAt(v, t)) % 360
+          if (d > 180) d = 360 - d
+          if (d < MIN_ANGLE) {
+            fail(
+              `${a.name}: two bonds leave the atom at (${v.x.toFixed(0)},${v.y.toFixed(0)}) ` +
+                `only ${d.toFixed(0)}° apart — they will read as one line`,
+            )
+            crossBad++
+          }
+        }
+      }
+      // A label sitting on top of a bond is the same failure in a different
+      // form: the letter and the line occupy the same pixels.
+      for (const l of g.labels) {
+        const { halfW, halfH } = labelBox(l.text, l.size)
+        for (const s of g.bonds) {
+          if (segmentHitsBox(s, l.x, l.y, halfW, halfH)) {
+            fail(`${a.name}: label "${l.text}" sits on a bond`)
+            crossBad++
+          }
+        }
+      }
+    }
+    if (!crossBad) console.log('  ok  20 side-chain structures: no crossing bonds, no bond pair under 45°, no label over a bond')
+  }
+
+  // Clean geometry is not the same as correct chemistry: a drawing with one
+  // CH₂ too few crosses nothing and reads perfectly. Count what each drawing
+  // actually contains and check it against the residue's real composition.
+  //
+  // These counts are the side chain only, obtained by subtracting the
+  // backbone (C2 N1 O2 — the alpha carbon, the carboxyl carbon, its two
+  // oxygens and the amino nitrogen) from the residue's molecular formula.
+  // Proline's ring shares the backbone nitrogen, so its N is counted here
+  // because the drawing shows it.
+  {
+    const EXPECTED = {
+      Glycine: { C: 0, N: 0, O: 0, S: 0, H: 1 },       // C2H5NO2
+      Alanine: { C: 1, N: 0, O: 0, S: 0 },             // C3H7NO2
+      Valine: { C: 3, N: 0, O: 0, S: 0 },              // C5H11NO2
+      Leucine: { C: 4, N: 0, O: 0, S: 0 },             // C6H13NO2
+      Isoleucine: { C: 4, N: 0, O: 0, S: 0 },          // C6H13NO2
+      Methionine: { C: 3, N: 0, O: 0, S: 1 },          // C5H11NO2S
+      Proline: { C: 3, N: 1, O: 0, S: 0 },             // C5H9NO2, ring shares backbone N
+      Phenylalanine: { C: 7, N: 0, O: 0, S: 0 },       // C9H11NO2
+      Tryptophan: { C: 9, N: 1, O: 0, S: 0 },          // C11H12N2O2
+      Serine: { C: 1, N: 0, O: 1, S: 0 },              // C3H7NO3
+      Threonine: { C: 2, N: 0, O: 1, S: 0 },           // C4H9NO3
+      Cysteine: { C: 1, N: 0, O: 0, S: 1 },            // C3H7NO2S
+      Tyrosine: { C: 7, N: 0, O: 1, S: 0 },            // C9H11NO3
+      Asparagine: { C: 2, N: 1, O: 1, S: 0 },          // C4H8N2O3
+      Glutamine: { C: 3, N: 1, O: 1, S: 0 },           // C5H10N2O3
+      Aspartate: { C: 2, N: 0, O: 2, S: 0 },           // C4H7NO4
+      Glutamate: { C: 3, N: 0, O: 2, S: 0 },           // C5H9NO4
+      Lysine: { C: 4, N: 1, O: 0, S: 0 },              // C6H14N2O2
+      Arginine: { C: 4, N: 3, O: 0, S: 0 },            // C6H14N4O2
+      Histidine: { C: 4, N: 2, O: 0, S: 0 },           // C6H9N3O2
+    }
+
+    let compBad = 0
+    for (const a of aa) {
+      const exp = EXPECTED[a.name]
+      if (!exp) { fail(`no expected composition for ${a.name}`); compBad++; continue }
+      const g = buildSideChain(a.name)
+      const got = { C: 0, N: 0, O: 0, S: 0, H: 0 }
+      for (const at of g.atoms) {
+        if (at.element === 'Cα') continue // backbone, drawn only for context
+        if (got[at.element] === undefined) { fail(`${a.name}: drawn atom "${at.element}" is not an element this check knows`); compBad++; continue }
+        got[at.element]++
+      }
+      for (const el of ['C', 'N', 'O', 'S', 'H']) {
+        const want = exp[el] ?? 0
+        if (got[el] !== want) {
+          fail(`${a.name}: structure draws ${got[el]} ${el}, but the side chain has ${want}`)
+          compBad++
+        }
+      }
+
+      // Two atoms in the same place means the structure has folded back onto
+      // itself. The atom count still comes out right, so the composition
+      // check above passes and the drawing is still nonsense.
+      for (let i = 0; i < g.atoms.length; i++) {
+        for (let j = i + 1; j < g.atoms.length; j++) {
+          const d = Math.hypot(g.atoms[i].x - g.atoms[j].x, g.atoms[i].y - g.atoms[j].y)
+          if (d < 13) {
+            fail(
+              `${a.name}: two atoms only ${d.toFixed(1)} apart at ` +
+                `(${g.atoms[i].x.toFixed(0)},${g.atoms[i].y.toFixed(0)}) — the structure overlaps itself`,
+            )
+            compBad++
+          }
+        }
+      }
+    }
+    if (!compBad) console.log('  ok  20 side-chain structures match the residue formulas atom for atom')
+  }
+
+  // The ladder introduces residues one at a time, in the order the three
+  // sorting phrases spell out. If that order drops one, the drill simply
+  // never teaches it and nothing else in the app notices — the question
+  // banks would still cover it, so accuracy would look fine.
+  {
+    const order = ladderOrder()
+    let ladBad = 0
+    if (order.length !== aa.length) {
+      fail(`ladder covers ${order.length} residues, not ${aa.length}`)
+      ladBad++
+    }
+    if (order.some((x) => !x)) {
+      fail('ladder order contains a letter with no matching amino acid')
+      ladBad++
+    } else {
+      const names = order.map((x) => x.name)
+      if (new Set(names).size !== names.length) {
+        fail('ladder order repeats a residue — it would be taught twice and another never')
+        ladBad++
+      }
+      const missing = aa.filter((x) => !names.includes(x.name)).map((x) => x.name)
+      if (missing.length) {
+        fail(`ladder never introduces: ${missing.join(', ')}`)
+        ladBad++
+      }
+      // Each phrase must arrive as an unbroken run, or "letter 3 of Santa's
+      // Team Crafts New Quilts Yearly" shown during the drill is wrong.
+      let at = 0
+      for (const m of JSON.parse(fs.readFileSync("src/data/genchem/aminoAcidMnemonics.json", "utf8"))) {
+        const run = names.slice(at, at + m.letters.length).map((n) => aa.find((x) => x.name === n).one).join('')
+        if (run !== m.letters) {
+          fail(`ladder run for "${m.cls}" is ${run}, but the phrase spells ${m.letters}`)
+          ladBad++
+        }
+        at += m.letters.length
+      }
+    }
+    if (!ladBad) console.log(`  ok  ladder introduces all 20 once, in the order the three phrases spell`)
   }
 
   if (!aaBad) console.log('  ok  20 amino acids: codes, classes, pKa and charges')

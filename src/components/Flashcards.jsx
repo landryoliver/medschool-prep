@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import aminoAcids from '../data/genchem/aminoAcids.json'
 import AminoAcidFull from './visuals/AminoAcidFull.jsx'
+import LadderDrill from './LadderDrill.jsx'
 
 /**
  * A real flashcard deck: flip to study, then drill at two difficulties.
@@ -15,6 +16,7 @@ import AminoAcidFull from './visuals/AminoAcidFull.jsx'
  * cramming a set in one sitting; the SRS is for keeping it.
  */
 const MODES = [
+  { id: 'ladder', label: 'Build', hint: 'Learn one, name it, then add the next — up to all twenty.' },
   { id: 'flip', label: 'Study', hint: 'Look at each structure, guess, then tap the card to check.' },
   { id: 'choice', label: 'Quiz', hint: 'Name the structure by picking from four options.' },
   { id: 'type', label: 'Recall', hint: 'Hardest: type the name, or its three- or one-letter code.' },
@@ -39,7 +41,10 @@ function matches(input, aa) {
 }
 
 export default function Flashcards({ onDone }) {
-  const [mode, setMode] = useState('flip')
+  // Build is the default: meeting twenty unfamiliar structures in random
+  // order is where this deck used to start, and that is the hardest possible
+  // entry point into a set you have not learned yet.
+  const [mode, setMode] = useState('ladder')
   // 'toName' shows the structure and asks for the name; 'toStructure'
   // shows the name and asks you to picture the structure — the direction
   // that matters if your course expects you to draw them.
@@ -97,6 +102,27 @@ export default function Flashcards({ onDone }) {
     setScore((s) => ({ right: s.right + (correct ? 1 : 0), wrong: s.wrong + (correct ? 0 : 1) }))
   }
 
+  // The mode row gets a line of its own: four labels crammed beside the card
+  // counter left each one too narrow to read on a phone.
+  const modeBar = (
+    <div className="seg wide-seg fc-modes">
+      {MODES.map((m) => (
+        <button key={m.id} className={mode === m.id ? 'active' : ''} onClick={() => restart(m.id)}>
+          {m.label}
+        </button>
+      ))}
+    </div>
+  )
+
+  if (mode === 'ladder') {
+    return (
+      <div>
+        {modeBar}
+        <LadderDrill onDone={onDone} />
+      </div>
+    )
+  }
+
   if (done) {
     const total = score.right + score.wrong
     const pct = total ? Math.round((score.right / total) * 100) : 0
@@ -125,6 +151,7 @@ export default function Flashcards({ onDone }) {
 
   return (
     <div>
+      {modeBar}
       <div className="session-bar">
         <span className="muted">
           {i + 1} / {deck.length}
@@ -132,13 +159,6 @@ export default function Flashcards({ onDone }) {
             <span className="muted"> · {score.right} right</span>
           )}
         </span>
-        <div className="seg">
-          {MODES.map((m) => (
-            <button key={m.id} className={mode === m.id ? 'active' : ''} title={m.hint} onClick={() => restart(m.id)}>
-              {m.label}
-            </button>
-          ))}
-        </div>
       </div>
       <div className="progress-track">
         <div className="progress-fill" style={{ width: `${(i / deck.length) * 100}%` }} />

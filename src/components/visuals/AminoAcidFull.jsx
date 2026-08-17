@@ -15,6 +15,9 @@ export default function AminoAcidFull({ aa, hideName = false }) {
   return (
     <div className="aaf">
       <AminoAcidDiagram sideChain="R" name={hideName ? '?' : aa.name} cyclic={false} />
+      {/* Label, structure and caption stack instead of sitting in a row, so
+          the drawing gets the full width of the card rather than whatever is
+          left over between two pieces of text. */}
       <div className="aaf-side">
         <span className="aaf-eq">R =</span>
         <SideChainStructure name={aa.name} />

@@ -77,6 +77,26 @@ const withKind = (rows) => rows.map((q) => shuffleChoices({ kind: 'mcq', ...q })
  * stays stable across sessions and reloads.
  */
 export const TOPICS = [
+  // First in the list because it is the deck in daily use: biochemistry
+  // assumes the twenty on day one, and the ladder below is the only place
+  // they get built up one at a time rather than drilled all at once.
+  {
+    id: 'aminoacids',
+    label: 'Amino Acids',
+    blurb: 'The 20, their codes, classes, side-chain pKa values and charges.',
+    speedRound: true,
+    build: () => [
+      ...buildBank(aminoAcidGen.generateThreeLetter, 40),
+      ...buildBank(aminoAcidGen.generateOneLetter, 40),
+      ...buildBank(aminoAcidGen.generateClassify, 20),
+      ...buildBank(aminoAcidGen.generateChargeAtPh, 20),
+      ...buildBank(aminoAcidGen.generateSideChainPka, 10),
+      ...buildBank(aminoAcidGen.generatePickFromClass, 60),
+      ...buildBank(aminoAcidGen.generateFromSideChain, 40),
+      ...buildBank(aminoAcidGen.generateSpecial, 10),
+      ...withKind(aminoAcidMnemonics),
+    ],
+  },
   {
     id: 'periodic',
     label: 'Periodic Table',
@@ -174,23 +194,6 @@ export const TOPICS = [
       ...buildBank(imfGen.generateStrongestForce, 40),
       ...buildBank(imfGen.generateSolubility, 40),
       ...buildBank(imfGen.generateFamilyForce, 40),
-    ],
-  },
-  {
-    id: 'aminoacids',
-    label: 'Amino Acids',
-    blurb: 'The 20, their codes, classes, side-chain pKa values and charges.',
-    speedRound: true,
-    build: () => [
-      ...buildBank(aminoAcidGen.generateThreeLetter, 40),
-      ...buildBank(aminoAcidGen.generateOneLetter, 40),
-      ...buildBank(aminoAcidGen.generateClassify, 20),
-      ...buildBank(aminoAcidGen.generateChargeAtPh, 20),
-      ...buildBank(aminoAcidGen.generateSideChainPka, 10),
-      ...buildBank(aminoAcidGen.generatePickFromClass, 60),
-      ...buildBank(aminoAcidGen.generateFromSideChain, 40),
-      ...buildBank(aminoAcidGen.generateSpecial, 10),
-      ...withKind(aminoAcidMnemonics),
     ],
   },
   {

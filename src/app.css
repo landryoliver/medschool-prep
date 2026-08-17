@@ -1646,6 +1646,42 @@ button.wide {
   margin: 0.9rem 0 0;
 }
 
+/* ---- Ladder: build the set one residue at a time --------------------- */
+
+.fc-modes {
+  margin-bottom: 0.6rem;
+}
+
+.ladder-learn {
+  position: relative;
+}
+
+.ladder-new {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 0.12rem 0.4rem;
+  border-radius: 0.3rem;
+}
+
+.ladder-phrase {
+  margin: 0.7rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.78rem;
+}
+
+button.ghost.small {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+}
+
 /* ---- Amino acid: backbone plus drawn side chain ---------------------- */
 
 .aaf {
@@ -1655,9 +1691,11 @@ button.wide {
 }
 
 .aaf-side {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  width: 100%;
+  gap: 0.15rem;
   margin-top: -0.3rem;
   padding: 0.5rem 0.7rem 0.6rem;
   border: 1px solid rgba(56, 189, 248, 0.35);
@@ -1665,15 +1703,23 @@ button.wide {
   border-radius: 0.6rem;
 }
 
+/* The structure is the point of the card, so it takes the width it can get
+   rather than sitting as a thumbnail between two labels. */
+.side-chain {
+  display: block;
+  width: 100%;
+  max-width: 250px;
+  height: 200px;
+}
+
 .aaf-eq {
+  justify-self: start;
   color: var(--accent);
   font-weight: 700;
   font-size: 0.95rem;
-  padding-top: 0.15rem;
 }
 
 .aaf-formula {
-  align-self: flex-end;
+  justify-self: end;
   font-size: 0.72rem;
-  padding-bottom: 0.1rem;
 }
