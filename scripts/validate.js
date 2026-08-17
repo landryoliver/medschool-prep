@@ -20,7 +20,10 @@ import CompoundTable from '../src/components/CompoundTable.jsx'
 import LessonView from '../src/components/LessonView.jsx'
 import Walkthroughs from '../src/components/Walkthroughs.jsx'
 import BackupPanel from '../src/components/BackupPanel.jsx'
-import LadderDrill, { ladderOrder } from '../src/components/LadderDrill.jsx'
+import LadderDrill from '../src/components/LadderDrill.jsx'
+import LadderPicker from '../src/components/LadderPicker.jsx'
+import { LADDERS, ladderOrder } from '../src/components/ladders/definitions.jsx'
+import { loadLadder, staleness } from '../src/lib/ladderProgress.js'
 
 let errors = 0
 const fail = (msg) => {
@@ -332,7 +335,8 @@ console.log('\n=== Reference views ===')
     ['VseprChart', createElement(VseprChart)],
     ['CompoundTable', createElement(CompoundTable)],
     ['BackupPanel', createElement(BackupPanel)],
-    ['LadderDrill', createElement(LadderDrill, { onDone: noop })],
+    ['LadderPicker', createElement(LadderPicker, { onPick: noop, onDone: noop })],
+    ...LADDERS.map((l) => [`LadderDrill(${l.id})`, createElement(LadderDrill, { ladderId: l.id, onDone: noop })]),
     ...TOPICS.map((t) => [
       `LessonView(${t.id})`,
       createElement(LessonView, { topicId: t.id, title: t.label, onNotes: noop, onStudy: noop }),
@@ -693,6 +697,77 @@ console.log('\n=== Reference data ===')
     }
     if (!compBad) console.log('  ok  20 structures and their captions match the residue formulas atom for atom')
   }
+
+// Each ladder is a set you identify by name, so every answer label has to be
+// unique — two items sharing one label makes a multiple-choice question with
+// two correct-looking buttons and no way to be right. Two VSEPR geometries
+// really are both called "bent", which is why their labels carry the
+// electron-group count.
+{
+  let lBad = 0
+  for (const l of LADDERS) {
+    if (!l.items.length) { fail(`ladder "${l.id}" has no items`); lBad++; continue }
+    if (!TOPICS.some((t) => t.id === l.topic)) {
+      fail(`ladder "${l.id}" points at topic "${l.topic}", which does not exist`)
+      lBad++
+    }
+    const names = l.items.map((i) => i.name)
+    const dupName = names.find((n, i) => names.indexOf(n) !== i)
+    if (dupName) {
+      fail(`ladder "${l.id}": two items are both labelled "${dupName}" — a quiz over them cannot be answered`)
+      lBad++
+    }
+    const keys = l.items.map((i) => i.key)
+    const dupKey = keys.find((k, i) => keys.indexOf(k) !== i)
+    if (dupKey) {
+      fail(`ladder "${l.id}": duplicate item key "${dupKey}" — progress would be shared between two items`)
+      lBad++
+    }
+    for (const i of l.items) {
+      if (!i.key || !i.name) { fail(`ladder "${l.id}" has an item missing key or name`); lBad++ }
+    }
+    // A ladder with fewer than four items cannot fill a four-option question
+    // from its own set, which is fine, but under two it is not a ladder.
+    if (l.items.length < 3) { fail(`ladder "${l.id}" has only ${l.items.length} items`); lBad++ }
+  }
+  if (!lBad) console.log(`  ok  ${LADDERS.length} ladders: unique labels and keys, real topics, ${LADDERS.reduce((n, l) => n + l.items.length, 0)} items total`)
+}
+
+// Progress storage must survive a renamed or removed item rather than
+// leaving a "learned" ghost that is never shown again.
+{
+  const order = ['a', 'b', 'c']
+  const stored = { learned: ['a', 'gone'], lastSeenAt: 5 }
+  globalThis.localStorage = {
+    getItem: (k) => (k === 'orgoprep.ladder.test' ? JSON.stringify(stored) : null),
+    setItem: () => {},
+  }
+  const got = loadLadder('test', order)
+  if (got.learned.join() !== 'a') {
+    fail(`ladder progress kept a key that is no longer in the set: ${JSON.stringify(got.learned)}`)
+  } else {
+    console.log('  ok  ladder progress drops items that left the set')
+  }
+
+  // The old integer-stage format has to migrate, or existing progress is lost.
+  globalThis.localStorage = {
+    getItem: (k) => (k === 'orgoprep.ladder.stage' ? '4' : null),
+    setItem: () => {},
+  }
+  const migrated = loadLadder('aminoacids', ladderOrder().map((a) => a.name))
+  if (migrated.learned.length !== 3) {
+    fail(`legacy stage 4 migrated to ${migrated.learned.length} learned, expected 3`)
+  } else {
+    console.log('  ok  legacy stage counter migrates to a learned set')
+  }
+  delete globalThis.localStorage
+
+  // Staleness thresholds: no nudge for a fresh visit, a nudge after a gap.
+  const HOUR = 3600e3
+  if (staleness(Date.now() - HOUR)) fail('staleness nudges after only an hour')
+  else if (!staleness(Date.now() - 72 * HOUR)) fail('staleness fails to nudge after three days')
+  else console.log('  ok  staleness quiet for an hour, nudges after days')
+}
 
   // The ladder introduces residues one at a time, in the order the three
   // sorting phrases spell out. If that order drops one, the drill simply

@@ -7,6 +7,8 @@ import ReferenceView from './components/ReferenceView.jsx'
 import Walkthroughs from './components/Walkthroughs.jsx'
 import LessonView from './components/LessonView.jsx'
 import Flashcards from './components/Flashcards.jsx'
+import LadderDrill from './components/LadderDrill.jsx'
+import LadderPicker from './components/LadderPicker.jsx'
 import Progression from './components/Progression.jsx'
 import UpdateCheck from './components/UpdateCheck.jsx'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank, getMissedBank } from './lib/topics.js'
@@ -56,6 +58,7 @@ export default function App() {
             onLearn={(topicId) => setView({ name: 'learn', topicId })}
             onLesson={(topicId) => setView({ name: 'lesson', topicId })}
             onCards={() => setView({ name: 'cards' })}
+            onBuild={(ladderId) => setView(ladderId ? { name: 'ladder', ladderId } : { name: 'ladders' })}
             onReviewMisses={() => {
               setMissedBank(null)
               setView({ name: 'misses' })
@@ -93,6 +96,17 @@ export default function App() {
         )}
 
         {view.name === 'cards' && <Flashcards onDone={() => setView({ name: 'topics' })} />}
+
+        {view.name === 'ladders' && (
+          <LadderPicker
+            onPick={(ladderId) => setView({ name: 'ladder', ladderId })}
+            onDone={() => setView({ name: 'topics' })}
+          />
+        )}
+
+        {view.name === 'ladder' && (
+          <LadderDrill ladderId={view.ladderId} onDone={() => setView({ name: 'ladders' })} />
+        )}
 
         {view.name === 'lesson' && (
           <LessonView

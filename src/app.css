@@ -1737,3 +1737,69 @@ button.ghost.small {
 .aaf-formula {
   font-size: 0.74rem;
 }
+
+/* ---- Ladder hub: the learned set, browsable ------------------------- */
+
+.ladder-nudge {
+  border-left: 3px solid var(--accent);
+}
+
+.ladder-nudge strong {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.ladder-nudge p {
+  margin: 0 0 0.7rem;
+  font-size: 0.84rem;
+}
+
+.ladder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.45rem;
+}
+
+.ladder-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.ladder-chip.learned {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.ladder-chip-n {
+  font-size: 0.62rem;
+  opacity: 0.5;
+}
+
+.ladder-chip-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.ladder-chip-sub {
+  font-size: 0.7rem;
+}
+
+.ladder-pick {
+  position: relative;
+}
+
+.ladder-pick-bar {
+  display: block;
+  margin-top: 0.45rem;
+}

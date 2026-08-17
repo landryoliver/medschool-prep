@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import aminoAcids from '../data/genchem/aminoAcids.json'
 import AminoAcidFull from './visuals/AminoAcidFull.jsx'
-import LadderDrill from './LadderDrill.jsx'
 import { useNotation } from '../lib/useNotation.js'
 import NotationToggle from './NotationToggle.jsx'
 
@@ -18,7 +17,6 @@ import NotationToggle from './NotationToggle.jsx'
  * cramming a set in one sitting; the SRS is for keeping it.
  */
 const MODES = [
-  { id: 'ladder', label: 'Build', hint: 'Learn one, name it, then add the next — up to all twenty.' },
   { id: 'flip', label: 'Study', hint: 'Look at each structure, guess, then tap the card to check.' },
   { id: 'choice', label: 'Quiz', hint: 'Name the structure by picking from four options.' },
   { id: 'type', label: 'Recall', hint: 'Hardest: type the name, or its three- or one-letter code.' },
@@ -43,10 +41,7 @@ function matches(input, aa) {
 }
 
 export default function Flashcards({ onDone }) {
-  // Build is the default: meeting twenty unfamiliar structures in random
-  // order is where this deck used to start, and that is the hardest possible
-  // entry point into a set you have not learned yet.
-  const [mode, setMode] = useState('ladder')
+  const [mode, setMode] = useState('flip')
   // 'toName' shows the structure and asks for the name; 'toStructure'
   // shows the name and asks you to picture the structure — the direction
   // that matters if your course expects you to draw them.
@@ -116,15 +111,6 @@ export default function Flashcards({ onDone }) {
       ))}
     </div>
   )
-
-  if (mode === 'ladder') {
-    return (
-      <div>
-        {modeBar}
-        <LadderDrill onDone={onDone} />
-      </div>
-    )
-  }
 
   if (done) {
     const total = score.right + score.wrong

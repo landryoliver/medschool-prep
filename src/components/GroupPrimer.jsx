@@ -8,7 +8,7 @@ import GroupDiagram from './visuals/GroupDiagram.jsx'
  * chemistry — and every later idea depends on seeing the arrangement, not
  * knowing the word.
  */
-const GROUPS = [
+export const GROUPS = [
   {
     kind: 'hydroxyl',
     name: 'Hydroxyl',

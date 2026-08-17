@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { TOPICS, getTopicBank, getMixedBank } from '../lib/topics.js'
+import { ladderForTopic } from './ladders/definitions.jsx'
 import { getAllProgress } from '../lib/db.js'
 import { getStreak } from '../lib/streaks.js'
 import { topicColor, topicTint, topicButtonColor } from '../lib/topicMeta.js'
@@ -71,7 +72,7 @@ function MasteryRing({ mastered, studied, total, topicId }) {
   )
 }
 
-function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards }) {
+function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards, onBuild }) {
   const pct = stat?.seen ? Math.round((stat.correct / stat.seen) * 100) : 0
   const color = topicColor(topic.id)
   const btnColor = topicButtonColor(topic.id)
@@ -133,6 +134,11 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards }
             Speed
           </button>
         )}
+        {ladderForTopic(topic.id) && (
+          <button className="ghost" onClick={() => onBuild(ladderForTopic(topic.id).id)}>
+            Build
+          </button>
+        )}
         {topic.id === 'aminoacids' && (
           <button className="ghost" onClick={onCards}>
             Flashcards
@@ -143,7 +149,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards }
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onReviewMisses, onPlan }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -187,7 +193,7 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
   const groupedIds = new Set(grouped.flatMap((g) => g.items.map((t) => t.id)))
   const ungrouped = TOPICS.filter((t) => !groupedIds.has(t.id))
 
-  const cardProps = { onLesson, onLearn, onStudy, onSpeed, onCards }
+  const cardProps = { onLesson, onLearn, onStudy, onSpeed, onCards, onBuild }
 
   return (
     <div>
@@ -226,9 +232,9 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
           running, and it used to sit four stage-blocks down the page behind
           a button labelled only "Cards". Pinned here so it costs no
           scrolling and says what it actually does. */}
-      <button className="action-btn primary-action" onClick={onCards}>
-        <span className="action-title">Build the twenty</span>
-        <span className="action-sub">Learn one amino acid, name it, then add the next</span>
+      <button className="action-btn primary-action" onClick={() => onBuild(null)}>
+        <span className="action-title">Build up a set</span>
+        <span className="action-sub">Learn one at a time, then name it against the rest</span>
       </button>
 
       <div className="action-row">
