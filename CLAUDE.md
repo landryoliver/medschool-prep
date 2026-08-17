@@ -287,9 +287,23 @@ and can never match what CI built. This has already produced one false
 If the hashes differ, re-run `npm run build` at the pushed commit and compare
 again before investigating anything else.
 
+Read the `<script src>` specifically, and confirm a **string from the new
+code** is in the served bundle. A filename comparison alone has produced two
+false reports: a loose grep matched something other than the script tag, and
+a bare `curl` of a mistyped asset path returned a 404 page that grep happily
+searched.
+
 ```bash
-curl -s https://landryoliver.github.io/medschool-prep/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js'
+EXPECT=$(ls dist/assets/index-*.js | sed 's|.*/||')
+LIVE=$(curl -s https://landryoliver.github.io/medschool-prep/ \
+  | grep -oE '<script[^>]*src="[^"]+"' | grep -oE 'index-[A-Za-z0-9_-]+\.js')
+echo "live=$LIVE expected=$EXPECT"
+curl -s --compressed "https://landryoliver.github.io/medschool-prep/assets/$LIVE" -o /tmp/live.js
+grep -c 'some string only the new code contains' /tmp/live.js
 ```
+
+`--compressed` matters: without it the response can be gzip bytes, and every
+grep against it silently returns zero.
 
 ## Standing limitation
 
