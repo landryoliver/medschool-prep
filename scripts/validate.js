@@ -815,6 +815,18 @@ console.log('\n=== Reference data ===')
   if (!leakBad) console.log('  ok  unanswered cards leak neither the name, the formula, nor the class colour')
 }
 
+// Question prompts pick a residue BY its condensed formula, so two residues
+  // sharing one would be a question with two right answers.
+  {
+    const fs_ = aa.map((x) => x.formula)
+    const dup = fs_.find((f, i) => fs_.indexOf(f) !== i)
+    if (dup) {
+      fail(`two residues share the condensed formula "${dup}" — a question asking which one has it has two right answers`)
+    } else {
+      console.log('  ok  20 condensed formulas are one per residue')
+    }
+  }
+
   // The ladder introduces residues one at a time, in the order the three
   // sorting phrases spell out. If that order drops one, the drill simply
   // never teaches it and nothing else in the app notices — the question

@@ -73,9 +73,9 @@ export function generateClassify(seed) {
     prompt: `How is ${aa.name} (${aa.three}) classified?`,
     choices,
     correctIndex: choices.indexOf(CLASS_LABEL[aa.class]),
-    explanation: `${aa.name} is ${aa.class}. Side chain: ${aa.sideChain}. ${aa.note}`,
+    explanation: `${aa.name} is ${aa.class}. Side chain: ${aa.formula}. ${aa.note}`,
     teach: 'Sort by side chain: carboxylate → acidic; amine, guanidinium or imidazole → basic; –OH, –SH or amide → polar; hydrocarbon or aromatic-with-no-polar-group → nonpolar.',
-    visual: { type: 'aminoAcid', sideChain: aa.sideChain, name: aa.name, cyclic: aa.name === 'Proline' },
+    visual: { type: 'aminoAcid', sideChain: aa.formula, name: aa.name, cyclic: aa.name === 'Proline' },
     visualAfter: true,
   }
 }
@@ -145,7 +145,7 @@ export function generatePickFromClass(seed) {
     prompt: `Which of these is ${targetClass === 'acidic' || targetClass === 'basic' ? `${targetClass}` : `a ${targetClass}`} amino acid?`,
     choices,
     correctIndex: options.indexOf(answer),
-    explanation: `${answer.name} — side chain ${answer.sideChain}. ${answer.note}`,
+    explanation: `${answer.name} — side chain ${answer.formula}. ${answer.note}`,
     teach: 'There are only two acidic (Asp, Glu) and three basic (Lys, Arg, His). Everything else is polar or nonpolar, so learning those five gives you the rest by elimination.',
   }
 }
@@ -161,27 +161,28 @@ export function generateFromSideChain(seed) {
   const aa = aminoAcids[seed % aminoAcids.length]
   const chainToName = seed < aminoAcids.length
 
-  // Some side-chain descriptions repeat across amino acids (both amides,
-  // both branched); only ask when this one identifies a single residue.
-  const sameChain = aminoAcids.filter((a) => a.sideChain === aa.sideChain)
+  // Condensed formulas are one per residue — validation enforces it — but
+  // the guard stays: a future edit that made two identical would otherwise
+  // ship a question with two right answers.
+  const sameChain = aminoAcids.filter((a) => a.formula === aa.formula)
   if (sameChain.length > 1) return null
 
   const { choices, correctIndex } = chainToName
     ? makeChoices(rng, aa.name, aminoAcids.map((a) => a.name))
-    : makeChoices(rng, aa.sideChain, aminoAcids.map((a) => a.sideChain))
+    : makeChoices(rng, aa.formula, aminoAcids.map((a) => a.formula))
 
   return {
     id: `aachain-${seed}`,
     topic: 'amino-acids',
     kind: 'mcq',
     prompt: chainToName
-      ? `Which amino acid has the side chain ${aa.sideChain}?`
+      ? `Which amino acid has the side chain ${aa.formula}?`
       : `What is the side chain of ${aa.name} (${aa.three})?`,
     choices,
     correctIndex,
-    explanation: `${aa.name} (${aa.three}, ${aa.one}) — side chain ${aa.sideChain}, classified ${aa.class}. ${aa.note}`,
+    explanation: `${aa.name} (${aa.three}, ${aa.one}) — side chain ${aa.formula}, classified ${aa.class}. ${aa.note}`,
     teach: 'Recognizing side chains on sight is what biochem actually tests. Group them by the functional group you already know: hydroxyl, thiol, amide, carboxylate, amine, aromatic ring.',
-    visual: { type: 'aminoAcid', sideChain: aa.sideChain, name: aa.name, cyclic: aa.name === 'Proline' },
+    visual: { type: 'aminoAcid', sideChain: aa.formula, name: aa.name, cyclic: aa.name === 'Proline' },
     visualAfter: true,
   }
 }
