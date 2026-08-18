@@ -24,7 +24,7 @@ import LadderDrill from '../src/components/LadderDrill.jsx'
 import LadderPicker from '../src/components/LadderPicker.jsx'
 import { buildNucleobase } from '../src/components/visuals/NucleobaseStructure.jsx'
 import { LADDERS, ladderOrder } from '../src/components/ladders/definitions.jsx'
-import { loadLadder, staleness } from '../src/lib/ladderProgress.js'
+import { loadLadder, saveLadder, staleness } from '../src/lib/ladderProgress.js'
 import { revealAccent } from '../src/lib/revealAccent.js'
 
 let errors = 0
@@ -828,6 +828,67 @@ console.log('\n=== Reference data ===')
   }
   if (!lBad) console.log(`  ok  ${LADDERS.length} ladders: unique labels and keys, real topics, ${LADDERS.reduce((n, l) => n + l.items.length, 0)} items total`)
 }
+// Typed answers are only fair if every accepted spelling is reachable and no
+// two items accept the same string — otherwise a correct answer is marked
+// wrong, or one answer satisfies two different questions.
+{
+  let tBad = 0
+  for (const l of LADDERS) {
+    if (l.typeable === false) continue // opted out, see its definition
+    if (!l.typePlaceholder) {
+      fail(`ladder "${l.id}" has no placeholder telling you what to type`)
+      tBad++
+    }
+    const seen = new Map()
+    for (const item of l.items) {
+      const accepted = [item.name, ...(item.aliases ?? [])].map((a) => String(a).trim().toLowerCase())
+      for (const a of accepted) {
+        if (!a) {
+          fail(`ladder "${l.id}": ${item.name} accepts an empty answer`)
+          tBad++
+          continue
+        }
+        if (seen.has(a) && seen.get(a) !== item.key) {
+          fail(`ladder "${l.id}": "${a}" is accepted for both ${seen.get(a)} and ${item.key}`)
+          tBad++
+        }
+        seen.set(a, item.key)
+      }
+    }
+  }
+  if (!tBad) console.log('  ok  4 ladders: every typed answer is unambiguous and every set says what to type')
+}
+
+// The mode promotes itself exactly once, when the set is finished, and a
+// manual choice afterwards has to stick.
+{
+  const store = {}
+  globalThis.localStorage = {
+    getItem: (k) => store[k] ?? null,
+    setItem: (k, v) => { store[k] = v },
+  }
+  let mBad = 0
+
+  const fresh = loadLadder('modetest', ['a', 'b'])
+  if (fresh.answerMode !== 'mc') { fail(`a new ladder starts in "${fresh.answerMode}", should be multiple choice`); mBad++ }
+  if (fresh.promoted) { fail('a new ladder is already marked promoted'); mBad++ }
+
+  // A stored manual choice of multiple choice must survive, even though the
+  // set is complete — that is what `promoted` is for.
+  saveLadder('modetest', { learned: ['a', 'b'], lastSeenAt: 1, answerMode: 'mc', promoted: true })
+  const kept = loadLadder('modetest', ['a', 'b'])
+  if (kept.answerMode !== 'mc' || !kept.promoted) {
+    fail(`a deliberate switch back to multiple choice was not kept: ${JSON.stringify(kept)}`)
+    mBad++
+  }
+
+  saveLadder('modetest2', { learned: [], lastSeenAt: 1, answerMode: 'type', promoted: true })
+  if (loadLadder('modetest2', []).answerMode !== 'type') { fail('typed mode does not persist'); mBad++ }
+
+  delete globalThis.localStorage
+  if (!mBad) console.log('  ok  answer mode starts at multiple choice and a manual override persists')
+}
+
 
 // Progress storage must survive a renamed or removed item rather than
 // leaving a "learned" ghost that is never shown again.

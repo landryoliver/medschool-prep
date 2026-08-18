@@ -37,7 +37,16 @@ export function loadLadder(id, order) {
     // Drop anything no longer in the ladder, so renaming an item cannot
     // leave a permanently "learned" ghost that is never shown again.
     const known = new Set(order)
-    return { learned: stored.learned.filter((k) => known.has(k)), lastSeenAt: stored.lastSeenAt ?? 0 }
+    return {
+      learned: stored.learned.filter((k) => known.has(k)),
+      lastSeenAt: stored.lastSeenAt ?? 0,
+      // Recognition before production: picking from four is how you get a
+      // set in place, typing is how you find out whether you actually have
+      // it. Starts at 'mc' and promotes itself once, when the set is
+      // complete — asking every round would be friction on the common path.
+      answerMode: stored.answerMode === 'type' ? 'type' : 'mc',
+      promoted: !!stored.promoted,
+    }
   }
 
   // Migration: the amino acid ladder used to store how many were unlocked.
@@ -55,14 +64,19 @@ export function loadLadder(id, order) {
     const n = parseInt(raw ?? '', 10)
     if (Number.isFinite(n) && n > 1) {
       // Stage N meant N was being learned, so N-1 were complete.
-      return { learned: order.slice(0, Math.min(n - 1, order.length)), lastSeenAt: 0 }
+      return { learned: order.slice(0, Math.min(n - 1, order.length)), lastSeenAt: 0, answerMode: 'mc', promoted: false }
     }
   }
-  return { learned: [], lastSeenAt: 0 }
+  return { learned: [], lastSeenAt: 0, answerMode: 'mc', promoted: false }
 }
 
 export function saveLadder(id, state) {
-  write(PREFIX + id, { learned: state.learned, lastSeenAt: state.lastSeenAt })
+  write(PREFIX + id, {
+    learned: state.learned,
+    lastSeenAt: state.lastSeenAt,
+    answerMode: state.answerMode,
+    promoted: state.promoted,
+  })
 }
 
 /** All ladder states at once, for the picker's progress counts. */

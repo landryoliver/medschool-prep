@@ -67,6 +67,7 @@ export const LADDERS = [
     label: 'The 20 amino acids',
     unit: 'residue',
     blurb: 'Structures, names and their one- and three-letter codes.',
+    typePlaceholder: 'Name, or three- or one-letter code',
     items: aminoItems,
     notation: true,
     Visual: ({ item, hideAnswer, notation }) => (
@@ -102,6 +103,7 @@ export const LADDERS = [
     label: 'Functional groups',
     unit: 'group',
     blurb: 'The arrangements every reaction is named after.',
+    typePlaceholder: 'Group name, or its formula',
     items: groupItems,
     Visual: ({ item, hideAnswer }) => (
       <figure className="aaf">
@@ -128,6 +130,12 @@ export const LADDERS = [
     label: 'VSEPR shapes',
     unit: 'shape',
     blurb: 'Every electron-group count and the shape it forces.',
+    // No typed mode. Two of these are called "bent" and two "linear", so a
+    // typed answer either accepts the bare shape - which passes for both and
+    // stops testing the electron-count distinction this set exists to teach -
+    // or demands "bent · 3 groups" character for character, which is a
+    // transcription exercise rather than recall.
+    typeable: false,
     items: vseprItems,
     Visual: ({ item, hideAnswer }) => (
       <figure className="aaf">
@@ -192,6 +200,7 @@ LADDERS.push({
   label: 'The five nucleobases',
   unit: 'base',
   blurb: 'Purine or pyrimidine, what pairs with what, and DNA versus RNA.',
+  typePlaceholder: 'Base name, or its letter',
   items: baseItems,
   Visual: ({ item, hideAnswer }) => (
     <figure className="aaf">

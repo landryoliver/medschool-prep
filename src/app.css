@@ -1841,3 +1841,7 @@ button.ghost.small {
 .ladder-picked-bar .primary {
   flex: 1;
 }
+
+.answer-mode {
+  margin-bottom: 0.6rem;
+}

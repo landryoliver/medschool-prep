@@ -21,6 +21,17 @@ import { revealAccent } from '../lib/revealAccent.js'
  * be reviewed alone or browsed, and a gap since the last visit offers a
  * warm-up before anything new is added.
  */
+/**
+ * Accepts the item's name or any of its aliases — a three- or one-letter
+ * code, a base's letter, a bare shape name. Typing "W" for tryptophan is
+ * recall; making you spell it is a spelling test.
+ */
+function typedMatches(input, item) {
+  const v = input.trim().toLowerCase()
+  if (!v) return false
+  return [item.name, ...(item.aliases ?? [])].some((a) => String(a).trim().toLowerCase() === v)
+}
+
 function shuffled(list) {
   const a = [...list]
   for (let i = a.length - 1; i > 0; i--) {
@@ -47,11 +58,15 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
   // Items ticked on the hub for a custom round. Picking your own set is the
   // point of showing them all: the weak ones are rarely the next ones.
   const [picked, setPicked] = useState(() => new Set())
+  const [typed, setTyped] = useState('')
 
   // Measured once on entry. Reading it live would make the prompt vanish
   // mid-session the moment anything saved.
   const [gap] = useState(() => staleness(loadLadder(ladder.id, order).lastSeenAt))
 
+  // A set whose answers are not single words cannot be typed fairly.
+  const typeable = ladder.typeable !== false
+  const answerMode = typeable ? (state.answerMode ?? 'mc') : 'mc'
   const learnedKeys = state.learned
   const learnedSet = new Set(learnedKeys)
   const learnedItems = ladder.items.filter((i) => learnedSet.has(i.key))
@@ -81,6 +96,17 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
   }, [phase, onInnerBack])
 
   const touch = () => setState((s) => ({ ...s, lastSeenAt: Date.now() }))
+  const setAnswerMode = (m) => setState((s) => ({ ...s, answerMode: m, promoted: true }))
+
+  // Once the whole set is in place, picking from four is the easy version of
+  // a test you have already passed, so typing becomes the default. Done once
+  // and recorded, so a later switch back to multiple choice sticks — and so
+  // it never asks, which would be a question on every round forever.
+  useEffect(() => {
+    if (typeable && allDone && !state.promoted && state.answerMode !== 'type') {
+      setState((s) => ({ ...s, answerMode: 'type', promoted: true }))
+    }
+  }, [allDone, state.promoted, state.answerMode])
 
   function startDrill(review, custom) {
     const pool = custom ?? (review ? learnedItems : [...learnedItems, next])
@@ -89,6 +115,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
     setQi(0)
     setMissed([])
     setResult(null)
+    setTyped('')
     setRetry(false)
     setPhase('drill')
   }
@@ -112,6 +139,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
 
   function advance() {
     setResult(null)
+    setTyped('')
     if (qi + 1 < queue.length) {
       setQi(qi + 1)
       return
@@ -125,7 +153,10 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
       setRetry(true)
       return
     }
+    // Spread, or the answer mode and the promotion flag are lost every time
+    // a round finishes — the setting would silently reset itself.
     setState((s) => ({
+      ...s,
       learned: reviewOnly || !next ? s.learned : [...s.learned, next.key],
       lastSeenAt: Date.now(),
     }))
@@ -267,15 +298,37 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
           <Visual item={card} hideAnswer={!result} notation={notation} />
         </div>
 
-        {!result && (
-          <div>
-            {options.map((o) => (
-              <button key={o.key} className="choice-btn" onClick={() => grade(o.key === card.key)}>
-                {o.name} {o.sub && <span className="muted">({o.sub})</span>}
+        {!result &&
+          (answerMode === 'type' ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                if (typed.trim()) grade(typedMatches(typed, card))
+              }}
+            >
+              <input
+                className="text-input"
+                value={typed}
+                onChange={(e) => setTyped(e.target.value)}
+                placeholder={ladder.typePlaceholder ?? 'Name it'}
+                autoComplete="off"
+                autoCapitalize="off"
+                autoCorrect="off"
+                autoFocus
+              />
+              <button className="primary wide" type="submit">
+                Check
               </button>
-            ))}
-          </div>
-        )}
+            </form>
+          ) : (
+            <div>
+              {options.map((o) => (
+                <button key={o.key} className="choice-btn" onClick={() => grade(o.key === card.key)}>
+                  {o.name} {o.sub && <span className="muted">({o.sub})</span>}
+                </button>
+              ))}
+            </div>
+          ))}
 
         {result && (
           <>
@@ -370,6 +423,22 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
           <span className="action-sub">All {ladder.items.length}</span>
         </button>
       </div>
+
+      {/* How rounds ask. Lives here rather than over each question, because
+          it is a setting rather than part of answering one. */}
+      {typeable && (
+      <div className="seg wide-seg answer-mode">
+        <button className={answerMode === 'mc' ? 'active' : ''} onClick={() => setAnswerMode('mc')}>
+          Multiple choice
+        </button>
+        <button className={answerMode === 'type' ? 'active' : ''} onClick={() => setAnswerMode('type')}>
+          Type it
+        </button>
+      </div>
+      )}
+      {allDone && answerMode === 'type' && (
+        <p className="muted fc-hint">All {ladder.items.length} learned — typing is the harder half.</p>
+      )}
 
       {/* Both halves of the set, learned first and the rest dimmed below.
           Tapping picks rather than opens: the items you most want to drill
