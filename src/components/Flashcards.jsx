@@ -3,6 +3,7 @@ import aminoAcids from '../data/genchem/aminoAcids.json'
 import AminoAcidFull from './visuals/AminoAcidFull.jsx'
 import { useNotation } from '../lib/useNotation.js'
 import NotationToggle from './NotationToggle.jsx'
+import { revealAccent } from '../lib/revealAccent.js'
 
 /**
  * A real flashcard deck: flip to study, then drill at two difficulties.
@@ -186,7 +187,7 @@ export default function Flashcards({ onDone }) {
 
       <div
         className={`card flashcard${flipped ? ' flipped' : ''}`}
-        style={{ borderTop: `3px solid ${CLASS_COLOR[card.class]}` }}
+        style={revealAccent(CLASS_COLOR[card.class], flipped || !!result || reversed)}
         onClick={mode === 'flip' ? () => setFlipped((f) => !f) : undefined}
       >
         {reversed && !flipped ? (
@@ -200,7 +201,7 @@ export default function Flashcards({ onDone }) {
             <p className="muted fc-prompt-ask">Picture the side chain, then tap to check.</p>
           </div>
         ) : (
-          <AminoAcidFull aa={card} hideName={!(flipped || result || reversed)} notation={notation} />
+          <AminoAcidFull aa={card} hideAnswer={!(flipped || result || reversed)} notation={notation} />
         )}
 
         {(flipped || result) && (

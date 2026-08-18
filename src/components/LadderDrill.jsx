@@ -3,6 +3,7 @@ import { ladderById } from './ladders/definitions.jsx'
 import { loadLadder, saveLadder, staleness } from '../lib/ladderProgress.js'
 import { useNotation } from '../lib/useNotation.js'
 import NotationToggle from './NotationToggle.jsx'
+import { revealAccent } from '../lib/revealAccent.js'
 
 /**
  * Learn one, name it against everything you already have, add the next.
@@ -175,14 +176,14 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         {header}
         <div
           className="card ladder-learn"
-          style={viewing.accent ? { borderTop: `3px solid ${viewing.accent}` } : undefined}
+          style={revealAccent(viewing.accent, true)}
         >
           <div className="aa-head">
             <strong>{viewing.name}</strong>
             {viewing.sub && <span className="muted">{viewing.sub}</span>}
           </div>
           {showNotation && <NotationToggle notation={notation} onChange={setNotation} />}
-          <Visual item={viewing} hideName notation={notation} />
+          <Visual item={viewing} notation={notation} />
           <Facts item={viewing} />
         </div>
 
@@ -231,14 +232,14 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         {showNotation && <NotationToggle notation={notation} onChange={setNotation} />}
         <div
           className="card ladder-learn"
-          style={next.accent ? { borderTop: `3px solid ${next.accent}` } : undefined}
+          style={revealAccent(next.accent, true)}
         >
           <div className="ladder-new">New</div>
           <div className="aa-head">
             <strong>{next.name}</strong>
             {next.sub && <span className="muted">{next.sub}</span>}
           </div>
-          <Visual item={next} notation={notation} hideName />
+          <Visual item={next} notation={notation} />
           <Facts item={next} />
         </div>
         <button className="primary wide" onClick={() => startDrill(false)}>
@@ -263,9 +264,9 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         {showNotation && <NotationToggle notation={notation} onChange={setNotation} />}
         <div
           className="card flashcard"
-          style={card.accent ? { borderTop: `3px solid ${card.accent}` } : undefined}
+          style={revealAccent(card.accent, !!result)}
         >
-          <Visual item={card} hideName={!result} notation={notation} />
+          <Visual item={card} hideAnswer={!result} notation={notation} />
         </div>
 
         {!result && (

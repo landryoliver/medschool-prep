@@ -19,20 +19,23 @@ import { AminoAcidStructure } from './SideChainStructure.jsx'
  *
  * Rings are drawn as rings either way; nobody writes benzene out as a chain.
  */
-export default function AminoAcidFull({ aa, hideName = false, notation = 'skeletal' }) {
+export default function AminoAcidFull({ aa, hideAnswer = false, notation = 'skeletal' }) {
   return (
     <figure className="aaf">
       <AminoAcidStructure name={aa.name} notation={notation} />
-      <figcaption className="aaf-caption">
-        {!hideName && <span className="aaf-name">{aa.name}</span>}
-        {/* The condensed formula, not the group's name. "isopropyl" and
-            "benzyl (aromatic)" name a thing without saying what is in it,
-            which is no use to a reader who does not already know the word. */}
-        <span className="muted aaf-formula">
-          R = {aa.formula}
-          {aa.name === 'Proline' && ' , closing onto the backbone N'}
-        </span>
-      </figcaption>
+      {/* The formula is the answer written another way: "R = –CH₂C₈H₆N"
+          names tryptophan as surely as the word does. Hiding only the name
+          left it printed under every unanswered card. Both go together, which
+          is why the prop is hideANSWER and not hideName. */}
+      {!hideAnswer && (
+        <figcaption className="aaf-caption">
+          <span className="aaf-name">{aa.name}</span>
+          <span className="muted aaf-formula">
+            R = {aa.formula}
+            {aa.name === 'Proline' && ' , closing onto the backbone N'}
+          </span>
+        </figcaption>
+      )}
     </figure>
   )
 }

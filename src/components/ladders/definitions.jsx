@@ -67,8 +67,8 @@ export const LADDERS = [
     blurb: 'Structures, names and their one- and three-letter codes.',
     items: aminoItems,
     notation: true,
-    Visual: ({ item, hideName, notation }) => (
-      <AminoAcidFull aa={item.data} hideName={hideName} notation={notation} />
+    Visual: ({ item, hideAnswer, notation }) => (
+      <AminoAcidFull aa={item.data} hideAnswer={hideAnswer} notation={notation} />
     ),
     Facts: ({ item }) => {
       const a = item.data
@@ -101,11 +101,11 @@ export const LADDERS = [
     unit: 'group',
     blurb: 'The arrangements every reaction is named after.',
     items: groupItems,
-    Visual: ({ item, hideName }) => (
+    Visual: ({ item, hideAnswer }) => (
       <figure className="aaf">
         <GroupDiagram kind={item.data.kind} width={210} height={128} />
         <figcaption className="aaf-caption">
-          {!hideName && <span className="aaf-name">{item.data.name}</span>}
+          {!hideAnswer && <span className="aaf-name">{item.data.name}</span>}
           <span className="muted aaf-formula">{item.data.formula}</span>
         </figcaption>
       </figure>
@@ -127,11 +127,11 @@ export const LADDERS = [
     unit: 'shape',
     blurb: 'Every electron-group count and the shape it forces.',
     items: vseprItems,
-    Visual: ({ item, hideName }) => (
+    Visual: ({ item, hideAnswer }) => (
       <figure className="aaf">
         <VseprDiagram geometry={item.data} height={168} />
         <figcaption className="aaf-caption">
-          {!hideName && <span className="aaf-name">{item.data.shape}</span>}
+          {!hideAnswer && <span className="aaf-name">{item.data.shape}</span>}
           <span className="muted aaf-formula">
             {item.data.bonding} bonded + {item.data.lone} lone
           </span>

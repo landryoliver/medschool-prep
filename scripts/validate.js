@@ -24,6 +24,7 @@ import LadderDrill from '../src/components/LadderDrill.jsx'
 import LadderPicker from '../src/components/LadderPicker.jsx'
 import { LADDERS, ladderOrder } from '../src/components/ladders/definitions.jsx'
 import { loadLadder, staleness } from '../src/lib/ladderProgress.js'
+import { revealAccent } from '../src/lib/revealAccent.js'
 
 let errors = 0
 const fail = (msg) => {
@@ -767,6 +768,51 @@ console.log('\n=== Reference data ===')
   if (staleness(Date.now() - HOUR)) fail('staleness nudges after only an hour')
   else if (!staleness(Date.now() - 72 * HOUR)) fail('staleness fails to nudge after three days')
   else console.log('  ok  staleness quiet for an hour, nudges after days')
+}
+
+// Nothing on an unanswered card may name the thing being asked about.
+//
+// The name was hidden and the condensed formula was not, so every question
+// carried "R = –CH₂C₈H₆N" underneath the structure — which identifies
+// tryptophan exactly as well as the word does. The class colour on the card
+// border is the same failure in CSS: yellow nonpolar, green polar, red
+// acidic, blue basic, against options that are not matched by class.
+{
+  let leakBad = 0
+  // The deck opens on an unflipped card: the leaking state.
+  const deck = renderToStaticMarkup(createElement(Flashcards, { onDone: () => {} }))
+
+  for (const a of aa) {
+    if (deck.includes(a.formula)) {
+      fail(`Flashcards prints the side-chain formula "${a.formula}" on a card whose answer is still hidden`)
+      leakBad++
+      break
+    }
+  }
+  for (const name of aa.map((x) => x.name)) {
+    if (deck.includes(`>${name}<`)) {
+      fail(`Flashcards prints the name "${name}" on a card whose answer is still hidden`)
+      leakBad++
+      break
+    }
+  }
+  for (const c of ['#facc15', '#4ade80', '#f87171', '#38bdf8']) {
+    if (deck.includes(`3px solid ${c}`)) {
+      fail(`Flashcards shows the ${c} class border before the answer is revealed`)
+      leakBad++
+    }
+  }
+
+  // And the shared rule both screens use must withhold by construction.
+  if (revealAccent('#facc15', false) !== undefined) {
+    fail('revealAccent returns a style while the answer is still hidden')
+    leakBad++
+  }
+  if (!revealAccent('#facc15', true)) {
+    fail('revealAccent withholds the style even after the answer is shown')
+    leakBad++
+  }
+  if (!leakBad) console.log('  ok  unanswered cards leak neither the name, the formula, nor the class colour')
 }
 
   // The ladder introduces residues one at a time, in the order the three
