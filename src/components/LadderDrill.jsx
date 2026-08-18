@@ -29,7 +29,7 @@ function shuffled(list) {
   return a
 }
 
-export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
+export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBack }) {
   const ladder = ladderById(ladderId)
   const order = useMemo(() => ladder.items.map((i) => i.key), [ladder])
 
@@ -43,6 +43,9 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
   const [result, setResult] = useState(null)
   const [retry, setRetry] = useState(false)
   const [notation, setNotation] = useNotation()
+  // Items ticked on the hub for a custom round. Picking your own set is the
+  // point of showing them all: the weak ones are rarely the next ones.
+  const [picked, setPicked] = useState(() => new Set())
 
   // Measured once on entry. Reading it live would make the prompt vanish
   // mid-session the moment anything saved.
@@ -58,10 +61,28 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
     saveLadder(ladder.id, state)
   }, [ladder.id, state])
 
+  // The header arrow walks this screen's own steps before leaving it, so
+  // there is one back control with one meaning instead of a large arrow that
+  // jumps home and a small one that goes up a level.
+  useEffect(() => {
+    if (!onInnerBack) return undefined
+    const step =
+      phase === 'view'
+        ? () => setPhase('browse')
+        : phase === 'hub'
+          ? null
+          : () => {
+              setPhase('hub')
+              setResult(null)
+            }
+    onInnerBack(() => step)
+    return () => onInnerBack(() => null)
+  }, [phase, onInnerBack])
+
   const touch = () => setState((s) => ({ ...s, lastSeenAt: Date.now() }))
 
-  function startDrill(review) {
-    const pool = review ? learnedItems : [...learnedItems, next]
+  function startDrill(review, custom) {
+    const pool = custom ?? (review ? learnedItems : [...learnedItems, next])
     setReviewOnly(review)
     setQueue(shuffled(pool))
     setQi(0)
@@ -122,19 +143,9 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
             ? `${qi + 1} / ${queue.length}${retry ? ' · missed' : ''}`
             : `${learnedKeys.length} of ${ladder.items.length} learned`}
         </span>
-        {phase === 'hub' ? (
+        {phase === 'hub' && (
           <button className="ghost small" onClick={onDone}>
             Done
-          </button>
-        ) : (
-          <button
-            className="ghost small"
-            onClick={() => {
-              setPhase('hub')
-              setResult(null)
-            }}
-          >
-            ← List
           </button>
         )}
       </div>
@@ -164,9 +175,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
           <Visual item={viewing} hideName notation={notation} />
           <Facts item={viewing} />
         </div>
-        <button className="primary wide" onClick={() => setPhase('browse')}>
-          ← All {ladder.items.length}
-        </button>
+
       </div>
     )
   }
@@ -194,9 +203,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
             </button>
           ))}
         </div>
-        <button className="ghost wide" onClick={() => setPhase('hub')}>
-          ← Back
-        </button>
+
       </div>
     )
   }
@@ -332,7 +339,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
           <span className="action-sub">
             {learnedKeys.length === 0
               ? `Nothing learned yet, out of ${ladder.items.length}`
-              : `${next.name} would be number ${learnedKeys.length + 1}`}
+              : `${next.name} · ${learnedKeys.length + 1} of ${ladder.items.length}`}
           </span>
         </button>
       )}
@@ -356,30 +363,72 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone }) {
         </button>
       </div>
 
-      {learnedItems.length > 0 && (
-        <section className="stage-block">
-          <div className="stage-head">
-            <h2 className="stage-title">Learned</h2>
-            <span className="muted stage-count">
-              {learnedItems.length} / {ladder.items.length}
-            </span>
-          </div>
-          <div className="ladder-grid">
-            {learnedItems.map((i) => (
-              <button
-                key={i.key}
-                className="ladder-chip learned"
-                onClick={() => {
-                  setViewing(i)
-                  setPhase('view')
-                }}
-              >
-                <span className="ladder-chip-name">{i.name}</span>
-                {i.sub && <span className="muted ladder-chip-sub">{i.sub}</span>}
-              </button>
+      {/* Both halves of the set, learned first and the rest dimmed below.
+          Tapping picks rather than opens: the items you most want to drill
+          are the shaky ones, which are rarely the next ones in order, and
+          the two buttons above already cover the common path. */}
+      {ladder.items.length > 0 && (
+        <>
+          <p className="muted fc-hint ladder-pick-hint">
+            Tap any {ladder.unit} to build your own round.
+            {picked.size > 0 && ` ${picked.size} picked.`}
+          </p>
+          {[
+            { title: 'Learned', items: learnedItems, learned: true },
+            { title: 'Not yet', items: ladder.items.filter((i) => !learnedSet.has(i.key)), learned: false },
+          ]
+            .filter((g) => g.items.length)
+            .map((g) => (
+              <section key={g.title} className="stage-block">
+                <div className="stage-head">
+                  <h2 className="stage-title">{g.title}</h2>
+                  <span className="muted stage-count">
+                    {g.items.length} of {ladder.items.length}
+                  </span>
+                </div>
+                <div className="ladder-grid">
+                  {g.items.map((i) => (
+                    <button
+                      key={i.key}
+                      className={`ladder-chip${g.learned ? ' learned' : ' unlearned'}${
+                        picked.has(i.key) ? ' picked' : ''
+                      }`}
+                      aria-pressed={picked.has(i.key)}
+                      onClick={() =>
+                        setPicked((p) => {
+                          const n = new Set(p)
+                          n.has(i.key) ? n.delete(i.key) : n.add(i.key)
+                          return n
+                        })
+                      }
+                    >
+                      <span className="ladder-chip-name">{i.name}</span>
+                      {i.sub && <span className="muted ladder-chip-sub">{i.sub}</span>}
+                    </button>
+                  ))}
+                </div>
+              </section>
             ))}
-          </div>
-        </section>
+        </>
+      )}
+
+      {/* Sticks to the bottom while you pick, so the button is reachable
+          without scrolling back up a list of twenty. */}
+      {picked.size > 0 && (
+        <div className="ladder-picked-bar">
+          <button
+            className="primary"
+            onClick={() => {
+              touch()
+              startDrill(true, ladder.items.filter((i) => picked.has(i.key)))
+            }}
+          >
+            Drill {picked.size} picked →
+          </button>
+          <button className="ghost" onClick={() => setPicked(new Set())}>
+            Clear
+          </button>
+        </div>
       )}
 
       {learnedItems.length > 0 && (

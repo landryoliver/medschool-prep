@@ -10,7 +10,7 @@ import lessons from '../data/lessons.json'
  * then hands off to Notes for revision, walkthroughs for procedure, and
  * questions for practice.
  */
-export default function LessonView({ topicId, title, onNotes, onStudy }) {
+export default function LessonView({ topicId, title, onNotes, onStudy, onCards }) {
   const lesson = lessons[topicId]
   const [read, setRead] = useState(0)
 
@@ -80,6 +80,13 @@ export default function LessonView({ topicId, title, onNotes, onStudy }) {
           <button className="ghost wide" onClick={onStudy}>
             Skip to practice
           </button>
+          {/* The deck belongs with the teaching, not as a sixth button on a
+              topic card that was already too crowded to read. */}
+          {onCards && (
+            <button className="ghost wide" onClick={onCards}>
+              Flashcards — flip, quiz or type the twenty
+            </button>
+          )}
         </>
       )}
     </div>

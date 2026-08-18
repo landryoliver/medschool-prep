@@ -19,9 +19,42 @@ import { getAllProgress } from './lib/db.js'
 // the same spaced-repetition history.
 const PROGRESS_MODE = 'prep'
 
+// What the back arrow returns you to, by view name. The header used to jump
+// straight home from anywhere, which meant a second, smaller back control had
+// to exist inside pages for "the step before" — two arrows, two meanings.
+const BACK_LABEL = {
+  topics: 'Topics',
+  ladders: 'Sets',
+  ladder: 'Set',
+  learn: 'Notes',
+  lesson: 'Lesson',
+  plan: 'Progression',
+  cards: 'Flashcards',
+  progress: 'Progress',
+}
+
 export default function App() {
-  const [view, setView] = useState({ name: 'topics' })
+  // A stack, not a single view: one back arrow that always means "the page
+  // before this one".
+  const [stack, setStack] = useState([{ name: 'topics' }])
+  const view = stack[stack.length - 1]
   const [missedBank, setMissedBank] = useState(null)
+  // A screen with its own internal steps (the ladder's hub, browse and card
+  // views) registers a handler here, so the same arrow walks those first
+  // instead of leaving the screen from halfway in.
+  const [innerBack, setInnerBack] = useState(null)
+
+  const setView = (v) => setStack((s) => [...s, v])
+  const goBack = () => {
+    if (innerBack) {
+      innerBack()
+      return
+    }
+    setStack((s) => (s.length > 1 ? s.slice(0, -1) : s))
+  }
+
+  const previous = stack.length > 1 ? stack[stack.length - 2] : null
+  const backLabel = innerBack ? 'Back' : BACK_LABEL[previous?.name] ?? 'Back'
 
   const label = view.topicId ? TOPICS.find((t) => t.id === view.topicId)?.label : null
 
@@ -34,16 +67,16 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        {view.name === 'topics' ? (
+        {stack.length === 1 && !innerBack ? (
           <h1>Orgo Prep</h1>
         ) : (
-          <button className="back" onClick={() => setView({ name: 'topics' })}>
-            ‹ Topics
+          <button className="back" onClick={goBack}>
+            ‹ {backLabel}
           </button>
         )}
         <button
           className={`header-link ${view.name === 'progress' ? 'active' : ''}`}
-          onClick={() => setView(view.name === 'progress' ? { name: 'topics' } : { name: 'progress' })}
+          onClick={() => (view.name === 'progress' ? goBack() : setView({ name: 'progress' }))}
         >
           Progress
         </button>
@@ -95,17 +128,17 @@ export default function App() {
           />
         )}
 
-        {view.name === 'cards' && <Flashcards onDone={() => setView({ name: 'topics' })} />}
+        {view.name === 'cards' && <Flashcards onDone={goBack} />}
 
         {view.name === 'ladders' && (
           <LadderPicker
             onPick={(ladderId) => setView({ name: 'ladder', ladderId })}
-            onDone={() => setView({ name: 'topics' })}
+            onDone={goBack}
           />
         )}
 
         {view.name === 'ladder' && (
-          <LadderDrill ladderId={view.ladderId} onDone={() => setView({ name: 'ladders' })} />
+          <LadderDrill ladderId={view.ladderId} onDone={goBack} onInnerBack={setInnerBack} />
         )}
 
         {view.name === 'lesson' && (
@@ -114,6 +147,7 @@ export default function App() {
             title={label}
             onNotes={() => setView({ name: 'learn', topicId: view.topicId })}
             onStudy={() => setView({ name: 'session', topicId: view.topicId })}
+            onCards={view.topicId === 'aminoacids' ? () => setView({ name: 'cards' }) : undefined}
           />
         )}
 

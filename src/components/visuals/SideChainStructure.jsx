@@ -100,8 +100,8 @@ function polygon(cx, cy, sides, r, startAngle) {
  * further along the same bond, so the ring points away from the chain
  * instead of doubling back over it.
  */
-function ringAt(attach, inDir, sides) {
-  const r = BOND / (2 * Math.sin(Math.PI / sides))
+function ringAt(attach, inDir, sides, side = BOND) {
+  const r = side / (2 * Math.sin(Math.PI / sides))
   const centre = step(attach, inDir, r)
   const start = Math.atan2(attach.y - centre.y, attach.x - centre.x)
   // Traverse so vertex 1 is on the side the chain leans away from; either
@@ -413,10 +413,15 @@ function collectWritten(name) {
   }
 
   if (spec.kind === 'proline') {
-    // A ring cannot be written out as a chain, so this is identical in both
-    // notations.
-    const { pts } = ringAt(alpha, rot(DOWN, 19), 5)
+    // The ring keeps its shape, but in this notation its carbons are named
+    // like every other carbon. Leaving them bare made "every carbon spelled
+    // out" false for exactly one residue — and proline's ring is saturated
+    // CH₂, which a biochemistry chart does label.
+    // A wider ring: a label at every vertex needs more edge than a bare
+    // skeletal pentagon has, or the trim leaves no line between the letters.
+    const { pts } = ringAt(alpha, rot(DOWN, 19), 5, BOND * 1.9)
     for (let i = 0; i < 5; i++) bond(pts[i], pts[(i + 1) % 5])
+    for (const i of [1, 2, 3]) label(pts[i], 'CH₂')
     label(pts[4], 'N')
     parts.prolineN = pts[4]
     return parts

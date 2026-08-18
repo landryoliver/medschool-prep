@@ -1803,3 +1803,41 @@ button.ghost.small {
   display: block;
   margin-top: 0.45rem;
 }
+
+/* Not-yet items: present and readable, but plainly not part of what you
+   have built. Dimmed rather than hidden, so the set has a visible size. */
+.ladder-chip.unlearned {
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.ladder-chip.picked,
+.ladder-chip.unlearned.picked {
+  opacity: 1;
+  border-style: solid;
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.2);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.ladder-pick-hint {
+  margin-bottom: 0.5rem;
+}
+
+/* Follows you down a list of twenty rather than sitting at the bottom of it. */
+.ladder-picked-bar {
+  position: sticky;
+  bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  margin: 0.6rem 0;
+  border: 1px solid var(--accent);
+  border-radius: 0.7rem;
+  background: var(--panel);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+.ladder-picked-bar .primary {
+  flex: 1;
+}

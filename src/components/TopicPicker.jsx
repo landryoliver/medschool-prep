@@ -139,11 +139,6 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards, 
             Build
           </button>
         )}
-        {topic.id === 'aminoacids' && (
-          <button className="ghost" onClick={onCards}>
-            Flashcards
-          </button>
-        )}
       </div>
     </div>
   )
