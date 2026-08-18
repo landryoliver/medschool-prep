@@ -149,10 +149,20 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
           </button>
         )}
       </div>
+      {/* The bar has to measure whatever the number beside it measures. It
+          used to always show learned-of-total, so a round that had just
+          started under "1 / 10" sat half filled, because ten of twenty were
+          learned — two different scales one line apart. */}
       <div className="progress-track">
         <div
           className="progress-fill"
-          style={{ width: `${(learnedKeys.length / ladder.items.length) * 100}%` }}
+          style={{
+            width: `${
+              phase === 'drill'
+                ? (qi / Math.max(queue.length, 1)) * 100
+                : (learnedKeys.length / ladder.items.length) * 100
+            }%`,
+          }}
         />
       </div>
     </>
