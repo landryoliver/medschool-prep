@@ -20,7 +20,7 @@ import { parseFormula, EMPTY, addCounts } from '../../lib/chem/formula.js'
  * chosen by eye, and the crossing check is what proves it.
  */
 
-const BOND = 22
+export const BOND = 22
 const STROKE = '#38bdf8'
 const TEXT = '#38bdf8'
 const MUTED = '#7dd3fc'
@@ -46,30 +46,30 @@ function trimFor(box, d) {
   return Math.min(tx, ty) + GAP
 }
 
-const DOWN_RIGHT = { x: 0.5, y: 0.866 }
+export const DOWN_RIGHT = { x: 0.5, y: 0.866 }
 const DOWN_LEFT = { x: -0.5, y: 0.866 }
-const DOWN = { x: 0, y: 1 }
-const UP = { x: 0, y: -1 }
-const LEFT = { x: -1, y: 0 }
-const RIGHT = { x: 1, y: 0 }
+export const DOWN = { x: 0, y: 1 }
+export const UP = { x: 0, y: -1 }
+export const LEFT = { x: -1, y: 0 }
+export const RIGHT = { x: 1, y: 0 }
 
 // The written groups either side of the alpha carbon need a longer bond than
 // a skeletal one, because the text itself eats most of the length.
 const BACKBONE = BOND * 2.1
-const LABEL_SIZE = 13
+export const LABEL_SIZE = 13
 
 const unit = (x, y) => {
   const m = Math.hypot(x, y) || 1
   return { x: x / m, y: y / m }
 }
-const rot = (d, deg) => {
+export const rot = (d, deg) => {
   const a = (deg * Math.PI) / 180
   const c = Math.cos(a)
   const s = Math.sin(a)
   return { x: d.x * c - d.y * s, y: d.x * s + d.y * c }
 }
-const dirTo = (a, b) => unit(b.x - a.x, b.y - a.y)
-const step = (p, d, len = BOND) => ({ x: p.x + d.x * len, y: p.y + d.y * len })
+export const dirTo = (a, b) => unit(b.x - a.x, b.y - a.y)
+export const step = (p, d, len = BOND) => ({ x: p.x + d.x * len, y: p.y + d.y * len })
 const flip = (d) => ({ x: -d.x, y: d.y })
 const dot = (a, b) => a.x * b.x + a.y * b.y
 
@@ -100,7 +100,7 @@ function polygon(cx, cy, sides, r, startAngle) {
  * further along the same bond, so the ring points away from the chain
  * instead of doubling back over it.
  */
-function ringAt(attach, inDir, sides, side = BOND) {
+export function ringAt(attach, inDir, sides, side = BOND) {
   const r = side / (2 * Math.sin(Math.PI / sides))
   const centre = step(attach, inDir, r)
   const start = Math.atan2(attach.y - centre.y, attach.x - centre.x)
@@ -111,7 +111,7 @@ function ringAt(attach, inDir, sides, side = BOND) {
 }
 
 /** A second ring sharing the edge a–b of an existing one. */
-function fusedRing(a, b, awayFrom, sides) {
+export function fusedRing(a, b, awayFrom, sides) {
   const s = Math.hypot(b.x - a.x, b.y - a.y)
   const r = s / (2 * Math.sin(Math.PI / sides))
   const apothem = s / (2 * Math.tan(Math.PI / sides))
@@ -585,10 +585,10 @@ export function buildAminoAcid(name, notation = 'skeletal') {
   return finish(name, p.bonds, p.labels, p.circles, labelled)
 }
 
-const near = (a, b) => Math.hypot(a.x - b.x, a.y - b.y) < 1
+export const near = (a, b) => Math.hypot(a.x - b.x, a.y - b.y) < 1
 
 /** Trims bonds at labelled atoms and computes the fitted viewBox. */
-function finish(name, bonds, labels, circles, labelled) {
+export function finish(name, bonds, labels, circles, labelled, { skipOrigin = true } = {}) {
   const trimmed = bonds.map(({ a, b, double, inner }) => {
     const d = dirTo(a, b)
     const boxA = labelled.get(key(a))?.box
@@ -634,7 +634,11 @@ function finish(name, bonds, labels, circles, labelled) {
   // The alpha carbon sits at the origin and belongs to the backbone, not the
   // side chain, so it is tagged rather than counted. It carries no label now
   // that the whole residue is drawn as one structure.
-  const ALPHA = key({ x: 0, y: 0 })
+  // Only amino acids have a backbone atom at the origin. Left implicit,
+  // this silently swallowed N1 of every nucleobase ring, which sits there
+  // too — five molecules each drawn one nitrogen short, all still looking
+  // perfectly plausible.
+  const ALPHA = skipOrigin ? key({ x: 0, y: 0 }) : null
   const atoms = []
   const seen = new Set()
   const composition = EMPTY()
@@ -700,7 +704,7 @@ export function aminoSpan() {
 }
 
 /** Two parallel lines for a double bond; `inner` keeps one inside a ring. */
-function doubleBondLines(s) {
+export function doubleBondLines(s) {
   const d = dirTo(s.a, s.b)
   const n = { x: -d.y, y: d.x }
   if (!s.inner) {
@@ -721,7 +725,7 @@ function doubleBondLines(s) {
 }
 
 /** The bonds, rings and labels of a finished geometry, as SVG. */
-function draw(g) {
+export function draw(g) {
   return (
     <>
       {g.bonds.map((s, i) =>

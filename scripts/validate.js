@@ -22,6 +22,7 @@ import Walkthroughs from '../src/components/Walkthroughs.jsx'
 import BackupPanel from '../src/components/BackupPanel.jsx'
 import LadderDrill from '../src/components/LadderDrill.jsx'
 import LadderPicker from '../src/components/LadderPicker.jsx'
+import { buildNucleobase } from '../src/components/visuals/NucleobaseStructure.jsx'
 import { LADDERS, ladderOrder } from '../src/components/ladders/definitions.jsx'
 import { loadLadder, staleness } from '../src/lib/ladderProgress.js'
 import { revealAccent } from '../src/lib/revealAccent.js'
@@ -279,6 +280,100 @@ for (const topic of TOPICS) {
       fail(`progression stage "${stage.id}" sits at position ${i + 1} but its subtitle says Stage ${claimed[1]}`)
     }
   })
+}
+
+// === NUCLEOBASES ===
+// A purine with a nitrogen in the wrong place still looks like a purine, so
+// the drawing is counted and compared against the accepted molecular formula
+// rather than inspected. These caught a real one: N1 of every ring sits at
+// the origin, which the shared `finish` was treating as an amino acid's
+// backbone carbon and dropping — five molecules each drawn one N short.
+console.log('\n=== Nucleobases ===')
+{
+  const bases = JSON.parse(fs.readFileSync('src/data/genchem/nucleobases.json', 'utf8'))
+  const ACCEPTED = {
+    Adenine: { C: 5, N: 5, O: 0 },
+    Guanine: { C: 5, N: 5, O: 1 },
+    Cytosine: { C: 4, N: 3, O: 1 },
+    Thymine: { C: 5, N: 2, O: 2 },
+    Uracil: { C: 4, N: 2, O: 2 },
+  }
+  let nbBad = 0
+
+  for (const b of bases) {
+    const g = buildNucleobase(b.name)
+    if (!g) { fail(`${b.name}: no geometry`); nbBad++; continue }
+
+    const want = ACCEPTED[b.name]
+    if (!want) { fail(`no accepted formula on record for ${b.name}`); nbBad++; continue }
+    for (const el of ['C', 'N', 'O']) {
+      if (g.composition[el] !== want[el]) {
+        fail(`${b.name}: drawing has ${g.composition[el]} ${el}, accepted formula has ${want[el]}`)
+        nbBad++
+      }
+    }
+    // The stated formula on the card must agree with the drawing too.
+    const stated = parseFormulaLib(b.formula)
+    for (const el of ['C', 'N', 'O']) {
+      if (stated[el] !== want[el]) {
+        fail(`${b.name}: caption "${b.formula}" has ${stated[el]} ${el}, accepted has ${want[el]}`)
+        nbBad++
+      }
+    }
+  }
+
+  // Pairing has to be symmetric, and the hydrogen-bond counts are the reason
+  // GC-rich DNA melts at a higher temperature — getting them backwards would
+  // teach the opposite.
+  const byName = new Map(bases.map((b) => [b.name, b]))
+  for (const [x, y, n] of [['Adenine', 'Thymine', 2], ['Adenine', 'Uracil', 2], ['Guanine', 'Cytosine', 3]]) {
+    if (byName.get(x).bonds !== n || byName.get(y).bonds !== n) {
+      fail(`${x}–${y} is ${n} hydrogen bonds, data says ${byName.get(x).bonds} and ${byName.get(y).bonds}`)
+      nbBad++
+    }
+  }
+  // Exactly two purines and three pyrimidines, or the class split is wrong.
+  const purines = bases.filter((b) => b.class === 'purine').map((b) => b.name)
+  const pyr = bases.filter((b) => b.class === 'pyrimidine').map((b) => b.name)
+  if (purines.join() !== 'Adenine,Guanine') { fail(`purines are ${purines.join(', ')}, should be Adenine, Guanine`); nbBad++ }
+  if (pyr.join() !== 'Cytosine,Thymine,Uracil') { fail(`pyrimidines are ${pyr.join(', ')}`); nbBad++ }
+
+  if (!nbBad) console.log('  ok  5 nucleobases match their accepted formulas, pairings and class split')
+
+  // Same geometry guards the amino acids get.
+  const cross = (p, q, r) => (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x)
+  const sgn = (v) => (v > 1e-9 ? 1 : v < -1e-9 ? -1 : 0)
+  const same = (a, b) => Math.hypot(a.x - b.x, a.y - b.y) < 1.5
+  let geoBad = 0
+  for (const b of bases) {
+    const g = buildNucleobase(b.name)
+    for (let i = 0; i < g.bonds.length; i++) {
+      for (let j = i + 1; j < g.bonds.length; j++) {
+        const s = g.bonds[i]
+        const t = g.bonds[j]
+        const shares = same(s.a, t.a) || same(s.a, t.b) || same(s.b, t.a) || same(s.b, t.b)
+        if (shares) continue
+        const d1 = sgn(cross(s.a, s.b, t.a))
+        const d2 = sgn(cross(s.a, s.b, t.b))
+        const d3 = sgn(cross(t.a, t.b, s.a))
+        const d4 = sgn(cross(t.a, t.b, s.b))
+        if (d1 !== d2 && d3 !== d4 && d1 && d2 && d3 && d4) {
+          fail(`${b.name}: two bonds cross`)
+          geoBad++
+        }
+      }
+    }
+    for (const l of g.labels) {
+      const { halfW, halfH } = labelBox(l.text, l.size)
+      for (const s of g.bonds) {
+        if (segmentHitsBox(s, l.x, l.y, halfW, halfH)) {
+          fail(`${b.name}: label "${l.text}" sits on a bond`)
+          geoBad++
+        }
+      }
+    }
+  }
+  if (!geoBad) console.log('  ok  5 nucleobase structures: no crossing bonds, no label over a bond')
 }
 
 console.log('\n=== Rendering visuals ===')

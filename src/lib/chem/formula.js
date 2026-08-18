@@ -15,9 +15,13 @@ export const EMPTY = () => ({ C: 0, H: 0, N: 0, O: 0, S: 0 })
 export function parseFormula(src) {
   const s = [...src].filter((c) => !'–-⁺⁻ '.includes(c)).join('')
   let i = 0
+  // Subscript digits and plain ASCII digits both count, so a formula copied
+  // from a reference ("C5H5N5") parses the same as one typed for display
+  // ("C₅H₅N₅").
+  const digit = (c) => (SUBSCRIPT[c] !== undefined ? SUBSCRIPT[c] : c >= '0' && c <= '9' ? Number(c) : undefined)
   const readCount = () => {
     let n = ''
-    while (i < s.length && SUBSCRIPT[s[i]] !== undefined) n += String(SUBSCRIPT[s[i++]])
+    while (i < s.length && digit(s[i]) !== undefined) n += String(digit(s[i++]))
     return n === '' ? 1 : Number(n)
   }
   const parse = (depth) => {

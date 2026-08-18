@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Adenine",
+    "code": "A",
+    "class": "purine",
+    "ring": "purine",
+    "formula": "C₅H₅N₅",
+    "pairsWith": "Thymine in DNA, Uracil in RNA",
+    "bonds": 2,
+    "foundIn": "DNA and RNA",
+    "substituents": [{ "ring": "six", "at": 5, "label": "NH₂" }],
+    "groupName": "an amino group on the six-ring",
+    "groupWhat": "A purine with –NH₂ at position 6. That NH₂ donates the hydrogen bonds it uses to pair.",
+    "note": "Two rings fused. Pairs with thymine through two hydrogen bonds — the weaker of the two pairings, which is why AT-rich DNA melts first."
+  },
+  {
+    "name": "Guanine",
+    "code": "G",
+    "class": "purine",
+    "ring": "purine",
+    "formula": "C₅H₅N₅O",
+    "pairsWith": "Cytosine",
+    "bonds": 3,
+    "foundIn": "DNA and RNA",
+    "substituents": [
+      { "ring": "six", "at": 5, "label": "O", "double": true },
+      { "ring": "six", "at": 1, "label": "NH₂" }
+    ],
+    "groupName": "a carbonyl and an amino group",
+    "groupWhat": "A purine carrying =O at position 6 and –NH₂ at position 2. Two donors and an acceptor is what lets it make three hydrogen bonds.",
+    "note": "The other purine. Pairs with cytosine through three hydrogen bonds, so GC-rich DNA takes more heat to separate."
+  },
+  {
+    "name": "Cytosine",
+    "code": "C",
+    "class": "pyrimidine",
+    "ring": "pyrimidine",
+    "formula": "C₄H₅N₃O",
+    "pairsWith": "Guanine",
+    "bonds": 3,
+    "foundIn": "DNA and RNA",
+    "substituents": [
+      { "ring": "six", "at": 1, "label": "O", "double": true },
+      { "ring": "six", "at": 3, "label": "NH₂" }
+    ],
+    "groupName": "a carbonyl and an amino group",
+    "groupWhat": "A single ring with =O at position 2 and –NH₂ at position 4. The partner to guanine's three hydrogen bonds.",
+    "note": "One ring. Present in both DNA and RNA, and the base that gets methylated to switch genes off."
+  },
+  {
+    "name": "Thymine",
+    "code": "T",
+    "class": "pyrimidine",
+    "ring": "pyrimidine",
+    "formula": "C₅H₆N₂O₂",
+    "pairsWith": "Adenine",
+    "bonds": 2,
+    "foundIn": "DNA only",
+    "substituents": [
+      { "ring": "six", "at": 1, "label": "O", "double": true },
+      { "ring": "six", "at": 3, "label": "O", "double": true },
+      { "ring": "six", "at": 4, "label": "CH₃" }
+    ],
+    "groupName": "two carbonyls and a methyl",
+    "groupWhat": "Uracil with a –CH₃ added at position 5. That methyl is the only difference between them, and it is how DNA is told apart from RNA.",
+    "note": "DNA only. Thymine IS 5-methyluracil — remembering that one methyl is the whole distinction saves learning a fifth structure."
+  },
+  {
+    "name": "Uracil",
+    "code": "U",
+    "class": "pyrimidine",
+    "ring": "pyrimidine",
+    "formula": "C₄H₄N₂O₂",
+    "pairsWith": "Adenine",
+    "bonds": 2,
+    "foundIn": "RNA only",
+    "substituents": [
+      { "ring": "six", "at": 1, "label": "O", "double": true },
+      { "ring": "six", "at": 3, "label": "O", "double": true }
+    ],
+    "groupName": "two carbonyls",
+    "groupWhat": "A single ring with =O at positions 2 and 4, and nothing at 5. Thymine is this plus a methyl.",
+    "note": "RNA only, standing in for thymine. Uracil is cheaper to make; DNA uses thymine so that deaminated cytosine, which becomes uracil, is recognisable as damage."
+  }
+]

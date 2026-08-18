@@ -5,6 +5,8 @@ import { GROUPS } from '../GroupPrimer.jsx'
 import AminoAcidFull from '../visuals/AminoAcidFull.jsx'
 import GroupDiagram from '../visuals/GroupDiagram.jsx'
 import VseprDiagram from '../visuals/VseprDiagram.jsx'
+import NUCLEOBASES from '../../data/genchem/nucleobases.json'
+import NucleobaseStructure from '../visuals/NucleobaseStructure.jsx'
 
 /**
  * Every set that can be learned one item at a time.
@@ -163,3 +165,66 @@ export const LADDERS = [
 
 export const ladderById = (id) => LADDERS.find((l) => l.id === id)
 export const ladderForTopic = (topicId) => LADDERS.find((l) => l.topic === topicId)
+
+// --- nucleobases ------------------------------------------------------
+// Purines first, so the two-ring/one-ring split is established before the
+// three pyrimidines arrive; thymine and uracil last and adjacent, because
+// the only difference between them is a methyl and that is easiest to see
+// when they are side by side.
+const BASE_ORDER = ['Adenine', 'Guanine', 'Cytosine', 'Thymine', 'Uracil']
+const CLASS_TINT = { purine: '#a78bfa', pyrimidine: '#38bdf8' }
+
+const baseItems = BASE_ORDER.map((n) => {
+  const b = NUCLEOBASES.find((x) => x.name === n)
+  return {
+    key: b.name,
+    name: b.name,
+    sub: `${b.code} · ${b.class}`,
+    aliases: [b.code],
+    accent: CLASS_TINT[b.class],
+    data: b,
+  }
+})
+
+LADDERS.push({
+  id: 'nucleobases',
+  topic: 'biomolecules',
+  label: 'The five nucleobases',
+  unit: 'base',
+  blurb: 'Purine or pyrimidine, what pairs with what, and DNA versus RNA.',
+  items: baseItems,
+  Visual: ({ item, hideAnswer }) => (
+    <figure className="aaf">
+      <NucleobaseStructure name={item.data.name} />
+      {!hideAnswer && (
+        <figcaption className="aaf-caption">
+          <span className="aaf-name">{item.data.name}</span>
+          <span className="muted aaf-formula">{item.data.formula}</span>
+        </figcaption>
+      )}
+    </figure>
+  ),
+  Facts: ({ item }) => {
+    const b = item.data
+    return (
+      <>
+        <div className="aa-facts">
+          <span style={{ color: CLASS_TINT[b.class] }}>{b.class}</span>
+          <span className="muted">pairs with {b.pairsWith}</span>
+          <span className="muted">{b.bonds} H-bonds</span>
+        </div>
+        <div className="fc-group">
+          <strong>Side group: {b.groupName}</strong>
+          {b.groupWhat}
+        </div>
+        <p className="muted aa-note">{b.note}</p>
+        <p className="muted ladder-phrase">
+          {b.class === 'purine'
+            ? 'PURe As Gold — the purines are Adenine and Guanine, and they are the two-ring ones.'
+            : 'CUT the PYe — Cytosine, Uracil and Thymine are the pyrimidines, and they have one ring.'}{' '}
+          Found in {b.foundIn}.
+        </p>
+      </>
+    )
+  },
+})
