@@ -1,16 +1,15 @@
 import { NOTATIONS } from '../lib/useNotation.js'
 
 /**
- * Switches how the structures are drawn, with the difference stated on
- * screen rather than in a tooltip no phone will surface.
+ * Switches how the structures are drawn.
  *
- * Two labels alone would be another "Flip" — a control whose meaning you
- * have to discover by pressing it. The hint line under the buttons says
- * what each notation actually is, because that distinction is itself part
- * of what has to be learned: the two courses draw the same molecule two
- * different ways, and an exam may use either.
+ * `compact` drops the explanatory line. Over a question the reader is
+ * looking at the chart, so a sentence describing what the chart looks like
+ * is words in the way — and it repeated on every card of a round. On the
+ * reading screens the line stays, because that is where the two words
+ * "skeletal" and "written out" have to be defined at all.
  */
-export default function NotationToggle({ notation, onChange }) {
+export default function NotationToggle({ notation, onChange, compact = false }) {
   const active = NOTATIONS.find((n) => n.id === notation) ?? NOTATIONS[0]
   return (
     <div className="notation">
@@ -21,7 +20,7 @@ export default function NotationToggle({ notation, onChange }) {
           </button>
         ))}
       </div>
-      <p className="muted notation-hint">{active.hint}</p>
+      {!compact && <p className="muted notation-hint">{active.hint}</p>}
     </div>
   )
 }

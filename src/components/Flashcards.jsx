@@ -160,7 +160,9 @@ export default function Flashcards({ onDone }) {
           ? 'Picture it, then tap to check.'
           : MODES.find((m) => m.id === mode).hint}
       </p>
-      <NotationToggle notation={notation} onChange={setNotation} />
+      {/* Reading mode gets the explanation; a graded card does not need
+          a sentence describing the chart it is showing you. */}
+      <NotationToggle notation={notation} onChange={setNotation} compact={mode !== 'flip'} />
 
       {mode === 'flip' && (
         <div className="seg wide-seg">

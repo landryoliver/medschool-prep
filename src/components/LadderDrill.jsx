@@ -254,14 +254,12 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
     return (
       <div>
         {header}
-        <p className="muted fc-hint">
-          {retry
-            ? 'Missed only.'
-            : reviewOnly
-              ? `Review · ${queue.length} you know`
-              : 'Name it.'}
-        </p>
-        {showNotation && <NotationToggle notation={notation} onChange={setNotation} />}
+        {/* No caption. "Review · 10 you know" restated the button just
+            pressed and the "1 / 10" directly above it, and the notation line
+            described a chart already on screen. Only the retry state says
+            anything new — that these are repeats. */}
+        {retry && <p className="muted fc-hint">Missed only.</p>}
+        {showNotation && <NotationToggle notation={notation} onChange={setNotation} compact />}
         <div
           className="card flashcard"
           style={revealAccent(card.accent, !!result)}
