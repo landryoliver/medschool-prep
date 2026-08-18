@@ -229,7 +229,7 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
           scrolling and says what it actually does. */}
       <button className="action-btn primary-action" onClick={() => onBuild(null)}>
         <span className="action-title">Build up a set</span>
-        <span className="action-sub">Learn one at a time, then name it against the rest</span>
+        <span className="action-sub">One at a time</span>
       </button>
 
       <div className="action-row">

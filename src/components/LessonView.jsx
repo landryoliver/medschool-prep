@@ -84,7 +84,7 @@ export default function LessonView({ topicId, title, onNotes, onStudy, onCards }
               topic card that was already too crowded to read. */}
           {onCards && (
             <button className="ghost wide" onClick={onCards}>
-              Flashcards — flip, quiz or type the twenty
+              Flashcards
             </button>
           )}
         </>

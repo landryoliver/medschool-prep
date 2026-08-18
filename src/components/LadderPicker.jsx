@@ -19,8 +19,7 @@ export default function LadderPicker({ onPick, onDone }) {
   return (
     <div>
       <p className="muted fc-hint">
-        Learn one at a time and name it against everything you already have. Progress is kept per set, so you can stop
-        anywhere and review what you have.
+        One at a time. Progress kept per set.
       </p>
       {LADDERS.map((l) => {
         const p = progress?.[l.id]
@@ -30,7 +29,7 @@ export default function LadderPicker({ onPick, onDone }) {
           <button key={l.id} className="action-btn ladder-pick" onClick={() => onPick(l.id)}>
             <span className="action-title">{l.label}</span>
             <span className="action-sub">
-              {done === 0 ? l.blurb : `${done} of ${l.items.length} learned${gap ? ` · last seen ${gap.text} ago` : ''}`}
+              {done === 0 ? l.blurb : `${done} of ${l.items.length}${gap ? ` · ${gap.text} ago` : ''}`}
             </span>
             <span className="progress-track thin ladder-pick-bar">
               <span className="progress-fill" style={{ width: `${(done / l.items.length) * 100}%` }} />

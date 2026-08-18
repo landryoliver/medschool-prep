@@ -10,8 +10,8 @@ import { useEffect, useState } from 'react'
 const STORE_KEY = 'orgoprep.notation'
 
 export const NOTATIONS = [
-  { id: 'skeletal', label: 'Skeletal', hint: 'Corners are carbons, hydrogens implied — how organic chemistry draws everything.' },
-  { id: 'written', label: 'Written out', hint: 'Every carbon spelled out, CH₂ stacked — how a biochemistry chart shows the twenty.' },
+  { id: 'skeletal', label: 'Skeletal', hint: 'Corners are carbons — orgo standard.' },
+  { id: 'written', label: 'Written out', hint: 'Every carbon named — biochem chart style.' },
 ]
 
 export function useNotation() {

@@ -196,7 +196,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
       <div>
         {header}
         <p className="muted fc-hint">
-          Every {ladder.unit} in the set. Tap any one to read it, whether or not you have reached it yet.
+          Tap any {ladder.unit} to read it.
         </p>
         <div className="ladder-grid">
           {ladder.items.map((i, n) => (
@@ -226,8 +226,8 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         {header}
         <p className="muted fc-hint">
           {learnedKeys.length === 0
-            ? `Start with one. Learn it, name it, then a second joins it — and so on to ${ladder.items.length}.`
-            : `Number ${learnedKeys.length + 1}. Learn this one, then name it against the ${learnedKeys.length} you already have.`}
+            ? `Learn it, then name it. One at a time to ${ladder.items.length}.`
+            : `New — then name it against your ${learnedKeys.length}.`}
         </p>
         {showNotation && <NotationToggle notation={notation} onChange={setNotation} />}
         <div
@@ -256,10 +256,10 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         {header}
         <p className="muted fc-hint">
           {retry
-            ? 'Missed ones only. Get these right to finish the round.'
+            ? 'Missed only.'
             : reviewOnly
-              ? `Review — the ${queue.length} you already know, nothing new.`
-              : `Which of your ${queue.length} is this?`}
+              ? `Review · ${queue.length} you know`
+              : 'Name it.'}
         </p>
         {showNotation && <NotationToggle notation={notation} onChange={setNotation} />}
         <div
@@ -310,9 +310,9 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
           next item. */}
       {gap && canReview && (
         <div className="card ladder-nudge">
-          <strong>It has been {gap.text}.</strong>
+          <strong>Been {gap.text}.</strong>
           <p className="muted">
-            Run through the {learnedItems.length} you know before adding another? Nothing new gets introduced.
+            Warm up on the {learnedItems.length} you know first?
           </p>
           <button
             className="primary wide"
@@ -321,7 +321,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
               startDrill(true)
             }}
           >
-            Warm up on {learnedItems.length} →
+            Warm up →
           </button>
         </div>
       )}
@@ -332,8 +332,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         <div className="card done-card">
           <h2 className="section-title">All {ladder.items.length} learned</h2>
           <p className="muted">
-            You built the set one at a time and named each against the whole group. Review keeps it; the question bank
-            for this topic keeps testing it on a schedule.
+            Review keeps it. The question bank for this topic tests it on a schedule.
           </p>
         </div>
       ) : (
@@ -349,7 +348,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
           </span>
           <span className="action-sub">
             {learnedKeys.length === 0
-              ? `Nothing learned yet, out of ${ladder.items.length}`
+              ? `${ladder.items.length} to go`
               : `${next.name} · ${learnedKeys.length + 1} of ${ladder.items.length}`}
           </span>
         </button>
@@ -370,7 +369,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
         )}
         <button className="action-btn" onClick={() => setPhase('browse')}>
           <span className="action-title">Browse all</span>
-          <span className="action-sub">All {ladder.items.length}, learned or not</span>
+          <span className="action-sub">All {ladder.items.length}</span>
         </button>
       </div>
 
@@ -381,8 +380,7 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
       {ladder.items.length > 0 && (
         <>
           <p className="muted fc-hint ladder-pick-hint">
-            Tap any {ladder.unit} to build your own round.
-            {picked.size > 0 && ` ${picked.size} picked.`}
+            Tap to pick your own round.{picked.size > 0 && ` ${picked.size} picked.`}
           </p>
           {[
             { title: 'Learned', items: learnedItems, learned: true },

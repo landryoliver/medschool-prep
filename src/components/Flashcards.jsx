@@ -18,9 +18,9 @@ import { revealAccent } from '../lib/revealAccent.js'
  * cramming a set in one sitting; the SRS is for keeping it.
  */
 const MODES = [
-  { id: 'flip', label: 'Study', hint: 'Look at each structure, guess, then tap the card to check.' },
-  { id: 'choice', label: 'Quiz', hint: 'Name the structure by picking from four options.' },
-  { id: 'type', label: 'Recall', hint: 'Hardest: type the name, or its three- or one-letter code.' },
+  { id: 'flip', label: 'Study', hint: 'Tap the card to check.' },
+  { id: 'choice', label: 'Quiz', hint: 'Pick from four.' },
+  { id: 'type', label: 'Recall', hint: 'Type the name, or its code.' },
 ]
 
 const CLASS_COLOR = { acidic: '#f87171', basic: '#38bdf8', polar: '#4ade80', nonpolar: '#facc15' }
@@ -157,7 +157,7 @@ export default function Flashcards({ onDone }) {
           single words is a guessing game otherwise. */}
       <p className="muted fc-hint">
         {reversed
-          ? 'Read the name, picture the side chain, then tap to check what it looks like.'
+          ? 'Picture it, then tap to check.'
           : MODES.find((m) => m.id === mode).hint}
       </p>
       <NotationToggle notation={notation} onChange={setNotation} />
@@ -198,7 +198,7 @@ export default function Flashcards({ onDone }) {
             <span className="muted">
               {card.three} · {card.one}
             </span>
-            <p className="muted fc-prompt-ask">Picture the side chain, then tap to check.</p>
+            <p className="muted fc-prompt-ask">Tap to check.</p>
           </div>
         ) : (
           <AminoAcidFull aa={card} hideAnswer={!(flipped || result || reversed)} notation={notation} />
