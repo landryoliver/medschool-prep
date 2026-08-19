@@ -1,7 +1,15 @@
 import { bondPairs, substituentsAt, bondOrder } from '../../lib/chem/molecule.js'
 
 const BOND = 46
-const SUB_BOND = 26
+// A substituent bond has to stay clearly visible where it leaves a HIGHLIGHTED
+// atom, because the questions that circle an atom are the ones that ask you to
+// count its bonds. At 26, with 9 trimmed for the label, only 17 was drawn
+// against a 15-radius highlight disc — two visible pixels.
+export const SUB_BOND = 34
+// How far the bond stops short of the label text.
+export const LABEL_GAP = 9
+// Radius of the disc marking the circled atom.
+export const HIGHLIGHT_R = 12
 
 /**
  * Chain layout is a zigzag, except around a triple bond: an sp carbon is
@@ -131,7 +139,7 @@ export default function SkeletalDiagram({
         <circle
           cx={pts[highlightVertex].x}
           cy={pts[highlightVertex].y}
-          r="15"
+          r={HIGHLIGHT_R}
           fill="rgba(250, 204, 21, 0.16)"
           stroke="rgba(250, 204, 21, 0.55)"
           strokeWidth="1.5"
@@ -168,7 +176,7 @@ export default function SkeletalDiagram({
         const dx = l.to.x - l.from.x
         const dy = l.to.y - l.from.y
         const len = Math.hypot(dx, dy) || 1
-        const end = { x: l.to.x - (dx / len) * 9, y: l.to.y - (dy / len) * 9 }
+        const end = { x: l.to.x - (dx / len) * LABEL_GAP, y: l.to.y - (dy / len) * LABEL_GAP }
         return (
           <g key={`sub-${i}`}>
             {offsets.map((m, k) => (

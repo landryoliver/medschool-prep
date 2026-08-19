@@ -9,6 +9,7 @@ import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
 import QuestionVisual from '../src/components/visuals/QuestionVisual.jsx'
+import { SUB_BOND, LABEL_GAP, HIGHLIGHT_R } from '../src/components/visuals/SkeletalDiagram.jsx'
 import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
 import SideChainStructure, { buildSideChain, buildAminoAcid, labelBox, aminoSpan } from '../src/components/visuals/SideChainStructure.jsx'
 import { parseFormula as parseFormulaLib } from '../src/lib/chem/formula.js'
@@ -374,6 +375,30 @@ console.log('\n=== Nucleobases ===')
     }
   }
   if (!geoBad) console.log('  ok  5 nucleobase structures: no crossing bonds, no label over a bond')
+}
+
+// A circled atom is circled precisely because the question asks you to count
+// its bonds. If the disc marking it swallows one, the question is unanswerable
+// from the picture — and this is not something rendering the diagram can
+// reveal, because the bond IS drawn, just almost entirely underneath.
+{
+  const visible = SUB_BOND - LABEL_GAP
+  const clear = visible - HIGHLIGHT_R
+  if (clear < 8) {
+    fail(
+      `a substituent bond on a highlighted atom shows only ${clear}px outside the marker ` +
+        `(bond ${SUB_BOND}, label gap ${LABEL_GAP}, marker radius ${HIGHLIGHT_R}) — ` +
+        `the question asks you to count bonds you cannot see`,
+    )
+  } else {
+    console.log(`  ok  substituent bonds clear the highlight marker by ${clear}px`)
+  }
+
+  // The label itself must sit outside the marker too, or the letter lands on
+  // the tinted disc and reads as part of it.
+  if (SUB_BOND - HIGHLIGHT_R < 12) {
+    fail(`a substituent label sits ${SUB_BOND - HIGHLIGHT_R}px from the highlight edge — too close to read as separate`)
+  }
 }
 
 console.log('\n=== Rendering visuals ===')
