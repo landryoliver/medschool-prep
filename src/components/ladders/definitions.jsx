@@ -67,7 +67,7 @@ export const LADDERS = [
     label: 'The 20 amino acids',
     unit: 'residue',
     blurb: 'Structures, names and their one- and three-letter codes.',
-    typePlaceholder: 'Name, or three- or one-letter code',
+    typePlaceholder: 'e.g. Tryptophan, Trp or W',
     items: aminoItems,
     notation: true,
     Visual: ({ item, hideAnswer, notation }) => (
@@ -103,7 +103,7 @@ export const LADDERS = [
     label: 'Functional groups',
     unit: 'group',
     blurb: 'The arrangements every reaction is named after.',
-    typePlaceholder: 'Group name, or its formula',
+    typePlaceholder: 'e.g. Hydroxyl or –OH',
     items: groupItems,
     Visual: ({ item, hideAnswer }) => (
       <figure className="aaf">
@@ -200,7 +200,7 @@ LADDERS.push({
   label: 'The five nucleobases',
   unit: 'base',
   blurb: 'Purine or pyrimidine, what pairs with what, and DNA versus RNA.',
-  typePlaceholder: 'Base name, or its letter',
+  typePlaceholder: 'e.g. Adenine or A',
   items: baseItems,
   Visual: ({ item, hideAnswer }) => (
     <figure className="aaf">

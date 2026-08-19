@@ -262,7 +262,10 @@ export default function Flashcards({ onDone }) {
             className="text-input"
             value={typed}
             onChange={(e) => setTyped(e.target.value)}
-            placeholder="Name, three-letter, or one-letter code"
+            name="answer"
+            placeholder="e.g. Tryptophan, Trp or W"
+            spellCheck={false}
+            enterKeyHint="go"
             autoComplete="off"
             autoCapitalize="off"
             autoCorrect="off"

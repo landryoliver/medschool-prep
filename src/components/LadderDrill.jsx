@@ -306,15 +306,22 @@ export default function LadderDrill({ ladderId = 'aminoacids', onDone, onInnerBa
                 if (typed.trim()) grade(typedMatches(typed, card))
               }}
             >
+              {/* No autoFocus: it opened the keyboard over the structure
+                  before you had seen it. Tap the box when you are ready.
+                  The field is named "answer" and the placeholder leads with
+                  an example rather than the word "name", because iOS reads
+                  both and was offering to autofill a contact. */}
               <input
                 className="text-input"
+                name="answer"
                 value={typed}
                 onChange={(e) => setTyped(e.target.value)}
-                placeholder={ladder.typePlaceholder ?? 'Name it'}
+                placeholder={ladder.typePlaceholder ?? 'Answer'}
                 autoComplete="off"
                 autoCapitalize="off"
                 autoCorrect="off"
-                autoFocus
+                spellCheck={false}
+                enterKeyHint="go"
               />
               <button className="primary wide" type="submit">
                 Check

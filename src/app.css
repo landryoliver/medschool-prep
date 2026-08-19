@@ -196,6 +196,13 @@ button.wide {
   background: var(--panel-2);
   color: var(--text);
   margin-bottom: 0.6rem;
+  /* 16px exactly, in px and not rem. iOS Safari zooms the whole page in
+     when a focused input is under 16px, which magnified the structure and
+     shoved it off the top of the screen the moment the keyboard opened.
+     Inputs do not inherit the body font, so without this it fell back to
+     the browser default of about 13px. */
+  font-size: 16px;
+  font-family: inherit;
 }
 
 .feedback {

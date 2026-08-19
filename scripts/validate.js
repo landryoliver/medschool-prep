@@ -859,6 +859,62 @@ console.log('\n=== Reference data ===')
   if (!tBad) console.log('  ok  4 ladders: every typed answer is unambiguous and every set says what to type')
 }
 
+// iOS Safari zooms the whole page in when a focused input is under 16px, and
+// the drill inputs sit directly under a structure — the zoom magnified it and
+// pushed it off the top of the screen the instant the keyboard opened. The
+// rule is invisible in review and trivially undone by a tidy-up, so it is
+// pinned here.
+{
+  let inBad = 0
+  const css = fs.readFileSync('src/app.css', 'utf8')
+  const block = /\.text-input\s*\{([^}]*)\}/.exec(css)
+  if (!block) {
+    fail('.text-input rule is missing from app.css')
+    inBad++
+  } else {
+    const size = /font-size:\s*([\d.]+)px/.exec(block[1])
+    if (!size) {
+      fail('.text-input has no font-size in px — iOS zooms the page on focus below 16px')
+      inBad++
+    } else if (Number(size[1]) < 16) {
+      fail(`.text-input font-size is ${size[1]}px; iOS zooms the page on focus below 16px`)
+      inBad++
+    }
+  }
+
+  // autoFocus on a drill input opens the keyboard over the structure before
+  // it has been looked at.
+  for (const f of ['src/components/LadderDrill.jsx', 'src/components/Flashcards.jsx']) {
+    const src = fs.readFileSync(f, 'utf8')
+    // Comments stripped first: the note explaining why autoFocus is absent
+    // names it, and a bare token search flagged that as the violation.
+    const code = src.replace(/\{?\/\*[\s\S]*?\*\/\}?/g, '').replace(/^\s*\/\/.*$/gm, '')
+    // A plain token search, not a match inside the <input> tag: an arrow
+    // function in any earlier attribute contains ">", which ends a [^>]*
+    // class and makes the tag-scoped version unable to fire at all. Found by
+    // break-testing it — it passed with autoFocus sitting right there.
+    if (/\bautoFocus\b/.test(code)) {
+      fail(`${f}: uses autoFocus, which opens the keyboard over the question before it has been seen`)
+      inBad++
+    }
+    // A placeholder starting with "Name" makes iOS offer to autofill a contact.
+    for (const m of src.matchAll(/placeholder="([^"]+)"/g)) {
+      if (/^name\b/i.test(m[1])) {
+        fail(`${f}: placeholder "${m[1]}" reads as a name field, so iOS offers contact autofill`)
+        inBad++
+      }
+    }
+  }
+  for (const l of LADDERS) {
+    if (l.typePlaceholder && /^name\b/i.test(l.typePlaceholder)) {
+      fail(`ladder "${l.id}" placeholder "${l.typePlaceholder}" reads as a name field to iOS`)
+      inBad++
+    }
+  }
+  if (!inBad) console.log('  ok  answer inputs: 16px, no autoFocus, no placeholder iOS reads as a name')
+}
+
+
 // The mode promotes itself exactly once, when the set is finished, and a
 // manual choice afterwards has to stick.
 {
