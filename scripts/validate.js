@@ -929,6 +929,49 @@ console.log('\n=== Reference data ===')
   if (!tBad) console.log('  ok  4 ladders: every typed answer is unambiguous and every set says what to type')
 }
 
+// Numeric answers need to be far enough apart to CHOOSE between. Water at
+// 15.7 and ethanol at 16.0 are both correct chemistry and a coin flip as two
+// options in one question — and the thing being taught is that they occupy
+// the same bracket, so asking anyone to separate them teaches the opposite.
+// Distinct-but-indistinguishable is not caught by the duplicate-label rule.
+{
+  // Half a pKa unit. Below that the same acid is quoted at either value by
+  // different textbooks, so choosing between them tests the edition rather
+  // than the chemistry. Ammonium at 9.2 against phenol at 10 stays: 0.8
+  // units is a factor of six in acidity and a real distinction.
+  const COIN_FLIP_GAP = 0.5
+  let gapBad = 0
+  for (const l of LADDERS) {
+    // Only when the answer IS a number. VSEPR answers like "bent · 3 groups"
+    // merely contain one, and two of those differing only in the word are
+    // perfectly distinguishable — flagging them was this check's first
+    // behaviour and it was wrong. The test is that every answer shares one
+    // skeleton once the number is removed, so the number is the whole
+    // difference between them.
+    const parsed = l.items.map((i) => ({
+      key: i.key,
+      n: Number((/(-?\d+(?:\.\d+)?)/.exec(i.name) ?? [])[1]),
+      skeleton: i.name.replace(/-?\d+(?:\.\d+)?/, '#'),
+    }))
+    const nums = parsed.filter((x) => Number.isFinite(x.n))
+    if (nums.length !== l.items.length || nums.length < 2) continue
+    if (new Set(nums.map((x) => x.skeleton)).size !== 1) continue
+    const sorted = [...nums].sort((a, b) => a.n - b.n)
+    for (let i = 1; i < sorted.length; i++) {
+      const gap = sorted[i].n - sorted[i - 1].n
+      if (gap < COIN_FLIP_GAP) {
+        fail(
+          `ladder "${l.id}": ${sorted[i - 1].key} and ${sorted[i].key} answer ${sorted[i - 1].n} and ${sorted[i].n} — ` +
+            `${gap.toFixed(1)} apart, which is a coin flip as two options in one question`,
+        )
+        gapBad++
+      }
+    }
+  }
+  if (!gapBad) console.log('  ok  numeric ladder answers are far enough apart to choose between')
+}
+
+
 // iOS Safari zooms the whole page in when a focused input is under 16px, and
 // the drill inputs sit directly under a structure — the zoom magnified it and
 // pushed it off the top of the screen the instant the keyboard opened. The

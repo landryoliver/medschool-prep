@@ -10,6 +10,7 @@ import NucleobaseStructure from '../visuals/NucleobaseStructure.jsx'
 import TABLE from '../../data/genchem/periodicTable.json'
 import ElementStrip from '../visuals/ElementStrip.jsx'
 import { configFor, shorthandFor } from '../../lib/chem/electronConfig.js'
+import PKA_TABLE from '../../data/genchem/pkaTable.json'
 
 /**
  * Every set that can be learned one item at a time.
@@ -354,6 +355,104 @@ LADDERS.push({
         <p className="muted aa-note">Seen in: {h.example}</p>
         <p className="muted ladder-phrase">
           Count groups, not bonds: a double bond is ONE group, and a lone pair counts as one too.
+        </p>
+      </>
+    )
+  },
+})
+
+// --- pKa anchors -------------------------------------------------------
+// The one ladder where the ANSWER is a number rather than a name: you are
+// shown an acid and asked roughly where it sits. That is the skill — nobody
+// needs 4.76, everyone needs "carboxylic acids are about 4, so a carboxylate
+// is the conjugate base you will meet at every biological pH".
+//
+// Ordered strongest to weakest, which is how the ladder in the Notes is
+// drawn and how the scale is actually reasoned about: each anchor tells you
+// what sits above and below it.
+const PKA_ANCHOR_ORDER = [
+  'HCl',
+  'H₃O⁺',
+  'RCOOH',
+  'NH₄⁺',
+  'PhOH',
+  'H₂O',
+  // Ethanol deliberately absent. At 16 against water's 15.7 the two would
+  // appear as separate options in one question, and choosing between them is
+  // a coin flip — while the thing actually being taught is that alcohols and
+  // water sit in the SAME bracket. Water carries that anchor for both.
+  'terminal alkyne (RC≡CH)',
+  'NH₃',
+  'alkane (CH₃CH₃)',
+]
+
+// Rounded to what is actually memorised. "pKa ≈ 4.76" claims a precision the
+// word "approximately" denies, and nobody recalls the second decimal.
+const fmtPka = (v) => `pKa ≈ ${Math.round(v * 10) / 10}`
+
+const pkaItems = PKA_ANCHOR_ORDER.map((acid) => {
+  const row = PKA_TABLE.find((r) => r.acid === acid)
+  return {
+    key: acid,
+    name: fmtPka(row.pKa),
+    sub: `${row.acid} · ${row.class}`,
+    data: row,
+  }
+})
+
+LADDERS.push({
+  id: 'pka',
+  topic: 'acidbase',
+  label: 'pKa anchors',
+  unit: 'anchor',
+  blurb: 'Ten values that bracket every acid you will be asked to compare.',
+  items: pkaItems,
+  // The answer is a number, and typing "15.7" or "4.76" is transcription
+  // rather than recall. What matters is which bracket it falls in, which is
+  // exactly what choosing between four values tests.
+  typeable: false,
+  Visual: ({ item, hideAnswer }) => (
+    <figure className="aaf">
+      <div className="pka-card">
+        <span className="pka-acid">{item.data.acid}</span>
+        <span className="muted pka-class">{item.data.class}</span>
+        <span className="muted pka-conj">
+          conjugate base: <strong>{item.data.base}</strong>
+          {item.data.baseName ? ` (${item.data.baseName})` : ''}
+        </span>
+      </div>
+      {!hideAnswer && (
+        <figcaption className="aaf-caption">
+          <span className="aaf-name">{fmtPka(item.data.pKa)}</span>
+        </figcaption>
+      )}
+    </figure>
+  ),
+  Facts: ({ item }) => {
+    const r = item.data
+    const strong = r.pKa < 0
+    return (
+      <>
+        <div className="aa-facts">
+          <span className="muted">pKa {r.pKa}</span>
+          <span className="muted">{r.class}</span>
+          <span className="muted">{strong ? 'stronger than H₃O⁺' : 'weaker than H₃O⁺'}</span>
+        </div>
+        <div className="fc-group">
+          <strong>What this anchor is for</strong>
+          Lower pKa means the stronger acid and the more stable conjugate base. Anything you are asked to compare sits
+          between two of these ten, so placing it between the neighbours you know is usually the whole answer.
+        </div>
+        <p className="muted aa-note">
+          Losing its proton gives {r.base}
+          {r.baseName ? `, the ${r.baseName}` : ''}. {strong
+            ? 'Below zero the acid is fully dissociated in water — "strong" means exactly that.'
+            : 'Above about 16 nothing in water will deprotonate it; you need a base made for the job.'}
+          {r.acid === 'H₂O' && ' Alcohols sit at essentially the same value (~16), so this one anchor covers both.'}
+        </p>
+        <p className="muted ladder-phrase">
+          A base can only deprotonate an acid whose pKa is LOWER than that of its own conjugate acid. That one sentence
+          is what the whole scale is used for.
         </p>
       </>
     )

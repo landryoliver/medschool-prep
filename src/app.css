@@ -1898,3 +1898,30 @@ button.ghost.small {
   font-size: 0.66rem;
   text-align: center;
 }
+
+/* ---- pKa anchor card ------------------------------------------------ */
+
+.pka-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 1.1rem 0.8rem;
+}
+
+.pka-acid {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.15;
+  text-align: center;
+}
+
+.pka-class {
+  font-size: 0.8rem;
+}
+
+.pka-conj {
+  font-size: 0.76rem;
+  margin-top: 0.35rem;
+}
