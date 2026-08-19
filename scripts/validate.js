@@ -13,6 +13,8 @@ import { SUB_BOND, LABEL_GAP, HIGHLIGHT_R } from '../src/components/visuals/Skel
 import AminoAcidReference from '../src/components/AminoAcidReference.jsx'
 import SideChainStructure, { buildSideChain, buildAminoAcid, labelBox, aminoSpan } from '../src/components/visuals/SideChainStructure.jsx'
 import { parseFormula as parseFormulaLib } from '../src/lib/chem/formula.js'
+import { referenceElementsFor } from '../src/lib/chem/elementsInText.js'
+import PERIODIC from '../src/data/genchem/periodicTable.json' with { type: 'json' }
 import Flashcards from '../src/components/Flashcards.jsx'
 import GroupPrimer from '../src/components/GroupPrimer.jsx'
 import PkaLadder from '../src/components/PkaLadder.jsx'
@@ -399,6 +401,49 @@ console.log('\n=== Nucleobases ===')
   if (SUB_BOND - HIGHLIGHT_R < 12) {
     fail(`a substituent label sits ${SUB_BOND - HIGHLIGHT_R}px from the highlight edge — too close to read as separate`)
   }
+}
+
+// The periodic-table cut beside a question must never print that question's
+// own answer. Checked against the real bank rather than a list of topic
+// names, because the first version of this rule excluded "periodic" while
+// the questions were filed under "element-recall" and every one of them
+// still showed its answer.
+{
+  let stripBad = 0
+  let shown = 0
+  for (const q of getMixedBank()) {
+    const els = referenceElementsFor(q)
+    if (!els.length) continue
+    shown++
+    if (q.kind !== 'mcq') continue
+    const answer = String(q.choices[q.correctIndex]).trim()
+    for (const sym of els) {
+      const e = PERIODIC.find((x) => x.symbol === sym)
+      if (!e) {
+        fail(`${q.id}: strip would show "${sym}", which is not in the periodic table data`)
+        stripBad++
+        continue
+      }
+      // A leak is a question ASKING for a property the card prints — not a
+      // numeric coincidence. BF₃ has three electron groups and boron has
+      // three valence electrons; that correlation IS the chemistry, and
+      // reaching the answer through valence is what a periodic table is for.
+      // This app already supplies the whole table during any session on
+      // exactly that reasoning, so flagging it would be inconsistent.
+      const asksFor = (re, value) => re.test(q.prompt) && answer === String(value)
+      for (const [what, hit] of [
+        ['atomic number', asksFor(/atomic number/i, e.atomicNumber)],
+        ['group number', asksFor(/\bgroup number\b|\bwhich group\b/i, e.group)],
+        ['valence electron count', asksFor(/valence electron/i, e.valenceElectrons)],
+      ]) {
+        if (hit) {
+          fail(`${q.id}: asks for ${sym}'s ${what} while the strip prints it — "${q.prompt.slice(0, 60)}"`)
+          stripBad++
+        }
+      }
+    }
+  }
+  if (!stripBad) console.log(`  ok  element strip on ${shown} questions, none printing its own answer`)
 }
 
 console.log('\n=== Rendering visuals ===')

@@ -7,6 +7,9 @@ import GroupDiagram from '../visuals/GroupDiagram.jsx'
 import VseprDiagram from '../visuals/VseprDiagram.jsx'
 import NUCLEOBASES from '../../data/genchem/nucleobases.json'
 import NucleobaseStructure from '../visuals/NucleobaseStructure.jsx'
+import TABLE from '../../data/genchem/periodicTable.json'
+import ElementStrip from '../visuals/ElementStrip.jsx'
+import { configFor, shorthandFor } from '../../lib/chem/electronConfig.js'
 
 /**
  * Every set that can be learned one item at a time.
@@ -232,6 +235,125 @@ LADDERS.push({
             ? 'PURe As Gold — the purines are Adenine and Guanine, and they are the two-ring ones.'
             : 'CUT the PYe — Cytosine, Uracil and Thymine are the pyrimidines, and they have one ring.'}{' '}
           Found in {b.foundIn}.
+        </p>
+      </>
+    )
+  },
+})
+
+// --- electron configuration -------------------------------------------
+// Every configuration is derived from the (n + ℓ) rule, so the ladder, the
+// aufbau chart and the question bank cannot disagree with each other.
+// Elements come in atomic-number order, which is also the order the rule
+// fills them in — learning them any other way fights the pattern.
+const configItems = TABLE.map((e) => ({
+  key: e.symbol,
+  name: configFor(e.atomicNumber),
+  sub: `${e.name} (${e.symbol})`,
+  aliases: [shorthandFor(e.atomicNumber)],
+  data: e,
+}))
+
+LADDERS.push({
+  id: 'econfig',
+  topic: 'periodic',
+  label: 'Electron configurations',
+  unit: 'element',
+  blurb: 'Fill order for the elements organic chemistry actually uses.',
+  items: configItems,
+  // Typing "1s² 2s² 2p⁶ 3s² 3p⁵" is a transcription exercise, superscripts
+  // and all. This one stays multiple choice.
+  typeable: false,
+  Visual: ({ item, hideAnswer }) => (
+    <figure className="aaf">
+      <ElementStrip symbols={[item.data.symbol]} showConfigHint />
+      {!hideAnswer && (
+        <figcaption className="aaf-caption">
+          <span className="aaf-name">{configFor(item.data.atomicNumber)}</span>
+          <span className="muted aaf-formula">{shorthandFor(item.data.atomicNumber)}</span>
+        </figcaption>
+      )}
+    </figure>
+  ),
+  Facts: ({ item }) => {
+    const e = item.data
+    return (
+      <>
+        <div className="aa-facts">
+          <span className="muted">period {e.period}</span>
+          <span className="muted">group {e.group}</span>
+          <span className="muted">{e.valenceElectrons} valence e⁻</span>
+        </div>
+        <div className="fc-group">
+          <strong>Shorthand: {shorthandFor(e.atomicNumber)}</strong>
+          The noble gas in brackets stands for every electron below the outer shell. Only what follows it does any
+          chemistry.
+        </div>
+        <p className="muted aa-note">
+          {e.valenceElectrons} valence electrons means {e.typicalBonds} bond{e.typicalBonds === 1 ? '' : 's'} in a
+          neutral molecule — the count that decides what this atom can attach to.
+        </p>
+      </>
+    )
+  },
+})
+
+// --- hybridization ----------------------------------------------------
+// Same pictures as the VSEPR ladder, a different question: that one asks
+// what SHAPE the electron groups force, this one asks what the orbitals had
+// to become to point that way. Learning them apart is the point — the shape
+// is what you see, the hybridization is what you write.
+const HYBRIDS = [
+  { key: 'sp', name: 'sp', groups: 2, angle: '180°', example: 'the carbons of an alkyne, or CO₂', mix: 'one s and one p orbital' },
+  { key: 'sp2', name: 'sp²', groups: 3, angle: '120°', example: 'the carbons of an alkene, or a carbonyl carbon', mix: 'one s and two p orbitals' },
+  { key: 'sp3', name: 'sp³', groups: 4, angle: '109.5°', example: 'any saturated carbon, and the oxygen of water', mix: 'one s and three p orbitals' },
+  { key: 'sp3d', name: 'sp³d', groups: 5, angle: '120° and 90°', example: 'PCl₅ — only for atoms below period 2', mix: 'one s, three p and one d orbital' },
+  { key: 'sp3d2', name: 'sp³d²', groups: 6, angle: '90°', example: 'SF₆', mix: 'one s, three p and two d orbitals' },
+]
+
+const hybridItems = HYBRIDS.map((h) => ({
+  key: h.key,
+  name: h.name,
+  sub: `${h.groups} electron groups`,
+  aliases: [h.name.replace('²', '2').replace('³', '3')],
+  data: { ...h, geometry: GEOMETRIES.find((g) => g.bonding === h.groups && g.lone === 0) },
+}))
+
+LADDERS.push({
+  id: 'hybridization',
+  topic: 'vsepr',
+  label: 'Hybridization',
+  unit: 'state',
+  blurb: 'Count the electron groups, read off the orbitals.',
+  items: hybridItems,
+  typePlaceholder: 'e.g. sp2 or sp³',
+  Visual: ({ item, hideAnswer }) => (
+    <figure className="aaf">
+      <VseprDiagram geometry={item.data.geometry} height={168} centerLabel="C" />
+      {!hideAnswer && (
+        <figcaption className="aaf-caption">
+          <span className="aaf-name">{item.data.name}</span>
+          <span className="muted aaf-formula">{item.data.groups} groups · {item.data.angle}</span>
+        </figcaption>
+      )}
+    </figure>
+  ),
+  Facts: ({ item }) => {
+    const h = item.data
+    return (
+      <>
+        <div className="aa-facts">
+          <span className="muted">{h.groups} electron groups</span>
+          <span className="muted">{h.angle}</span>
+        </div>
+        <div className="fc-group">
+          <strong>What is mixed</strong>
+          {h.mix}. The number of hybrid orbitals always equals the number of electron groups, which is why counting
+          groups is the whole method.
+        </div>
+        <p className="muted aa-note">Seen in: {h.example}</p>
+        <p className="muted ladder-phrase">
+          Count groups, not bonds: a double bond is ONE group, and a lone pair counts as one too.
         </p>
       </>
     )
