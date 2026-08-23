@@ -107,6 +107,74 @@ const TEMPLATES = [
 
 export const ALL_GROUPS = TEMPLATES.map((t) => t.group)
 
+/**
+ * The carboxylic acid derivatives, drilled against each other rather than
+ * against unrelated groups. All six are a C=O with something on the carbonyl
+ * carbon, so telling them apart is a different and harder skill than picking
+ * a ketone out of a list containing "alkyne" — and it is the one that matters,
+ * because their reactivity order is the backbone of carbonyl chemistry.
+ *
+ * Deliberately a separate generator rather than more entries in TEMPLATES:
+ * generateGroupId indexes with seed % TEMPLATES.length, so appending there
+ * would remap every existing seed to a different group and quietly point all
+ * stored progress at questions other than the ones it was earned on.
+ */
+const CARBOXYLOIDS = [
+  {
+    group: 'Carboxylic acid',
+    tell: 'an –OH on the carbonyl carbon',
+    sub: [{ vertexIndex: 0, label: 'O', bond: 2 }, { vertexIndex: 0, label: 'OH' }],
+  },
+  {
+    group: 'Ester',
+    tell: 'an –O– on the carbonyl carbon carrying a carbon, not a hydrogen',
+    sub: [{ vertexIndex: 0, label: 'O', bond: 2 }, { vertexIndex: 0, label: 'OCH3' }],
+  },
+  {
+    group: 'Amide',
+    tell: 'a nitrogen on the carbonyl carbon',
+    sub: [{ vertexIndex: 0, label: 'O', bond: 2 }, { vertexIndex: 0, label: 'NH2' }],
+  },
+  {
+    group: 'Thioester',
+    tell: 'a sulfur on the carbonyl carbon — an ester with S in place of O',
+    sub: [{ vertexIndex: 0, label: 'O', bond: 2 }, { vertexIndex: 0, label: 'SCH3' }],
+  },
+  {
+    group: 'Acid chloride',
+    tell: 'a chlorine on the carbonyl carbon',
+    sub: [{ vertexIndex: 0, label: 'O', bond: 2 }, { vertexIndex: 0, label: 'Cl' }],
+  },
+]
+
+const CARBOXYLOID_NAMES = CARBOXYLOIDS.map((c) => c.group)
+
+/** Tell the carboxylic acid derivatives apart from one another. */
+export function generateCarboxyloidId(seed) {
+  const rng = rngFor(seed)
+  const t = CARBOXYLOIDS[seed % CARBOXYLOIDS.length]
+  const size = 4 + Math.floor(rng() * 4)
+  const mol = { doubleBondAt: [], tripleBondAt: [], substituents: t.sub, shape: 'chain', size }
+  const { choices, correctIndex } = makeChoices(rng, t.group, CARBOXYLOID_NAMES)
+
+  return {
+    id: `cbx-${seed}`,
+    topic: 'functional-groups',
+    kind: 'mcq',
+    prompt: 'Every one of these is a C=O with something attached. Which derivative is this?',
+    choices,
+    correctIndex,
+    explanation: `${/^[AEIOU]/.test(t.group) ? 'An' : 'A'} ${t.group.toLowerCase()} — the giveaway is ${t.tell}.`,
+    teach:
+      'Read the atom attached to the carbonyl carbon and nothing else: –OH acid, –OR ester, ' +
+      '–SR thioester, –N amide, –Cl acid chloride. That one atom also sets reactivity, which runs ' +
+      'acid chloride > anhydride > thioester > ester > amide — the better the leaving group, the ' +
+      'more reactive. Thioesters sitting above esters is why acetyl-CoA works as a biological ' +
+      'acetyl donor.',
+    visual: { type: 'skeletal', molecule: mol },
+  }
+}
+
 /** Identify the single functional group in a generated structure. */
 export function generateGroupId(seed) {
   const rng = rngFor(seed)

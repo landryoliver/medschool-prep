@@ -1,0 +1,32 @@
+[
+  {
+    "id": "gcl-1",
+    "topic": "functional-groups",
+    "course": "orgo",
+    "prompt": "Alcohols and amines are both classified 1°, 2° or 3°, but the two are counted differently. What is counted in each?",
+    "choices": [
+      "Alcohol: carbons attached to the carbon bearing the OH. Amine: carbons attached to the nitrogen itself",
+      "Both count the carbons attached to the heteroatom",
+      "Both count the carbons attached to the atom next to the heteroatom",
+      "Alcohol: carbons attached to the oxygen. Amine: carbons attached to the carbon next to N"
+    ],
+    "correctIndex": 0,
+    "explanation": "(CH₃)₃C–OH is a tertiary alcohol because the carbon holding the OH carries three other carbons — the oxygen itself still has only one. (CH₃)₃N is a tertiary amine because the nitrogen itself carries three carbons. Counting the oxygen's own attachments would make every alcohol primary.",
+    "teach": "Oxygen and nitrogen part company here because their attachment counts already mean something else. An oxygen carrying two carbons is not a tertiary alcohol — it is an ether. Nitrogen has three slots free, so it takes the 1°/2°/3° label directly; oxygen has only two, so the label had to move one atom over onto the carbon."
+  },
+  {
+    "id": "gcl-2",
+    "topic": "functional-groups",
+    "course": "orgo",
+    "prompt": "A benzene ring attached to something is a phenyl group. What are benzyl and benzoyl?",
+    "choices": [
+      "Benzyl is phenyl plus a CH₂; benzoyl is phenyl plus a C=O",
+      "Benzyl is phenyl plus a C=O; benzoyl is phenyl plus a CH₂",
+      "Benzyl and benzoyl are both other names for phenyl",
+      "Benzyl has two rings; benzoyl has three"
+    ],
+    "correctIndex": 0,
+    "explanation": "Phenyl is C₆H₅– bonded directly. Benzyl is C₆H₅CH₂–, the ring plus one carbon. Benzoyl is C₆H₅CO–, the ring plus a carbonyl. Three similar words, three different groups, and swapping them changes the compound.",
+    "teach": "Benzylic is the one that earns its keep: the benzylic position is the carbon NEXT TO the ring, and a cation, radical or anion there is unusually stable because the ring delocalizes it. That single fact drives a large amount of aromatic-side-chain reactivity."
+  }
+]

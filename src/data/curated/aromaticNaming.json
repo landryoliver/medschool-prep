@@ -1,0 +1,32 @@
+[
+  {
+    "id": "arn-1",
+    "topic": "nomenclature",
+    "course": "orgo",
+    "prompt": "On a benzene ring carrying two substituents, what do ortho, meta and para mean?",
+    "choices": [
+      "ortho 1,2- · meta 1,3- · para 1,4-",
+      "ortho 1,2- · meta 1,4- · para 1,3-",
+      "ortho 1,3- · meta 1,2- · para 1,4-",
+      "ortho 1,4- · meta 1,3- · para 1,2-"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ortho is adjacent, meta skips one carbon, para is directly across the ring. Abbreviated o-, m- and p-.",
+    "teach": "These words apply only to a benzene ring with exactly TWO substituents. Three or more groups, or any ring that is not benzene, and you number the positions instead. Worth being fluent in before aromatic substitution, where every directing effect is stated in this vocabulary."
+  },
+  {
+    "id": "arn-2",
+    "topic": "nomenclature",
+    "course": "orgo",
+    "prompt": "Match the suffixes: -one, -al, -oic acid, -ol.",
+    "choices": [
+      "ketone, aldehyde, carboxylic acid, alcohol",
+      "aldehyde, ketone, carboxylic acid, alcohol",
+      "ketone, aldehyde, alcohol, carboxylic acid",
+      "alcohol, aldehyde, ketone, carboxylic acid"
+    ],
+    "correctIndex": 0,
+    "explanation": "-one ketone, -al aldehyde, -oic acid carboxylic acid, -ol alcohol. Also -ene alkene, -yne alkyne, -amide amide. Esters take a two-word form instead: alkyl ...-oate, as in methyl ethanoate.",
+    "teach": "Only the HIGHEST-priority group gets the suffix; everything else becomes a prefix. So a molecule containing both an OH and a ketone is named as the ketone with 'hydroxy-' in front, never as an alcohol. Priority runs carboxylic acid > ester > amide > aldehyde > ketone > alcohol > amine."
+  }
+]

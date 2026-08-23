@@ -41,6 +41,8 @@ import radicals from '../data/curated/radicals.json'
 import formalChargeShortcut from '../data/curated/formalChargeShortcut.json'
 import connectivity from '../data/curated/connectivity.json'
 import lineDrawings from '../data/curated/lineDrawings.json'
+import groupClasses from '../data/curated/groupClasses.json'
+import aromaticNaming from '../data/curated/aromaticNaming.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
@@ -286,6 +288,8 @@ export const TOPICS = [
       ...buildBank(functionalGroups.generateGroupId, 110),
       ...buildBank(functionalGroups.generateMultiGroupId, 60),
       ...buildBank(functionalGroups.generateGroupFromDescription, 13),
+      ...buildBank(functionalGroups.generateCarboxyloidId, 30),
+      ...withKind(groupClasses),
     ],
   },
   {
@@ -300,6 +304,7 @@ export const TOPICS = [
       ...buildBank(nomenclature.generateBranchedName, 20),
       ...buildBank(nomenclature.generateBranchedStructure, 20),
       ...withKind(branchedNomenclature),
+      ...withKind(aromaticNaming),
     ],
   },
   {
