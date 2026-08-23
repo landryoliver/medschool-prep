@@ -950,7 +950,12 @@ console.log('\n=== Reference data ===')
       }
     }
   }
-  if (!tBad) console.log('  ok  4 ladders: every typed answer is unambiguous and every set says what to type')
+  if (!tBad) {
+    // Counted, not hardcoded: this message said "4 ladders" while checking six,
+    // which is a success line that cannot tell you it has stopped covering things.
+    const typed = LADDERS.filter((l) => l.typeable !== false).length
+    console.log(`  ok  ${typed} ladders: every typed answer is unambiguous and every set says what to type`)
+  }
 }
 
 // Study time has to follow distinct CONCEPTS, not question count. A generator

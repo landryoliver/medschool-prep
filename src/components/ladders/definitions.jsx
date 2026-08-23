@@ -11,6 +11,7 @@ import TABLE from '../../data/genchem/periodicTable.json'
 import ElementStrip from '../visuals/ElementStrip.jsx'
 import { configFor, shorthandFor } from '../../lib/chem/electronConfig.js'
 import PKA_TABLE from '../../data/genchem/pkaTable.json'
+import { NAMING_LADDERS } from './namingLadders.jsx'
 
 /**
  * Every set that can be learned one item at a time.
@@ -458,3 +459,8 @@ LADDERS.push({
     )
   },
 })
+
+// The two naming tables from the functional-group reading. Defined in their
+// own module because they carry twelve and twenty structures between them,
+// which would double the length of this file for no gain.
+LADDERS.push(...NAMING_LADDERS)
