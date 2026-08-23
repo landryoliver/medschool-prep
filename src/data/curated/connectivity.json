@@ -1,0 +1,57 @@
+[
+  {
+    "id": "conn-1",
+    "topic": "lewis-structures",
+    "course": "orgo",
+    "prompt": "You are given the formula H₂CO₃ and no drawing. Which atom goes in the middle?",
+    "choices": [
+      "Carbon — it has the highest valence, so it can hold the most neighbours",
+      "One of the oxygens — there are more of them",
+      "A hydrogen — it is listed first in the formula",
+      "It cannot be decided without more information"
+    ],
+    "correctIndex": 0,
+    "explanation": "Carbon forms four bonds, more than oxygen's two or hydrogen's one, so it is the only atom that can hold the structure together. Carbonic acid is O=C(OH)₂ — carbon at the centre, three oxygens around it, and the two hydrogens out on oxygens.",
+    "teach": "Pick the central atom by valence: the atom that forms the most bonds goes in the middle. It is usually the least electronegative one and usually the first listed in the formula, which is why those two rules of thumb work. Hydrogen is never central — it makes one bond, so it is always on the edge."
+  },
+  {
+    "id": "conn-2",
+    "topic": "lewis-structures",
+    "course": "orgo",
+    "prompt": "In an oxyacid such as H₂SO₄ or HClO₄, where do the hydrogens go?",
+    "choices": [
+      "On the oxygens, not on the central atom",
+      "On the central atom, since it forms the most bonds",
+      "Bridging between two oxygens",
+      "Wherever gives the most symmetric structure"
+    ],
+    "correctIndex": 0,
+    "explanation": "H₂SO₄ is (HO)₂SO₂ and HClO₄ is HO–ClO₃. The acidic hydrogen sits on an oxygen, which is exactly why these are acids — an O–H bond is what gets donated. Some phosphorus oxoanions are the exception: hypophosphite, H₂PO₂⁻, really does have both hydrogens on phosphorus.",
+    "teach": "Oxyacid, oxo-anion: put the H's on the O's. This also explains the acidity — you are looking for an O–H to lose, and the more electron-withdrawing oxygens are attached to the central atom, the more stable the resulting anion and the stronger the acid. HClO₄ beats HClO for exactly that reason."
+  },
+  {
+    "id": "conn-3",
+    "topic": "lewis-structures",
+    "course": "orgo",
+    "prompt": "When guessing connectivity, why avoid drawing an O–O bond unless the formula forces it?",
+    "choices": [
+      "Bonds between two electronegative atoms are weak, and such structures are usually unstable",
+      "Oxygen cannot bond to itself under any circumstances",
+      "It would violate the octet rule",
+      "It always produces a formal charge"
+    ],
+    "correctIndex": 0,
+    "explanation": "Lone-pair repulsion between two electron-rich atoms makes O–O and F–F bonds weak. They exist — O₂, H₂O₂, F₂ — but peroxides being reactive is the point: the weak O–O bond is exactly what breaks. Given a choice of arrangements, the one without such a bond is the better guess.",
+    "teach": "Carbon is the opposite case, and that asymmetry is why organic chemistry exists: carbon usually has no lone pairs, so C–C bonds carry no lone-pair repulsion and chains can run to any length. Oxygen and the halogens cannot do this."
+  },
+  {
+    "id": "conn-4",
+    "topic": "lewis-structures",
+    "course": "orgo",
+    "prompt": "Typical valences for second-row atoms — how many bonds does each of B, C, N, O, F normally form?",
+    "choices": ["3, 4, 3, 2, 1", "4, 4, 3, 2, 1", "3, 4, 4, 2, 1", "1, 4, 3, 2, 3"],
+    "correctIndex": 0,
+    "explanation": "Boron 3, carbon 4, nitrogen 3, oxygen 2, fluorine 1. For C, N, O and F the number is how many electrons short of an octet the atom is. Boron is the exception: it needs five to reach an octet but has only three electrons to share, so it stops at three bonds and an incomplete octet.",
+    "teach": "Count outward from the right edge of the periodic table: F needs 1, O needs 2, N needs 3, C needs 4. Then it turns around — B forms 3, not 5, because valence is capped by electrons available to share, not only by electrons wanted. This is also why boron compounds are electron-hungry and act as Lewis acids."
+  }
+]

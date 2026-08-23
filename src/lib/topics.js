@@ -38,6 +38,8 @@ import arrowsExtra from '../data/curated/arrowsExtra.json'
 import matterTypes from '../data/curated/matterTypes.json'
 import formulaMeaning from '../data/curated/formulaMeaning.json'
 import radicals from '../data/curated/radicals.json'
+import formalChargeShortcut from '../data/curated/formalChargeShortcut.json'
+import connectivity from '../data/curated/connectivity.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
@@ -157,6 +159,8 @@ export const TOPICS = [
       ...buildBank(lewisBuilder.generateBuilder, 12),
       ...withKind(lewisStructures),
       ...withKind(radicals),
+      ...withKind(formalChargeShortcut),
+      ...withKind(connectivity),
     ],
   },
   {
