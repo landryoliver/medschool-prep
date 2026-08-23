@@ -40,6 +40,7 @@ import formulaMeaning from '../data/curated/formulaMeaning.json'
 import radicals from '../data/curated/radicals.json'
 import formalChargeShortcut from '../data/curated/formalChargeShortcut.json'
 import connectivity from '../data/curated/connectivity.json'
+import lineDrawings from '../data/curated/lineDrawings.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
@@ -272,6 +273,7 @@ export const TOPICS = [
       ...buildBank(skeletal.generateCondensed, 35),
       ...buildBank(skeletal.generateCondensedToSkeletal, 25),
       ...withKind(formulaMeaning),
+      ...withKind(lineDrawings),
     ],
   },
   {

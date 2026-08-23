@@ -1,0 +1,27 @@
+[
+  {
+    "id": "line-1",
+    "topic": "skeletal-fluency",
+    "course": "orgo",
+    "prompt": "In a line drawing, hydrogens on carbon are left out, but hydrogens on oxygen and nitrogen are always written in. Why the difference?",
+    "choices": [
+      "A carbon's H count is fixed by its four bonds and can be deduced; an O–H can be gained or lost, so it has to be stated",
+      "Oxygen and nitrogen form stronger bonds to hydrogen, so those bonds are drawn",
+      "Carbon is never bonded to hydrogen in a line drawing",
+      "It is arbitrary convention with no chemical reason behind it"
+    ],
+    "correctIndex": 0,
+    "explanation": "Carbon always makes four bonds, so its hydrogens follow from the lines you can already see and nothing is lost by omitting them. Oxygen and nitrogen change protonation state constantly: R–OH and its alkoxide R–O⁻ differ by exactly that one hydrogen, and that is the difference between a neutral molecule and a nucleophile. Leaving it off would make the drawing ambiguous.",
+    "teach": "The convention encodes what varies. Anything deducible gets dropped; anything that could genuinely differ gets written. So the first move on any acid-base problem given as a line drawing is to find every O–H and N–H — those are the hydrogens that actually move."
+  },
+  {
+    "id": "line-2",
+    "topic": "skeletal-fluency",
+    "course": "orgo",
+    "prompt": "A line drawing shows a ketone with no dots anywhere on it. How many lone pairs does that carbonyl oxygen really have?",
+    "choices": ["2", "1", "3", "0"],
+    "correctIndex": 0,
+    "explanation": "Oxygen brings six valence electrons. The double bond accounts for two of them, leaving four — two lone pairs. Line drawings omit lone pairs almost always, but the electrons are still there. An ether or alcohol oxygen also has two; an alkoxide O⁻ has three.",
+    "teach": "Lone pairs are left off line drawings and matter constantly — every curved arrow in a mechanism starts at a lone pair or a bond, so a drawing with none shown offers no visible starting points. Pencil them onto every N, O and halogen before beginning a mechanism problem. Count: lone pairs = (valence electrons − bonds) ÷ 2, taking a double bond as two."
+  }
+]
