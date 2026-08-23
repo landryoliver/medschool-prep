@@ -1,0 +1,32 @@
+[
+  {
+    "id": "rad-1",
+    "topic": "lewis-structures",
+    "course": "orgo",
+    "prompt": "NO₂ has 17 valence electrons in total. What does an odd count tell you before you draw anything?",
+    "choices": [
+      "One electron must be left unpaired — it is a radical",
+      "The species must carry a charge",
+      "The structure must contain a triple bond",
+      "The molecule cannot exist"
+    ],
+    "correctIndex": 0,
+    "explanation": "Nitrogen brings 5 and each oxygen brings 6, so 5 + 12 = 17. Electrons are used in pairs — bonding pairs and lone pairs — so an odd total guarantees one is left over with no partner. NO₂ is a radical, which is why it is brown, highly reactive, and a component of smog.",
+    "teach": "Count total valence electrons before drawing. Odd → radical: one atom cannot reach an octet, and the species will be reactive and often dimerizes. Even → an ordinary Lewis structure should be reachable. This costs five seconds and tells you what kind of species you are dealing with."
+  },
+  {
+    "id": "rad-2",
+    "topic": "lewis-structures",
+    "course": "orgo",
+    "prompt": "NO₂ (17 valence electrons) dimerizes to colourless N₂O₄ when cooled, but nitrite, NO₂⁻ (18 valence electrons), does not dimerize. Why?",
+    "choices": [
+      "NO₂'s unpaired electron pairs with another molecule's to form an N–N bond; NO₂⁻ has none to offer",
+      "NO₂⁻ already reaches an octet on every atom by forming two double bonds",
+      "Dimerization requires a positive charge, which NO₂⁻ lacks",
+      "NO₂⁻ is the more reactive of the two and decomposes instead"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adding one electron to NO₂ gives nitrite 18 — even, fully paired, nothing left over. NO₂'s spare electron is effectively half a bond looking for a partner, and two of them make the N–N bond of N₂O₄. That bond is weak, so warming the gas breaks it again and the brown colour returns.",
+    "teach": "Pairing two unpaired electrons IS a bond, which is why radicals dimerize on contact. The same fact drives radical chain reactions: a radical meeting a closed-shell molecule cannot simply pair off, so it makes a new radical instead and the chain continues."
+  }
+]

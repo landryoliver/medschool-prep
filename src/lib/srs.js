@@ -98,6 +98,19 @@ function weightedSample(items, count) {
 export function selectSessionQuestions(questions, progressById, count, now = Date.now()) {
   const accuracyByTopic = topicAccuracy([...progressById.values()])
 
+  // How many UNSEEN questions share each concept. Only unseen material is
+  // divided this way: a question you have actually answered and that is now
+  // due is a specific memory worth reviewing, not a redundant seed, and
+  // dividing its weight would suppress legitimate reviews. Unseen population
+  // is where the distortion lives — a generator handed 90 seeds contributed 90
+  // unseen questions and took 90 shares of new-material time for one idea.
+  const unseenInFamily = new Map()
+  for (const q of questions) {
+    if (progressById.has(q.id)) continue
+    const key = q.family ?? q.id
+    unseenInFamily.set(key, (unseenInFamily.get(key) ?? 0) + 1)
+  }
+
   const weighted = questions.map((question) => {
     const id = question.id
     const p = progressById.get(id)
@@ -111,7 +124,7 @@ export function selectSessionQuestions(questions, progressById, count, now = Dat
 
     let baseWeight
     if (!p) {
-      baseWeight = 3 // unseen material
+      baseWeight = 3 / (unseenInFamily.get(question.family ?? id) ?? 1)
     } else if (p.nextDueAt <= now) {
       const overdueDays = (now - p.nextDueAt) / DAY_MS
       baseWeight = 4 + Math.min(overdueDays, 5) // due, more so the longer it waits

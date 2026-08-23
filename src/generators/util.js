@@ -75,7 +75,12 @@ export function buildBank(genFn, count, seedOffset = 0) {
     const sig = contentSignature(q)
     if (seen.has(sig)) continue
     seen.add(sig)
-    out.push(q)
+    // Every question a generator produces is the same idea with different
+    // numbers in it. The family groups them so study time can be spent per
+    // concept rather than per seed — asking for 90 seeds instead of 40 should
+    // buy variety, not priority. Derived from the id rather than genFn.name
+    // because identifiers get minified in a production build and ids do not.
+    out.push({ family: q.id.replace(/-?\d+$/, '') || q.id, ...q })
   }
   return out
 }

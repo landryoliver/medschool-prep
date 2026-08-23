@@ -37,6 +37,7 @@ import resonanceExtra from '../data/curated/resonanceExtra.json'
 import arrowsExtra from '../data/curated/arrowsExtra.json'
 import matterTypes from '../data/curated/matterTypes.json'
 import formulaMeaning from '../data/curated/formulaMeaning.json'
+import radicals from '../data/curated/radicals.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
@@ -70,7 +71,11 @@ function shuffleChoices(q) {
   return next
 }
 
-const withKind = (rows) => rows.map((q) => shuffleChoices({ kind: 'mcq', ...q }))
+// A hand-written question is one idea, so each is its own family. Grouping
+// curated rows by id prefix would be the generator logic applied backwards:
+// isomers.json's twenty questions share the prefix "iso" and cover twenty
+// different concepts, and collapsing them would bury the lot.
+const withKind = (rows) => rows.map((q) => shuffleChoices({ kind: 'mcq', family: q.id, ...q }))
 
 /**
  * Study topics for the pre-organic prep track. Banks are built once on
@@ -151,6 +156,7 @@ export const TOPICS = [
       ...buildBank(lewisErrors.generateSpotError, 48),
       ...buildBank(lewisBuilder.generateBuilder, 12),
       ...withKind(lewisStructures),
+      ...withKind(radicals),
     ],
   },
   {

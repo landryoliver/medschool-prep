@@ -953,6 +953,72 @@ console.log('\n=== Reference data ===')
   if (!tBad) console.log('  ok  4 ladders: every typed answer is unambiguous and every set says what to type')
 }
 
+// Study time has to follow distinct CONCEPTS, not question count. A generator
+// asked for 90 seeds produces 90 questions about one idea; a curated file's 20
+// rows are 20 different ideas. Weighting unseen material per question meant the
+// number typed into a buildBank call silently set study priority — periodic
+// trends outranked dimerization ninety to one for no reason anyone chose.
+//
+// Nothing else catches this. Every question was valid, every answer derivable,
+// and the bank looked healthy; only the mix a session actually served was wrong.
+{
+  const bank = getMixedBank()
+  const byId = new Map(bank.map((q) => [q.id, q]))
+
+  const conceptOf = new Map()
+  for (const q of bank) if (!conceptOf.has(q.family)) conceptOf.set(q.family, q.subject)
+  const conceptShare = new Map()
+  for (const [, subj] of conceptOf) conceptShare.set(subj, (conceptShare.get(subj) ?? 0) + 1)
+
+  const SESSIONS = 150
+  const PER = 20
+  const drawn = new Map()
+  const drawnFamily = new Map()
+  for (let i = 0; i < SESSIONS; i++) {
+    for (const sel of selectSessionQuestions(bank, new Map(), PER)) {
+      const q = byId.get(sel.id ?? sel)
+      drawn.set(q.subject, (drawn.get(q.subject) ?? 0) + 1)
+      drawnFamily.set(q.family, (drawnFamily.get(q.family) ?? 0) + 1)
+    }
+  }
+  const total = SESSIONS * PER
+
+  // With no prior progress every concept should compete evenly, so a subject's
+  // share of sessions should track its share of concepts, not of questions.
+  let mixBad = 0
+  for (const [subj, concepts] of conceptShare) {
+    const want = (100 * concepts) / conceptOf.size
+    const got = (100 * (drawn.get(subj) ?? 0)) / total
+    if (Math.abs(want - got) > 6) {
+      fail(
+        `session mix: ${subj} is ${want.toFixed(1)}% of concepts but ${got.toFixed(1)}% of a fresh session — ` +
+          `selection is tracking question count rather than distinct ideas`,
+      )
+      mixBad++
+    }
+  }
+
+  // And no single idea should dominate. Even share here is 1/417; anything past
+  // 1% means one family is being drawn several times more often than the rest.
+  let hog = null
+  for (const [f, n] of drawnFamily) {
+    if ((100 * n) / total > 1 && (!hog || n > drawnFamily.get(hog))) hog = f
+  }
+  if (hog) {
+    fail(
+      `concept "${hog}" takes ${((100 * drawnFamily.get(hog)) / total).toFixed(1)}% of a fresh session, ` +
+        `against an even share of ${(100 / conceptOf.size).toFixed(2)}%`,
+    )
+    mixBad++
+  }
+
+  if (!mixBad) {
+    console.log(
+      `  ok  study time follows concepts, not seed counts (${conceptOf.size} concepts across ${bank.length} questions)`,
+    )
+  }
+}
+
 // Numeric answers need to be far enough apart to CHOOSE between. Water at
 // 15.7 and ethanol at 16.0 are both correct chemistry and a coin flip as two
 // options in one question — and the thing being taught is that they occupy
