@@ -84,6 +84,7 @@ export const TOPICS = [
   // they get built up one at a time rather than drilled all at once.
   {
     id: 'aminoacids',
+    subject: 'biochem',
     label: 'Amino Acids',
     blurb: 'The 20, their codes, classes, side-chain pKa values and charges.',
     speedRound: true,
@@ -101,6 +102,7 @@ export const TOPICS = [
   },
   {
     id: 'periodic',
+    subject: 'genchem',
     label: 'Periodic Table',
     blurb: 'Symbols, valence, bonding patterns, and the trends that drive everything else.',
     speedRound: true,
@@ -119,6 +121,7 @@ export const TOPICS = [
   },
   {
     id: 'polarity',
+    subject: 'genchem',
     label: 'Bond Polarity',
     blurb: 'Which atom gets δ−, and whether the whole molecule ends up with a net dipole.',
     speedRound: true,
@@ -137,6 +140,7 @@ export const TOPICS = [
   },
   {
     id: 'lewis',
+    subject: 'genchem',
     label: 'Lewis & Formal Charge',
     blurb: 'Build structures dot by dot, count lone pairs, compute formal charge, spot broken drawings.',
     build: () => [
@@ -151,6 +155,7 @@ export const TOPICS = [
   },
   {
     id: 'vsepr',
+    subject: 'genchem',
     label: 'VSEPR & Hybridization',
     blurb: 'Electron groups to shapes, angles, and sp/sp²/sp³.',
     build: () => [
@@ -171,6 +176,7 @@ export const TOPICS = [
   },
   {
     id: 'acidbase',
+    subject: 'genchem',
     label: 'Acids & Bases',
     blurb: 'pKa comparisons, conjugate pairs, and which way a proton actually moves.',
     build: () => [
@@ -189,6 +195,7 @@ export const TOPICS = [
   },
   {
     id: 'imf',
+    subject: 'genchem',
     label: 'Intermolecular Forces',
     blurb: 'H-bonding, dipoles, dispersion — what sets boiling points and solubility.',
     build: () => [
@@ -201,6 +208,7 @@ export const TOPICS = [
   },
   {
     id: 'buffers',
+    subject: 'genchem',
     label: 'pH & Buffers',
     blurb: 'Henderson-Hasselbalch, protonation state, and picking a buffer.',
     build: () => [
@@ -212,12 +220,14 @@ export const TOPICS = [
   },
   {
     id: 'biomolecules',
+    subject: 'biochem',
     label: 'Biomolecules',
     blurb: 'Proteins, carbs, lipids, nucleic acids — structure levels and bond types.',
     build: () => [...withKind(biomolecules), ...withKind(biomoleculesExtra)],
   },
   {
     id: 'energy',
+    subject: 'genchem',
     label: 'Energy & Kinetics',
     blurb: 'Energy diagrams, activation barriers, rate laws — why SN1 and SN2 differ.',
     build: () => [
@@ -232,12 +242,14 @@ export const TOPICS = [
   },
   {
     id: 'isomers',
+    subject: 'orgo',
     label: 'Isomers',
     blurb: 'Constitutional vs stereo, conformers, and spotting a stereocenter.',
     build: () => [...withKind(isomers), ...withKind(isomersExtra), ...withKind(stereoShortcuts)],
   },
   {
     id: 'skeletal',
+    subject: 'orgo',
     label: 'Skeletal Structures',
     blurb: 'Read line-angle drawings fast: hidden hydrogens, formulas, unsaturation.',
     speedRound: true,
@@ -254,6 +266,7 @@ export const TOPICS = [
   },
   {
     id: 'functional',
+    subject: 'orgo',
     label: 'Functional Groups',
     blurb: 'Spot alcohols, carbonyls, amines and the rest on sight.',
     speedRound: true,
@@ -265,6 +278,7 @@ export const TOPICS = [
   },
   {
     id: 'nomenclature',
+    subject: 'orgo',
     label: 'Nomenclature',
     blurb: 'Name simple chains both directions: structure to name and back.',
     build: () => [
@@ -278,18 +292,21 @@ export const TOPICS = [
   },
   {
     id: 'resonance',
+    subject: 'orgo',
     label: 'Resonance',
     blurb: 'Delocalization, major vs minor contributors, and what resonance is not.',
     build: () => [...withKind(resonance), ...withKind(resonanceExtra)],
   },
   {
     id: 'arrows',
+    subject: 'orgo',
     label: 'Curved Arrows',
     blurb: 'Recognition only — what an arrow means before mechanisms start in class.',
     build: () => [...withKind(curvedArrows), ...withKind(arrowsExtra)],
   },
   {
     id: 'orgopreview',
+    subject: 'orgo',
     label: 'Orgo Preview',
     blurb: 'A look ahead: mechanism concepts and SN1/SN2/E1/E2 conditions.',
     build: () => [...withKind(mechanismConcepts), ...withKind(snsE), ...withKind(substitutionDecision)],
@@ -301,7 +318,10 @@ const cache = new Map()
 export function getTopicBank(topicId) {
   if (!cache.has(topicId)) {
     const topic = TOPICS.find((t) => t.id === topicId)
-    cache.set(topicId, topic ? topic.build() : [])
+    cache.set(
+      topicId,
+      topic ? topic.build().map((q) => (q.subject ? q : { ...q, subject: topic.subject })) : [],
+    )
   }
   return cache.get(topicId)
 }
@@ -326,3 +346,52 @@ export function getSpeedBank(topicId) {
 }
 
 export const TOPIC_LABELS = Object.fromEntries(TOPICS.map((t) => [t.id, t.label]))
+
+/**
+ * MCAT subject each topic belongs to. Separate axis from `course`: course is
+ * provenance (which class the material arrived from), subject is what the MCAT
+ * would file it under. An empirical-formula question that came via the organic
+ * syllabus is course 'orgo' and subject 'genchem'.
+ */
+export const TOPIC_SUBJECT = Object.fromEntries(TOPICS.map((t) => [t.id, t.subject]))
+
+export const SUBJECT_LABELS = {
+  genchem: 'General Chemistry',
+  orgo: 'Organic Chemistry',
+  biochem: 'Biochemistry',
+  bio: 'Biology',
+  physics: 'Physics',
+  psych: 'Psych/Soc',
+}
+
+/** Topics under one subject, in the order they appear on the home screen. */
+export function topicsInSubject(subject) {
+  return TOPICS.filter((t) => t.subject === subject)
+}
+
+/**
+ * Subject for a question-topic slug, for session-log rows written before
+ * questions carried a subject of their own. Derived from the built banks
+ * rather than a hand-written map, so it cannot drift.
+ *
+ * A slug can genuinely span subjects — `hybridization` is asked both from
+ * VSEPR (general chemistry) and off a skeletal structure (organic) — so the
+ * majority wins. New rows log their own subject and never come through here.
+ */
+let slugSubjects = null
+export function subjectForTopicSlug(slug) {
+  if (!slugSubjects) {
+    const counts = new Map()
+    for (const t of TOPICS) {
+      for (const q of getTopicBank(t.id)) {
+        const byslug = counts.get(q.topic) ?? new Map()
+        byslug.set(q.subject, (byslug.get(q.subject) ?? 0) + 1)
+        counts.set(q.topic, byslug)
+      }
+    }
+    slugSubjects = Object.fromEntries(
+      [...counts].map(([s, m]) => [s, [...m].sort((a, b) => b[1] - a[1])[0][0]]),
+    )
+  }
+  return slugSubjects[slug]
+}

@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react'
 import { getAllSessionLog } from '../lib/db.js'
-import { accuracyByTopic, overallAccuracy } from '../lib/scoring.js'
+import { accuracyByTopic, accuracyBySubject, accuracyByCourse, overallAccuracy } from '../lib/scoring.js'
+import { subjectForTopicSlug, SUBJECT_LABELS } from '../lib/topics.js'
 import { getStreak } from '../lib/streaks.js'
 import TopicAccuracyBars from './TopicAccuracyBars.jsx'
 import BackupPanel from './BackupPanel.jsx'
+
+// Only the classes whose own material has been added to the bank appear here;
+// a course with no tagged questions simply never shows up.
+const COURSE_LABELS = {
+  orgo: 'Organic Chemistry',
+  genchem: 'General Chemistry',
+  biochem: 'Biochemistry',
+  bio: 'Biology',
+  physics: 'Physics',
+  psych: 'Psych/Soc',
+}
 
 const TOPIC_LABELS = {
   'element-recall': 'Element recall',
@@ -51,6 +63,15 @@ export default function ProgressView() {
     )
   }
 
+  // Subject first, then topic: the MCAT question is "which subject am I
+  // weakest in", and only once that is answered does "which area within it"
+  // mean anything. Both are weakest-first for the same reason.
+  const bySubject = accuracyBySubject(log, subjectForTopicSlug)
+    .map((r) => ({ ...r, key: SUBJECT_LABELS[r.key] ?? r.key }))
+    .sort((a, b) => a.accuracy - b.accuracy)
+  const byCourse = accuracyByCourse(log)
+    .map((r) => ({ ...r, key: COURSE_LABELS[r.key] ?? r.key }))
+    .sort((a, b) => a.accuracy - b.accuracy)
   const byTopic = accuracyByTopic(log)
     .map((r) => ({ ...r, key: TOPIC_LABELS[r.key] ?? r.key }))
     .sort((a, b) => a.accuracy - b.accuracy)
@@ -67,6 +88,18 @@ export default function ProgressView() {
           {streak.current}-day streak (best {streak.best}) · {streak.answeredToday} answered today
         </p>
       </div>
+
+      <div className="card">
+        <h3 className="section-title">By subject — weakest first</h3>
+        <TopicAccuracyBars rows={bySubject} />
+      </div>
+
+      {byCourse.length > 0 && (
+        <div className="card">
+          <h3 className="section-title">By course</h3>
+          <TopicAccuracyBars rows={byCourse} />
+        </div>
+      )}
 
       <div className="card">
         <h3 className="section-title">By topic — weakest first</h3>

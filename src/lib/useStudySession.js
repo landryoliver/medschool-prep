@@ -73,7 +73,16 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
       })
       progressById.set(question.id, updated)
       await putProgress(updated)
-      const logId = await logSession({ timestamp: Date.now(), mode, topic: question.topic, correct })
+      const logId = await logSession({
+        timestamp: Date.now(),
+        mode,
+        topic: question.topic,
+        // Logged alongside topic so accuracy can be rolled up by MCAT subject and
+        // by course without re-deriving it from a topic map that may have moved on.
+        subject: question.subject,
+        ...(question.course ? { course: question.course } : {}),
+        correct,
+      })
       recordAnswer()
       lastWrite.current = { questionId: question.id, prev, logId }
     },

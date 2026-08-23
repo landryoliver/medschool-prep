@@ -101,6 +101,13 @@ function segmentHitsBox(seg, cx, cy, halfW, halfH) {
 // course filter, and no other check looks at this field.
 const COURSES = new Set(['orgo', 'genchem', 'biochem', 'bio', 'physics', 'psych'])
 
+// What the MCAT would file a question under. Same values as COURSES, different
+// axis and deliberately not shared with it: course is where material came from,
+// subject is what it is. The two disagree often enough to matter — an
+// empirical-formula question off the organic syllabus is course orgo,
+// subject genchem.
+const SUBJECTS = new Set(['genchem', 'orgo', 'biochem', 'bio', 'physics', 'psych'])
+
 const seenIds = new Map()
 // Content signature -> first id seen. Two questions that differ only by id
 // are one question occupying two spaced-repetition rows, so the user is
@@ -155,6 +162,13 @@ for (const topic of TOPICS) {
     }
 
     if (!q.topic) fail(`${q.id}: missing topic`)
+    // Every question must carry a subject. It is stamped from the topic in
+    // getTopicBank, so a missing one means a topic was added without one and
+    // its whole bank would land in an "unknown" bucket on the progress screen.
+    if (!q.subject) fail(`${q.id}: no subject — does topic "${topic.id}" declare one?`)
+    else if (!SUBJECTS.has(q.subject)) {
+      fail(`${q.id}: unknown subject "${q.subject}" — expected one of ${[...SUBJECTS].join(', ')}`)
+    }
     if (q.course && !COURSES.has(q.course)) {
       fail(`${q.id}: unknown course tag "${q.course}" — expected one of ${[...COURSES].join(', ')}`)
     }

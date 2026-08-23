@@ -26,3 +26,20 @@ export function overallAccuracy(sessionLog) {
   const correct = sessionLog.filter((r) => r.correct).length
   return correct / sessionLog.length
 }
+
+/**
+ * Accuracy per MCAT subject. Rows logged before subjects existed carry only a
+ * topic, so the topic map fills in — which is also what keeps a question that
+ * later moves topics from silently losing its history here.
+ */
+export function accuracyBySubject(sessionLog, subjectOf) {
+  return aggregateByKey(sessionLog, (r) => r.subject ?? subjectOf(r.topic) ?? 'unknown')
+}
+
+/** Accuracy per course, over only the rows that carry a course tag. */
+export function accuracyByCourse(sessionLog) {
+  return aggregateByKey(
+    sessionLog.filter((r) => r.course),
+    (r) => r.course,
+  )
+}
