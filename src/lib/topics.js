@@ -35,6 +35,8 @@ import energyKinetics from '../data/curated/energyKinetics.json'
 import isomers from '../data/curated/isomers.json'
 import resonanceExtra from '../data/curated/resonanceExtra.json'
 import arrowsExtra from '../data/curated/arrowsExtra.json'
+import matterTypes from '../data/curated/matterTypes.json'
+import formulaMeaning from '../data/curated/formulaMeaning.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
@@ -130,6 +132,7 @@ export const TOPICS = [
       ...buildBank(molPolarity.generateComparePolarity, 40),
       ...withKind(bondTypeRule),
       ...withKind(metalCarbon),
+      ...withKind(matterTypes),
     ],
   },
   {
@@ -246,6 +249,7 @@ export const TOPICS = [
       ...buildBank(skeletal.generateSkeletalHybridization, 35),
       ...buildBank(skeletal.generateCondensed, 35),
       ...buildBank(skeletal.generateCondensedToSkeletal, 25),
+      ...withKind(formulaMeaning),
     ],
   },
   {

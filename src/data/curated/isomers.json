@@ -233,5 +233,15 @@
     "correctIndex": 0,
     "explanation": "Skeletal drawings can look very different while representing the same connectivity. If rotating single bonds converts one into the other, it is one compound.",
     "teach": "A common exam trap: check connectivity atom by atom rather than trusting how the drawing looks on the page."
+  },
+  {
+    "id": "iso-21",
+    "topic": "isomers",
+    "course": "orgo",
+    "prompt": "How many constitutional isomers does C₆H₁₄ have?",
+    "choices": ["5", "4", "6", "3"],
+    "correctIndex": 0,
+    "explanation": "Hexane; 2-methylpentane; 3-methylpentane; 2,2-dimethylbutane; 2,3-dimethylbutane. '4-methylpentane' is 2-methylpentane numbered from the wrong end, which is the usual way people overcount.",
+    "teach": "Work down by chain length: one 6-carbon chain, two ways to put a methyl on a 5-carbon chain, two ways to put two methyls on a 4-carbon chain. 2 for C₄, 3 for C₅, 5 for C₆, 9 for C₇."
   }
 ]

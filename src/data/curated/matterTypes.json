@@ -1,0 +1,37 @@
+[
+  {
+    "id": "mat-1",
+    "topic": "polarity",
+    "course": "orgo",
+    "prompt": "Which of these formulas describes a discrete particle you could actually count — a real molecule — rather than just an atom ratio?",
+    "choices": ["CO₂", "NaCl", "SiO₂", "Cu"],
+    "correctIndex": 0,
+    "explanation": "CO₂ is one carbon and two oxygens bonded together and separate from the next CO₂. The other three are continuous structures: NaCl is an ionic lattice, SiO₂ (quartz) is a covalent network, Cu is a metallic lattice. 'NaCl' and 'SiO₂' give a ratio, not a count — a grain of salt has no particular number of atoms in it.",
+    "teach": "This extends the metal/nonmetal bond-type rule one step further, into what the solid looks like. Metal + nonmetal → ionic lattice. Metal alone → metallic lattice. Nonmetal + nonmetal → discrete molecules, EXCEPT a short list of covalent networks worth memorising outright: SiO₂, SiC, diamond, graphite. Silicon is a metalloid rather than a true nonmetal, which is part of why SiO₂ breaks the pattern CO₂ follows."
+  },
+  {
+    "id": "mat-2",
+    "topic": "polarity",
+    "course": "orgo",
+    "prompt": "In solid table salt, why is there no such thing as 'one molecule of NaCl'?",
+    "choices": [
+      "Each Na⁺ is surrounded by six Cl⁻ in a continuous lattice, so no pair belongs to each other",
+      "NaCl molecules exist but are too small to detect",
+      "Na and Cl share electrons covalently, so the partners constantly swap",
+      "NaCl is a molecule only once dissolved in water"
+    ],
+    "correctIndex": 0,
+    "explanation": "In the rock-salt lattice every Na⁺ has six Cl⁻ neighbours and every Cl⁻ has six Na⁺. 'NaCl' is a formula unit — the 1:1 ratio — not a particle. That continuous electrostatic network is also why ionic solids melt so high: melting means pulling the entire lattice apart, not separating pairs.",
+    "teach": "Ionic compound → lattice, no molecules, formula is a ratio. This is why 'molecular formula' is a term reserved for molecular compounds, and why ionic melting points dwarf molecular ones."
+  },
+  {
+    "id": "mat-3",
+    "topic": "polarity",
+    "course": "orgo",
+    "prompt": "Which of these is held together by a continuous network of covalent bonds, with no separate molecules in it?",
+    "choices": ["Quartz, SiO₂", "Dry ice, CO₂", "Table salt, NaCl", "Copper wire, Cu"],
+    "correctIndex": 0,
+    "explanation": "Quartz is covalent network — every Si is bonded through O to the next Si, all the way across the crystal. Dry ice is molecular (discrete CO₂ units). Salt is ionic. Copper is metallic. Four substances, four different kinds of solid.",
+    "teach": "Four solid types worth telling apart: molecular (discrete units, weak forces between them), covalent network (bonded throughout), ionic (lattice of ions), metallic (cations in a shared electron sea). Molecular solids melt low; ionic and network solids melt very high. Metals are the unreliable one — mercury is liquid at room temperature, tungsten melts at 3400 °C — so do not use melting point to spot a metal."
+  }
+]

@@ -227,5 +227,20 @@
       "kind": "dispersion"
     },
     "visualAfter": true
+  },
+  {
+    "id": "imf-15",
+    "topic": "imf",
+    "course": "orgo",
+    "prompt": "Quartz (SiO₂) melts near 1700 °C. Dry ice (CO₂) sublimes at −78 °C. Both are a group-14 element with two oxygens. Why the enormous gap?",
+    "choices": [
+      "Melting quartz breaks covalent bonds throughout a network; subliming dry ice only overcomes weak London forces between intact molecules",
+      "Si–O bonds are far more polar than C=O bonds",
+      "SiO₂ is ionic while CO₂ is covalent",
+      "SiO₂ has the much higher molar mass"
+    ],
+    "correctIndex": 0,
+    "explanation": "CO₂ is a molecular solid: its C=O bonds survive sublimation untouched, and all you break are the dispersion forces holding one CO₂ against the next. Quartz has no molecules to separate, so melting it means breaking Si–O covalent bonds. Breaking bonds costs far more than breaking forces.",
+    "teach": "When a melting or boiling point looks absurdly high, ask what is actually being broken. Molecular solid → intermolecular forces only. Covalent network → real bonds. That one question separates them faster than any structural analysis."
   }
 ]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "fm-1",
+    "topic": "skeletal",
+    "course": "orgo",
+    "prompt": "Glucose is C₆H₁₂O₆. What is its empirical formula?",
+    "choices": ["CH₂O", "C₆H₁₂O₆", "C₂H₄O₂", "CHO"],
+    "correctIndex": 0,
+    "explanation": "Divide every subscript by the greatest common factor, 6. Formaldehyde (CH₂O) and acetic acid (C₂H₄O₂) reduce to the same empirical formula — three completely different compounds sharing one ratio.",
+    "teach": "Empirical formula answers 'what ratio?'. Molecular formula answers 'how many?'. Combustion analysis gives you the ratio only, which is why it can never identify a compound on its own — you need a molar mass on top of it."
+  },
+  {
+    "id": "fm-2",
+    "topic": "skeletal",
+    "course": "orgo",
+    "prompt": "A compound's empirical formula is CH₂ and its molar mass is about 42 g/mol. What is its molecular formula?",
+    "choices": ["C₃H₆", "CH₂", "C₂H₄", "C₄H₈"],
+    "correctIndex": 0,
+    "explanation": "CH₂ weighs about 14 g/mol. 42 ÷ 14 = 3, so multiply every subscript by 3, giving C₃H₆ (propene, 42.08 g/mol).",
+    "teach": "Molecular = empirical × n, where n = molar mass ÷ empirical formula mass. n is always a whole number — if it comes out at 2.9, round it; if it comes out at 2.5, the empirical formula itself is wrong."
+  }
+]

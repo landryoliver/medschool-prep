@@ -94,6 +94,13 @@ function segmentHitsBox(seg, cx, cy, halfW, halfH) {
   return false
 }
 
+// Which class a question's material came from. This is provenance, not subject
+// matter — an empirical-formula question that arrived via the organic syllabus
+// is tagged 'orgo' even though the chemistry is general. The vocabulary is
+// closed because a typo would make a question silently invisible to a
+// course filter, and no other check looks at this field.
+const COURSES = new Set(['orgo', 'genchem', 'biochem', 'bio', 'physics', 'psych'])
+
 const seenIds = new Map()
 // Content signature -> first id seen. Two questions that differ only by id
 // are one question occupying two spaced-repetition rows, so the user is
@@ -148,6 +155,9 @@ for (const topic of TOPICS) {
     }
 
     if (!q.topic) fail(`${q.id}: missing topic`)
+    if (q.course && !COURSES.has(q.course)) {
+      fail(`${q.id}: unknown course tag "${q.course}" — expected one of ${[...COURSES].join(', ')}`)
+    }
     if (!q.prompt) fail(`${q.id}: missing prompt`)
 
     if (q.kind === 'mcq') {
