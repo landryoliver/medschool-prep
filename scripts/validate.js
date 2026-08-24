@@ -977,6 +977,67 @@ console.log('\n=== Reference data ===')
   }
 }
 
+// No file the Swift toolchain reads may contain a Windows path separator.
+//
+// This is not hypothetical tidiness. Running `cap sync` on Windows wrote
+//
+//     path: "..\\..\\..\\node_modules\\@capacitor\\local-notifications"
+//
+// into Package.swift, and Swift reads those backslashes as escape sequences:
+// "invalid escape sequence in literal", five times, plus a bogus "missing
+// argument for parameter 'path'". Nothing on Windows can notice, because
+// nothing on Windows compiles Swift — it surfaced on a rented Mac after a
+// clone, a pull and an npm install.
+//
+// Capacitor regenerates these files, so this will happen again the next time a
+// plugin is added from this machine.
+{
+  let wBad = 0
+  const files = [
+    'ios/App/CapApp-SPM/Package.swift',
+    'ios/App/App.xcodeproj/project.pbxproj',
+    'ios/ScreenTime/Shared/StudyGate.swift',
+    'ios/ScreenTime/Shared/ScreenTimePlugin.swift',
+    'ios/ScreenTime/MonitorExtension/StudyGateMonitor.swift',
+    'ios/ScreenTime/ShieldConfiguration/StudyGateShield.swift',
+    'ios/ScreenTime/ShieldAction/StudyGateShieldAction.swift',
+  ]
+  for (const f of files) {
+    if (!fs.existsSync(f)) {
+      fail(`Windows path separator check: ${f} is missing`)
+      wBad++
+      continue
+    }
+    const text = fs.readFileSync(f, 'utf8')
+    for (const [i, line] of text.split(/\r?\n/).entries()) {
+      // A bare "contains a backslash" test is useless here: it flags every
+      // string interpolation (\(x)) and every pbxproj line continuation, which
+      // is how the first version of this reported five failures on a correct
+      // tree. What is actually wrong is a backslash that is not a valid Swift
+      // escape — \. and \@ and \l, which is exactly what a Windows path
+      // produces and exactly what the compiler complained about.
+      if (f.endsWith('.swift')) {
+        for (const m of line.matchAll(/"([^"\n]*)"/g)) {
+          const bad = [...m[1].matchAll(/\\(.)/g)].filter((e) => !'0\\tnr"\'u('.includes(e[1]))
+          if (bad.length) {
+            fail(
+              `Windows path separator in ${f}:${i + 1} — "${m[1]}" — ` +
+                `\\${bad[0][1]} is not a Swift escape, so this is a Windows path`,
+            )
+            wBad++
+          }
+        }
+      } else if (/\.\.\\|node_modules\\/.test(line)) {
+        // pbxproj is not Swift, so the escape rules do not apply — but a
+        // Windows path in a build setting is just as broken.
+        fail(`Windows path separator in ${f}:${i + 1} — ${line.trim().slice(0, 80)}`)
+        wBad++
+      }
+    }
+  }
+  if (!wBad) console.log(`  ok  no Windows path separators in the ${files.length} files Swift reads`)
+}
+
 // The Xcode project was assembled by scripts/addScreenTimeTargets.py without a
 // Mac, so nothing has opened it. These are the linkages that fail quietly:
 //
