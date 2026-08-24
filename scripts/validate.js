@@ -5,6 +5,7 @@ import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/gene
 import { lookupGeometry, GEOMETRIES } from '../src/lib/chem/vsepr.js'
 import { nextProgressState, selectSessionQuestions, BOX_INTERVALS_MS } from '../src/lib/srs.js'
 import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
+import { courseIndex } from '../src/lib/courseWeeks.js'
 import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
@@ -168,6 +169,16 @@ for (const topic of TOPICS) {
     if (!q.subject) fail(`${q.id}: no subject — does topic "${topic.id}" declare one?`)
     else if (!SUBJECTS.has(q.subject)) {
       fail(`${q.id}: unknown subject "${q.subject}" — expected one of ${[...SUBJECTS].join(', ')}`)
+    }
+    // A week without a course cannot be filed under anything, so the course
+    // view would silently never show it. Weeks are 1-based integers because
+    // they are read off a syllabus, and "week 0" or "week 2.5" means someone
+    // put something else in the field.
+    if (q.week != null) {
+      if (!q.course) fail(`${q.id}: has week ${q.week} but no course to file it under`)
+      if (!Number.isInteger(q.week) || q.week < 1 || q.week > 20) {
+        fail(`${q.id}: week tag ${JSON.stringify(q.week)} is not a week number between 1 and 20`)
+      }
     }
     if (q.course && !COURSES.has(q.course)) {
       fail(`${q.id}: unknown course tag "${q.course}" — expected one of ${[...COURSES].join(', ')}`)
@@ -920,6 +931,10 @@ console.log('\n=== Reference data ===')
     // from its own set, which is fine, but under two it is not a ladder.
     if (l.items.length < 3) { fail(`ladder "${l.id}" has only ${l.items.length} items`); lBad++ }
   }
+  for (const l of LADDERS) {
+    if (l.week != null && !l.course) { fail(`ladder "${l.id}" has a week but no course`); lBad++ }
+    if (l.course && !COURSES.has(l.course)) { fail(`ladder "${l.id}" unknown course "${l.course}"`); lBad++ }
+  }
   if (!lBad) console.log(`  ok  ${LADDERS.length} ladders: unique labels and keys, real topics, ${LADDERS.reduce((n, l) => n + l.items.length, 0)} items total`)
 }
 // Typed answers are only fair if every accepted spelling is reachable and no
@@ -955,6 +970,34 @@ console.log('\n=== Reference data ===')
     // which is a success line that cannot tell you it has stopped covering things.
     const typed = LADDERS.filter((l) => l.typeable !== false).length
     console.log(`  ok  ${typed} ladders: every typed answer is unambiguous and every set says what to type`)
+  }
+}
+
+// Every row the course screen offers has to lead to a session that can
+// actually run. A week listed with no questions behind it is a dead button,
+// and because the index is derived from tags rather than hand-kept, one
+// mistyped week would produce exactly that.
+{
+  let cBad = 0
+  let weeks = 0
+  for (const c of courseIndex()) {
+    if (!COURSES.has(c.id)) { fail(`course index contains unknown course "${c.id}"`); cBad++ }
+    for (const w of c.weeks) {
+      weeks++
+      if (!w.questions.length && !w.ladders.length) {
+        fail(`${c.id} week ${w.week} is listed with nothing behind it`)
+        cBad++
+      }
+      for (const q of w.questions) {
+        if (q.course !== c.id || q.week !== w.week) {
+          fail(`${q.id} is filed under ${c.id} week ${w.week} but tagged ${q.course} week ${q.week}`)
+          cBad++
+        }
+      }
+    }
+  }
+  if (!cBad) {
+    console.log(`  ok  course index: ${courseIndex().length} course(s), ${weeks} week(s), every row has material behind it`)
   }
 }
 

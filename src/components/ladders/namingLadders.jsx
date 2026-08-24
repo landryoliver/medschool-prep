@@ -216,6 +216,8 @@ export const NAMING_LADDERS = [
   {
     id: 'suffixes',
     topic: 'nomenclature',
+    course: 'orgo',
+    week: 1,
     label: 'Naming suffixes',
     unit: 'suffix',
     blurb: 'Read a structure, know which ending its name has to take.',
@@ -248,6 +250,8 @@ export const NAMING_LADDERS = [
   {
     id: 'alkyl',
     topic: 'nomenclature',
+    course: 'orgo',
+    week: 1,
     label: 'Alkyl and common groups',
     unit: 'group',
     blurb: 'The fragments named as pieces: methyl through decyl, plus isopropyl, vinyl, phenyl and the rest.',

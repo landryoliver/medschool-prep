@@ -43,6 +43,7 @@ import connectivity from '../data/curated/connectivity.json'
 import lineDrawings from '../data/curated/lineDrawings.json'
 import groupClasses from '../data/curated/groupClasses.json'
 import aromaticNaming from '../data/curated/aromaticNaming.json'
+import geometryHybrid from '../data/curated/geometryHybrid.json'
 import * as imfGen from '../generators/imf.js'
 import * as energyDiagrams from '../generators/energyDiagrams.js'
 import * as molPolarity from '../generators/molecularPolarity.js'
@@ -185,6 +186,7 @@ export const TOPICS = [
       ...buildBank(vsepr.generateAngleFromDiagram, 18),
       ...buildBank(vsepr.generateDiagramFromShape, 18),
       ...withKind(vseprCurated),
+      ...withKind(geometryHybrid),
     ],
   },
   {

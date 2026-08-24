@@ -3,6 +3,7 @@
     "id": "conn-1",
     "topic": "lewis-structures",
     "course": "orgo",
+    "week": 1,
     "prompt": "You are given the formula H₂CO₃ and no drawing. Which atom goes in the middle?",
     "choices": [
       "Carbon — it has the highest valence, so it can hold the most neighbours",
@@ -18,6 +19,7 @@
     "id": "conn-2",
     "topic": "lewis-structures",
     "course": "orgo",
+    "week": 1,
     "prompt": "In an oxyacid such as H₂SO₄ or HClO₄, where do the hydrogens go?",
     "choices": [
       "On the oxygens, not on the central atom",
@@ -33,6 +35,7 @@
     "id": "conn-3",
     "topic": "lewis-structures",
     "course": "orgo",
+    "week": 1,
     "prompt": "When guessing connectivity, why avoid drawing an O–O bond unless the formula forces it?",
     "choices": [
       "Bonds between two electronegative atoms are weak, and such structures are usually unstable",
@@ -48,6 +51,7 @@
     "id": "conn-4",
     "topic": "lewis-structures",
     "course": "orgo",
+    "week": 1,
     "prompt": "Typical valences for second-row atoms — how many bonds does each of B, C, N, O, F normally form?",
     "choices": ["3, 4, 3, 2, 1", "4, 4, 3, 2, 1", "3, 4, 4, 2, 1", "1, 4, 3, 2, 3"],
     "correctIndex": 0,

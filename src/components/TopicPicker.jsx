@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { TOPICS, getTopicBank, getMixedBank } from '../lib/topics.js'
 import { ladderForTopic } from './ladders/definitions.jsx'
+import { courseIndex } from '../lib/courseWeeks.js'
 import { getAllProgress } from '../lib/db.js'
 import { getStreak } from '../lib/streaks.js'
 import { topicColor, topicTint, topicButtonColor } from '../lib/topicMeta.js'
@@ -144,7 +145,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards, 
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan, onCourses }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -231,6 +232,16 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
         <span className="action-title">Build up a set</span>
         <span className="action-sub">One at a time</span>
       </button>
+
+      {/* Only offered once a course reading has actually been tagged. An
+          empty "My courses" button is worse than no button — it looks like a
+          feature that is broken rather than one waiting on input. */}
+      {courseIndex().length > 0 && (
+        <button className="action-btn" onClick={onCourses}>
+          <span className="action-title">My courses</span>
+          <span className="action-sub">Week by week, from your readings</span>
+        </button>
+      )}
 
       <div className="action-row">
         <button className="action-btn" onClick={onPlan}>

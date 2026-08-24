@@ -1,0 +1,45 @@
+[
+  {
+    "id": "gh-1",
+    "topic": "hybridization",
+    "course": "orgo",
+    "week": 1,
+    "prompt": "Match electron geometry to hybridization: tetrahedral, trigonal planar, linear.",
+    "choices": ["sp³, sp², sp", "sp², sp³, sp", "sp³, sp, sp²", "sp, sp², sp³"],
+    "correctIndex": 0,
+    "explanation": "Count the electron groups on the atom — bonding pairs and lone pairs both count, and a double or triple bond counts once. Four groups is tetrahedral and sp³, three is trigonal planar and sp², two is linear and sp.",
+    "teach": "Geometry and hybridization are one fact stated twice: the number of electron groups sets both. Count groups once and you have the geometry, the hybridization and the ideal angle together — 4 → 109.5°, 3 → 120°, 2 → 180°."
+  },
+  {
+    "id": "gh-2",
+    "topic": "hybridization",
+    "course": "orgo",
+    "week": 1,
+    "prompt": "Water's molecular shape is bent, not tetrahedral. So what is the oxygen's hybridization?",
+    "choices": [
+      "sp³ — hybridization follows the ELECTRON geometry, which is tetrahedral",
+      "sp² — because the shape you can see is bent",
+      "sp — because oxygen has only two bonds",
+      "sp³d — because lone pairs need extra orbitals"
+    ],
+    "correctIndex": 0,
+    "explanation": "Oxygen has two bonding pairs and two lone pairs: four electron groups, so tetrahedral electron geometry and sp³. The lone pairs take up space but are not drawn, which is why the molecule looks bent. Ammonia is the same story — trigonal pyramidal shape, tetrahedral electron geometry, sp³.",
+    "teach": "'Tetrahedral = sp³' is a statement about ELECTRON geometry. Read it off the molecular shape instead and water and ammonia both come out wrong. Count every group on the atom including lone pairs, then map."
+  },
+  {
+    "id": "gh-3",
+    "topic": "hybridization",
+    "course": "orgo",
+    "week": 1,
+    "prompt": "In acetone, CH₃–C(=O)–CH₃, what are the hybridizations of the carbonyl carbon and of the two methyl carbons?",
+    "choices": [
+      "carbonyl sp², methyls sp³",
+      "carbonyl sp³, methyls sp²",
+      "all three sp³",
+      "all three sp²"
+    ],
+    "correctIndex": 0,
+    "explanation": "The carbonyl carbon carries three groups — two methyls and one C=O, the double bond counting once — so it is trigonal planar and sp². Each methyl carbon has four single bonds, so tetrahedral and sp³.",
+    "teach": "A double bond counts as ONE electron group, not two. That single rule is what makes a carbonyl carbon sp² rather than sp³, and miscounting it is the most common way this question goes wrong."
+  }
+]

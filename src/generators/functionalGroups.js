@@ -160,6 +160,8 @@ export function generateCarboxyloidId(seed) {
   return {
     id: `cbx-${seed}`,
     topic: 'functional-groups',
+    course: 'orgo',
+    week: 1,
     kind: 'mcq',
     prompt: 'Every one of these is a C=O with something attached. Which derivative is this?',
     choices,

@@ -3,6 +3,7 @@
     "id": "arn-1",
     "topic": "nomenclature",
     "course": "orgo",
+    "week": 1,
     "prompt": "On a benzene ring carrying two substituents, what do ortho, meta and para mean?",
     "choices": [
       "ortho 1,2- · meta 1,3- · para 1,4-",
@@ -18,6 +19,7 @@
     "id": "arn-2",
     "topic": "nomenclature",
     "course": "orgo",
+    "week": 1,
     "prompt": "Match the suffixes: -one, -al, -oic acid, -ol.",
     "choices": [
       "ketone, aldehyde, carboxylic acid, alcohol",

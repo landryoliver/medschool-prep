@@ -3,6 +3,7 @@
     "id": "rad-1",
     "topic": "lewis-structures",
     "course": "orgo",
+    "week": 1,
     "prompt": "NO₂ has 17 valence electrons in total. What does an odd count tell you before you draw anything?",
     "choices": [
       "One electron must be left unpaired — it is a radical",
@@ -18,6 +19,7 @@
     "id": "rad-2",
     "topic": "lewis-structures",
     "course": "orgo",
+    "week": 1,
     "prompt": "NO₂ (17 valence electrons) dimerizes to colourless N₂O₄ when cooled, but nitrite, NO₂⁻ (18 valence electrons), does not dimerize. Why?",
     "choices": [
       "NO₂'s unpaired electron pairs with another molecule's to form an N–N bond; NO₂⁻ has none to offer",

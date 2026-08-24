@@ -3,6 +3,7 @@
     "id": "gcl-1",
     "topic": "functional-groups",
     "course": "orgo",
+    "week": 1,
     "prompt": "Alcohols and amines are both classified 1°, 2° or 3°, but the two are counted differently. What is counted in each?",
     "choices": [
       "Alcohol: carbons attached to the carbon bearing the OH. Amine: carbons attached to the nitrogen itself",
@@ -18,6 +19,7 @@
     "id": "gcl-2",
     "topic": "functional-groups",
     "course": "orgo",
+    "week": 1,
     "prompt": "A benzene ring attached to something is a phenyl group. What are benzyl and benzoyl?",
     "choices": [
       "Benzyl is phenyl plus a CH₂; benzoyl is phenyl plus a C=O",

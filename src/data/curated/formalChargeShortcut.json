@@ -3,6 +3,7 @@
     "id": "fcs-1",
     "topic": "formal-charge",
     "course": "orgo",
+    "week": 1,
     "prompt": "An oxygen atom in a structure has THREE bonds and one lone pair. What is its formal charge?",
     "choices": ["+1", "−1", "0", "+2"],
     "correctIndex": 0,
@@ -13,6 +14,7 @@
     "id": "fcs-2",
     "topic": "formal-charge",
     "course": "orgo",
+    "week": 1,
     "prompt": "A nitrogen atom has FOUR bonds and no lone pairs. Its formal charge is:",
     "choices": ["+1", "−1", "0", "−2"],
     "correctIndex": 0,
@@ -23,6 +25,7 @@
     "id": "fcs-3",
     "topic": "formal-charge",
     "course": "orgo",
+    "week": 1,
     "prompt": "In carbon monoxide, C≡O, each atom has a triple bond and one lone pair. What are the formal charges?",
     "choices": [
       "C is −1, O is +1",
@@ -38,6 +41,7 @@
     "id": "fcs-4",
     "topic": "formal-charge",
     "course": "orgo",
+    "week": 1,
     "prompt": "A carbon has THREE bonds and NO lone pairs. Applying 'one bond fewer than usual means −1' gives the wrong answer. What is the actual formal charge, and why?",
     "choices": [
       "+1 — the octet is incomplete, so the shortcut does not apply",
@@ -53,6 +57,7 @@
     "id": "fcs-5",
     "topic": "formal-charge",
     "course": "orgo",
+    "week": 1,
     "prompt": "Which of these neutral-looking atoms actually carries a formal charge?",
     "choices": [
       "An oxygen with one bond and three lone pairs",

@@ -3,6 +3,7 @@
     "id": "mat-1",
     "topic": "bond-polarity",
     "course": "orgo",
+    "week": 1,
     "prompt": "Which of these formulas describes a discrete particle you could actually count — a real molecule — rather than just an atom ratio?",
     "choices": ["CO₂", "NaCl", "SiO₂", "Cu"],
     "correctIndex": 0,
@@ -13,6 +14,7 @@
     "id": "mat-2",
     "topic": "bond-polarity",
     "course": "orgo",
+    "week": 1,
     "prompt": "In solid table salt, why is there no such thing as 'one molecule of NaCl'?",
     "choices": [
       "Each Na⁺ is surrounded by six Cl⁻ in a continuous lattice, so no pair belongs to each other",
@@ -28,6 +30,7 @@
     "id": "mat-3",
     "topic": "bond-polarity",
     "course": "orgo",
+    "week": 1,
     "prompt": "Which of these is held together by a continuous network of covalent bonds, with no separate molecules in it?",
     "choices": ["Quartz, SiO₂", "Dry ice, CO₂", "Table salt, NaCl", "Copper wire, Cu"],
     "correctIndex": 0,

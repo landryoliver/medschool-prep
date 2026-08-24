@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import TopicPicker from './components/TopicPicker.jsx'
 import StudySessionView from './components/StudySessionView.jsx'
+import CourseWeeks from './components/CourseWeeks.jsx'
+import { weekBank, courseBank, COURSE_LABELS } from './lib/courseWeeks.js'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import ReferenceView from './components/ReferenceView.jsx'
@@ -29,6 +31,7 @@ const BACK_LABEL = {
   learn: 'Notes',
   lesson: 'Lesson',
   plan: 'Progression',
+  courses: 'Courses',
   cards: 'Flashcards',
   progress: 'Progress',
 }
@@ -97,6 +100,7 @@ export default function App() {
               setView({ name: 'misses' })
             }}
             onPlan={() => setView({ name: 'plan' })}
+            onCourses={() => setView({ name: 'courses' })}
           />
         )}
 
@@ -178,6 +182,29 @@ export default function App() {
             onExit={() => setView({ name: 'topics' })}
           />
         )}
+
+        {view.name === 'courses' && (
+          <CourseWeeks
+            onWeek={(courseId, week) => setView({ name: 'week', courseId, week })}
+            onCourse={(courseId) => setView({ name: 'week', courseId, week: null })}
+            onLadder={(ladderId) => setView({ name: 'ladder', ladderId })}
+          />
+        )}
+
+        {view.name === 'week' &&
+          (() => {
+            const bank = view.week == null ? courseBank(view.courseId) : weekBank(view.courseId, view.week)
+            const name = COURSE_LABELS[view.courseId] ?? view.courseId
+            return (
+              <StudySessionView
+                key={`${view.courseId}-${view.week ?? 'all'}`}
+                mode={PROGRESS_MODE}
+                title={view.week == null ? name : `${name} · week ${view.week}`}
+                bank={bank}
+                sessionSize={Math.min(15, bank.length)}
+              />
+            )
+          })()}
 
         {view.name === 'progress' && <ProgressView />}
       </main>
