@@ -977,6 +977,59 @@ console.log('\n=== Reference data ===')
   }
 }
 
+// Which framework each type comes from, checked per file.
+//
+// "cannot find type 'DeviceActivityName' in scope" is what a missing import
+// looks like, and it cost a round trip to a rented Mac to discover that
+// StudyGate.swift used two DeviceActivity types without importing it. A
+// compiler finds this instantly; there is no compiler here, so the mapping is
+// written down and checked instead.
+//
+// Deliberately a small table of the types this project actually uses rather
+// than an attempt at parsing Swift. It only has to cover what is written here.
+{
+  let iBad = 0
+  const NEEDS = {
+    DeviceActivity: ['DeviceActivityName', 'DeviceActivityEvent', 'DeviceActivityMonitor', 'DeviceActivityCenter', 'DeviceActivitySchedule'],
+    ManagedSettings: ['ManagedSettingsStore', 'ShieldActionDelegate', 'ShieldAction', 'ApplicationToken', 'ActivityCategoryToken', 'WebDomainToken'],
+    ManagedSettingsUI: ['ShieldConfigurationDataSource', 'ShieldConfiguration'],
+    FamilyControls: ['FamilyActivitySelection', 'FamilyActivityPicker', 'AuthorizationCenter'],
+    Capacitor: ['CAPPlugin', 'CAPPluginCall', 'CAPPluginMethod', 'CAPBridgedPlugin'],
+    SwiftUI: ['UIHostingController', 'NavigationView'],
+    UIKit: ['UIColor'],
+    Foundation: ['UserDefaults', 'JSONDecoder', 'JSONEncoder'],
+  }
+
+  const files = [
+    'ios/ScreenTime/Shared/StudyGate.swift',
+    'ios/ScreenTime/Shared/ScreenTimePlugin.swift',
+    'ios/ScreenTime/MonitorExtension/StudyGateMonitor.swift',
+    'ios/ScreenTime/ShieldConfiguration/StudyGateShield.swift',
+    'ios/ScreenTime/ShieldAction/StudyGateShieldAction.swift',
+  ]
+
+  for (const f of files) {
+    const text = fs.readFileSync(f, 'utf8')
+    // Comments carry these names all over the place, so they are stripped
+    // first — otherwise a note about DeviceActivity would demand an import the
+    // code does not need, which is the same blunt-guard mistake as before.
+    const code = text
+      .split(/\r?\n/)
+      .filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l))
+      .join('\n')
+    const imports = new Set([...text.matchAll(/^import (\w+)/gm)].map((m) => m[1]))
+
+    for (const [framework, types] of Object.entries(NEEDS)) {
+      const used = types.filter((t) => new RegExp(`\\b${t}\\b`).test(code))
+      if (used.length && !imports.has(framework)) {
+        fail(`missing import in ${f}: uses ${used.join(', ')} but never imports ${framework}`)
+        iBad++
+      }
+    }
+  }
+  if (!iBad) console.log(`  ok  every Swift type used in ${files.length} files has its framework imported`)
+}
+
 // No file the Swift toolchain reads may contain a Windows path separator.
 //
 // This is not hypothetical tidiness. Running `cap sync` on Windows wrote
