@@ -150,17 +150,19 @@ export function plan({ now = new Date(), settings, studiedToday, streak = 0, due
 
 /* ------------------------------------------------------------------ adapter */
 
-/** Capacitor when it is there, a no-op in the browser. Kept to one place
- *  because this is the only part that cannot be tested without a device. */
+/**
+ * The native side rides on our own ScreenTimePlugin rather than
+ * @capacitor/local-notifications. UNUserNotificationCenter is a bare iOS
+ * framework — scheduling a local alert needs no third-party package, and
+ * ScreenTimePlugin.swift already exists as a hand-written Capacitor bridge for
+ * a harder case. Adding two @objc funcs there costs less than a second SPM
+ * dependency costs in resolve-and-commit friction, and it is one fewer entry
+ * in Package.resolved for a Mac-only step to ever need to redo.
+ */
 async function backend() {
   const cap = globalThis.Capacitor
   if (!cap?.isNativePlatform?.()) return null
-  try {
-    const { LocalNotifications } = await import('@capacitor/local-notifications')
-    return LocalNotifications
-  } catch {
-    return null
-  }
+  return cap.Plugins?.ScreenTime ?? null
 }
 
 /** Numeric ids are what the platform wants; the readable id is what we reason
@@ -177,8 +179,8 @@ export function numericId(id) {
 export async function requestPermission() {
   const api = await backend()
   if (!api) return 'unsupported'
-  const res = await api.requestPermissions()
-  return res?.display ?? 'denied'
+  const res = await api.requestNotificationPermission()
+  return res?.granted ? 'granted' : 'denied'
 }
 
 /**
@@ -190,18 +192,13 @@ export async function reschedule(input) {
   const api = await backend()
   if (!api) return items // browser: planning still runs, nothing is delivered
 
-  const pending = await api.getPending()
-  if (pending?.notifications?.length) await api.cancel({ notifications: pending.notifications })
-
-  if (items.length) {
-    await api.schedule({
-      notifications: items.map((n) => ({
-        id: numericId(n.id),
-        title: n.title,
-        body: n.body,
-        schedule: { at: n.at, allowWhileIdle: true },
-      })),
-    })
-  }
+  await api.scheduleNotifications({
+    notifications: items.map((n) => ({
+      id: numericId(n.id),
+      title: n.title,
+      body: n.body,
+      at: n.at.getTime(),
+    })),
+  })
   return items
 }

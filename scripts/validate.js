@@ -1062,6 +1062,7 @@ console.log('\n=== Reference data ===')
     SwiftUI: ['UIHostingController', 'NavigationView'],
     UIKit: ['UIColor'],
     Foundation: ['UserDefaults', 'JSONDecoder', 'JSONEncoder'],
+    UserNotifications: ['UNUserNotificationCenter', 'UNMutableNotificationContent', 'UNCalendarNotificationTrigger', 'UNNotificationRequest'],
   }
 
   const files = [
@@ -1319,12 +1320,22 @@ console.log('\n=== Reference data ===')
       bBad++
     }
   }
-  // Every method the JS calls must exist on the Swift side.
-  const jsSource = fs.readFileSync('src/lib/screenTime.js', 'utf8')
-  for (const m of [...jsSource.matchAll(/\bp\.(\w+)\(/g)].map((x) => x[1])) {
-    if (!declared.has(m)) {
-      fail(`native bridge: screenTime.js calls p.${m}() which the plugin does not expose`)
-      bBad++
+  // Every method the JS calls must exist on the Swift side. Two callers, two
+  // variable names for the same plugin handle — screenTime.js says `p`,
+  // notifications.js says `api`, and both reach ScreenTimePlugin through the
+  // same backend(). Checked the same way this caught the missing import: by
+  // reading the source rather than trusting it compiles.
+  for (const [file, varName] of [
+    ['src/lib/screenTime.js', 'p'],
+    ['src/lib/notifications.js', 'api'],
+  ]) {
+    const jsSource = fs.readFileSync(file, 'utf8')
+    const pattern = new RegExp(`\\b${varName}\\.(\\w+)\\(`, 'g')
+    for (const m of [...jsSource.matchAll(pattern)].map((x) => x[1])) {
+      if (!declared.has(m)) {
+        fail(`native bridge: ${file} calls ${varName}.${m}() which the plugin does not expose`)
+        bBad++
+      }
     }
   }
 

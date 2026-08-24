@@ -3,6 +3,7 @@ import DeviceActivity
 import FamilyControls
 import ManagedSettings
 import SwiftUI
+import UserNotifications
 
 /// The bridge. Everything the web layer can ask for, and nothing it cannot.
 ///
@@ -22,6 +23,8 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "arm", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pushRecord", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "unlockLog", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "requestNotificationPermission", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "scheduleNotifications", returnType: CAPPluginReturnPromise),
     ]
 
     private let center = DeviceActivityCenter()
@@ -122,6 +125,68 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func unlockLog(_ call: CAPPluginCall) {
         let log = AppGroup.defaults.array(forKey: "unlockLog") as? [[String: Any]] ?? []
         call.resolve(["entries": log])
+    }
+
+    // MARK: - study reminders
+    //
+    // UNUserNotificationCenter is a plain iOS framework, not a third-party
+    // package. notifications.js already contains the entire scheduling
+    // decision — what to say, when, and whether a day counts as studied — so
+    // the native side has exactly two jobs: ask once, and write whatever it is
+    // given after clearing what came before.
+
+    @objc func requestNotificationPermission(_ call: CAPPluginCall) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            call.resolve(["granted": granted, "error": error?.localizedDescription ?? NSNull()])
+        }
+    }
+
+    /// Cancel every pending reminder and schedule exactly the set handed in.
+    /// notifications.js always sends the FULL rebuilt plan, never a delta, so
+    /// clearing first is what makes a stale reminder impossible to leave behind
+    /// — there is no diffing to get wrong.
+    @objc func scheduleNotifications(_ call: CAPPluginCall) {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+
+        guard let items = call.getArray("notifications", JSObject.self) else {
+            call.resolve(["scheduled": 0])
+            return
+        }
+
+        let group = DispatchGroup()
+        var scheduled = 0
+        for item in items {
+            guard
+                let id = item["id"] as? Int,
+                let title = item["title"] as? String,
+                let body = item["body"] as? String,
+                let atMillis = item["at"] as? Double
+            else { continue }
+
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            content.sound = .default
+
+            let fireDate = Date(timeIntervalSince1970: atMillis / 1000)
+            let comps = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute, .second],
+                from: fireDate
+            )
+            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            let request = UNNotificationRequest(identifier: String(id), content: content, trigger: trigger)
+
+            group.enter()
+            center.add(request) { _ in
+                scheduled += 1
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            call.resolve(["scheduled": scheduled])
+        }
     }
 
     /// Stop everything and start it again from stored config, every time.
