@@ -95,12 +95,14 @@ INFO_PLIST = """<?xml version="1.0" encoding="UTF-8"?>
 \t<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 \t<key>CFBundleName</key>
 \t<string>$(PRODUCT_NAME)</string>
+\t<key>CFBundleExecutable</key>
+\t<string>$(EXECUTABLE_NAME)</string>
 \t<key>CFBundlePackageType</key>
 \t<string>XPC!</string>
 \t<key>CFBundleShortVersionString</key>
-\t<string>1.0</string>
+\t<string>$(MARKETING_VERSION)</string>
 \t<key>CFBundleVersion</key>
-\t<string>1</string>
+\t<string>$(CURRENT_PROJECT_VERSION)</string>
 \t<key>NSExtension</key>
 \t<dict>
 \t\t<key>NSExtensionPointIdentifier</key>
@@ -183,8 +185,16 @@ def main():
     with open(PBX, "r", encoding="utf-8") as f:
         text = f.read()
 
+    # write_support_files() runs unconditionally, ahead of the idempotency
+    # check below. It is naturally idempotent — deterministic content to fixed
+    # paths — so re-running costs nothing, and a fix to the plist/entitlements
+    # templates (like the missing CFBundleExecutable this was written to add)
+    # needs to reach disk even when the pbxproj mutation is skipped as already
+    # done. Without this, a re-run would silently apply nothing.
+    write_support_files()
+
     if "StudyGateMonitor.swift" in text:
-        print("targets already present — nothing to do")
+        print("targets already present in project.pbxproj — support files rewritten, project untouched")
         return
 
     app_target = APP_TARGET_RE.search(text)
@@ -203,8 +213,6 @@ def main():
             raise SystemExit(f"could not locate {label} in project.pbxproj — refusing to write")
     app_target, project = app_target.group(1), project.group(1)
     products, main_group, app_sources = products.group(1), main_group.group(1), app_sources.group(1)
-
-    write_support_files()
 
     build_files, file_refs, groups, phases, configs, conf_lists = [], [], [], [], [], []
     targets, deps, proxies, embed_files, group_children = [], [], [], [], []

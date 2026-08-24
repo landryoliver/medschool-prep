@@ -5,3 +5,6 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .claude/
+
+# build logs dropped in the repo root for debugging, never source
+*.log

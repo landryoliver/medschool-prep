@@ -1208,6 +1208,18 @@ console.log('\n=== Reference data ===')
         fail(`Xcode project: ${name}'s principal class is not ${principal}`)
         xBad++
       }
+      // App Store Connect rejected the first upload over exactly this: no
+      // CFBundleExecutable, on all three extensions. It surfaced as ITMS-90360
+      // (explicit) on one bundle and as ITMS-90349 "invalid
+      // NSExtensionPointIdentifier" on the other two — Apple's validator
+      // reports a correct extension point as invalid when the bundle it lives
+      // in cannot be confirmed as a complete executable bundle first. A local
+      // build cannot catch this: Xcode does not require the key to compile or
+      // archive, only to pass App Store validation on upload.
+      if (!t.includes('<key>CFBundleExecutable</key>')) {
+        fail(`Xcode project: ${name}'s Info.plist has no CFBundleExecutable — rejected at upload, not at build`)
+        xBad++
+      }
     }
 
     const ent = `ios/ScreenTime/${dir}/${name}.entitlements`
