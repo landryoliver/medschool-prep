@@ -101,7 +101,7 @@ export async function getAllSessionLog() {
 export async function exportProgress() {
   const [progress, sessionLog] = await Promise.all([getAllProgress(), getAllSessionLog()])
   return {
-    format: 'orgoprep-backup',
+    format: 'medladder-backup',
     version: 1,
     exportedAt: new Date().toISOString(),
     progress,
@@ -112,10 +112,13 @@ export async function exportProgress() {
 
 /** Merge a backup in, keeping whichever record was seen most recently. */
 export async function importProgress(backup) {
-  // The format string stays 'orgoprep-backup' even though the app is now
-  // called MedLadder. It is written into every backup file already exported,
-  // and renaming it would make the app reject its own past backups.
-  if (backup?.format !== 'orgoprep-backup') throw new Error('Not a MedLadder backup file')
+  // Writes 'medladder-backup', reads either. The old name shipped for months,
+  // and while nothing is known to have been exported under it, the cost of
+  // being wrong about that is a file containing all of someone's progress that
+  // the app refuses to open. Accepting both costs one array.
+  if (!['medladder-backup', 'orgoprep-backup'].includes(backup?.format)) {
+    throw new Error('Not a MedLadder backup file')
+  }
   const db = await getDb()
   if (!db) throw new Error('Storage is unavailable, so the backup cannot be restored')
 
