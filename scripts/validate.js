@@ -1172,11 +1172,12 @@ console.log('\n=== Reference data ===')
   const APP_ID = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8')).appId
   const GROUP = `group.${APP_ID}`
 
-  const EXTS = [
-    ['Monitor', 'monitor', 'com.apple.deviceactivity.monitor', 'StudyGateMonitor', 'MonitorExtension'],
-    ['ShieldConfiguration', 'shield', 'com.apple.ManagedSettings.shield-configuration-service', 'StudyGateShield', 'ShieldConfiguration'],
-    ['ShieldAction', 'shieldaction', 'com.apple.ManagedSettings.shield-action-service', 'StudyGateShieldAction', 'ShieldAction'],
-  ]
+  // Same file addScreenTimeTargets.py reads, not a second hardcoded copy. Two
+  // copies of "com.apple.ManagedSettingsUI.shield-configuration-service" is
+  // how a fix lands in the generator and this guard keeps checking the old,
+  // now-wrong value — which is exactly what the previous version of this did.
+  const extJson = JSON.parse(fs.readFileSync('scripts/screenTimeExtensions.json', 'utf8'))
+  const EXTS = extJson.map((e) => [e.name, e.bundle_suffix, e.point, e.principal, e.group])
 
   for (const [name, suffix, point, principal, dir] of EXTS) {
     if (!new RegExp(`/\\* ${name} \\*/ = \\{\\s*isa = PBXNativeTarget;`).test(pbx)) {

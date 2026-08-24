@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Monitor",
+    "bundle_suffix": "monitor",
+    "point": "com.apple.deviceactivity.monitor-extension",
+    "principal": "StudyGateMonitor",
+    "sources": ["../ScreenTime/MonitorExtension/StudyGateMonitor.swift"],
+    "group": "MonitorExtension"
+  },
+  {
+    "name": "ShieldConfiguration",
+    "bundle_suffix": "shield",
+    "point": "com.apple.ManagedSettingsUI.shield-configuration-service",
+    "principal": "StudyGateShield",
+    "sources": ["../ScreenTime/ShieldConfiguration/StudyGateShield.swift"],
+    "group": "ShieldConfiguration"
+  },
+  {
+    "name": "ShieldAction",
+    "bundle_suffix": "shieldaction",
+    "point": "com.apple.ManagedSettings.shield-action-service",
+    "principal": "StudyGateShieldAction",
+    "sources": ["../ScreenTime/ShieldAction/StudyGateShieldAction.swift"],
+    "group": "ShieldAction"
+  }
+]

@@ -18,12 +18,14 @@ Idempotent: exits without changes if the targets are already present.
 """
 
 import hashlib
+import json
 import os
 import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PBX = os.path.join(ROOT, "ios/App/App.xcodeproj/project.pbxproj")
+EXTENSIONS_JSON = os.path.join(ROOT, "scripts/screenTimeExtensions.json")
 
 APP_ID = "com.medladder.app"
 APP_GROUP = "group." + APP_ID
@@ -46,41 +48,36 @@ def uid(label):
 
 
 # NSExtensionPointIdentifier values. These are NOT guessable and a wrong one
-# means the extension never loads, or worse, is rejected at upload time with
-# "Invalid NSExtensionPointIdentifier".
+# means the extension never loads, or is rejected at upload with
+# "Invalid NSExtensionPointIdentifier" — which is what happened to both of the
+# first two entries below, on a real App Store Connect submission.
 #
-# Confirmed against an Apple DTS reply (developer.apple.com/forums/thread/814945):
-# it is ManagedSettings, NOT ManagedSettingsUI, for the shield services. A
-# developer using the ManagedSettingsUI form had the upload rejected.
+# The bug in the previous version of this comment was generalising from one
+# confirmed case to two. The shield-action identifier was confirmed directly
+# by an Apple DTS engineer (developer.apple.com/forums/thread/814945) as
+# ManagedSettings, not ManagedSettingsUI — correct, and never flagged across
+# two uploads. That got written down as a rule for "the shield services"
+# (plural) and applied by pattern-matching to shield-configuration too, which
+# was wrong: ShieldConfigurationDataSource is documented under the
+# ManagedSettingsUI framework specifically (developer.apple.com/documentation/
+# ManagedSettingsUI/ShieldConfigurationDataSource), a different framework from
+# ShieldActionDelegate, and its extension point uses that prefix — confirmed
+# by a second Apple engineer, developer.apple.com/forums/thread/683110.
+# Monitor's rejection was unrelated: missing the "-extension" suffix, confirmed
+# against developer.apple.com/forums/thread/822083 and 681963.
 #
-# If App Store Connect rejects the build over one of these, this dict is the
-# only place to change.
-EXTENSIONS = [
-    {
-        "name": "Monitor",
-        "bundle_suffix": "monitor",
-        "point": "com.apple.deviceactivity.monitor",
-        "principal": "StudyGateMonitor",
-        "sources": ["../ScreenTime/MonitorExtension/StudyGateMonitor.swift"],
-        "group": "MonitorExtension",
-    },
-    {
-        "name": "ShieldConfiguration",
-        "bundle_suffix": "shield",
-        "point": "com.apple.ManagedSettings.shield-configuration-service",
-        "principal": "StudyGateShield",
-        "sources": ["../ScreenTime/ShieldConfiguration/StudyGateShield.swift"],
-        "group": "ShieldConfiguration",
-    },
-    {
-        "name": "ShieldAction",
-        "bundle_suffix": "shieldaction",
-        "point": "com.apple.ManagedSettings.shield-action-service",
-        "principal": "StudyGateShieldAction",
-        "sources": ["../ScreenTime/ShieldAction/StudyGateShieldAction.swift"],
-        "group": "ShieldAction",
-    },
-]
+# Each of these three is independent. Do not infer one from another again —
+# verify each on its own, ideally against Apple's own sample project or a
+# forum answer explicitly attributed to an Apple engineer.
+#
+# The values themselves live in screenTimeExtensions.json, not here, and
+# validate.js's Xcode-project guard reads the same file. They used to be a
+# literal list here AND a second hardcoded copy in validate.js — which is
+# exactly how the shield-configuration fix above could have landed in one
+# file and not the other. One file now; a wrong value is wrong in both places
+# by construction, and there is nothing left to keep in sync by hand.
+with open(EXTENSIONS_JSON, encoding="utf-8") as f:
+    EXTENSIONS = json.load(f)
 
 SHARED = "../ScreenTime/Shared/StudyGate.swift"
 PLUGIN = "../ScreenTime/Shared/ScreenTimePlugin.swift"
