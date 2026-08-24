@@ -6,6 +6,7 @@ import { lookupGeometry, GEOMETRIES } from '../src/lib/chem/vsepr.js'
 import { nextProgressState, selectSessionQuestions, BOX_INTERVALS_MS } from '../src/lib/srs.js'
 import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
 import { courseIndex } from '../src/lib/courseWeeks.js'
+import { plan as planNotifications, SLOTS, HORIZON_DAYS, IOS_PENDING_CAP, numericId } from '../src/lib/notifications.js'
 import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
@@ -970,6 +971,107 @@ console.log('\n=== Reference data ===')
     // which is a success line that cannot tell you it has stopped covering things.
     const typed = LADDERS.filter((l) => l.typeable !== false).length
     console.log(`  ok  ${typed} ladders: every typed answer is unambiguous and every set says what to type`)
+  }
+}
+
+// A reminder is only worth having if it cannot fire on a day already studied,
+// cannot fire in the past, and cannot be silently dropped by iOS. None of that
+// is checkable on a device without waiting a real day for each case, so it is
+// checked here against the clock instead.
+{
+  let nBad = 0
+  const allOn = {
+    enabled: true,
+    slots: Object.fromEntries(SLOTS.map((x) => [x.id, { on: true, time: x.defaultTime }])),
+  }
+  // 03:00, so every slot time today is still ahead and "skips today" is a real
+  // assertion rather than one the clock would satisfy anyway.
+  const now = new Date(2026, 0, 5, 3, 0, 0)
+
+  const fresh = planNotifications({ now, settings: allOn, studiedToday: false, streak: 4, due: 6 })
+  const studied = planNotifications({ now, settings: allOn, studiedToday: true, streak: 4, due: 6 })
+
+  const sameDay = (a, b) => a.toDateString() === b.toDateString()
+  const todayCount = (rows) => rows.filter((n) => sameDay(n.at, now)).length
+
+  if (todayCount(fresh) !== SLOTS.length) {
+    fail(`reminder schedule: an unstudied day should offer all ${SLOTS.length} slots, got ${todayCount(fresh)}`)
+    nBad++
+  }
+  if (todayCount(studied) !== 0) {
+    fail(`reminder schedule: ${todayCount(studied)} reminders still scheduled for a day already studied`)
+    nBad++
+  }
+  // Evening is its own case, and the reason is the whole point of having it:
+  // at 03:00 every slot time is still ahead, so asserting "nothing in the past"
+  // against the 03:00 plan alone would pass even with the guard deleted. At
+  // 19:00 two of the three slots have already gone by and the guard has work
+  // to do. Break-testing found this one vacuous the first time.
+  const evening = new Date(2026, 0, 5, 19, 0, 0)
+  const late = planNotifications({ now: evening, settings: allOn, studiedToday: false, streak: 1, due: 3 })
+  if (fresh.some((n) => n.at <= now)) {
+    fail('reminder schedule: a reminder is scheduled in the past')
+    nBad++
+  }
+  const stale = late.filter((n) => n.at <= evening)
+  if (stale.length) {
+    fail(`reminder schedule: ${stale.length} reminder(s) scheduled in the past, e.g. ${stale[0].id}`)
+    nBad++
+  }
+  const lateToday = late.filter((n) => sameDay(n.at, evening)).length
+  if (lateToday !== 1) {
+    fail(`reminder schedule: at 19:00 only the last-call slot is still ahead, expected 1 today, got ${lateToday}`)
+    nBad++
+  }
+  if (fresh.length > IOS_PENDING_CAP) {
+    fail(`reminder schedule: ${fresh.length} pending exceeds the iOS cap of ${IOS_PENDING_CAP}`)
+    nBad++
+  }
+  if (new Set(fresh.map((n) => n.id)).size !== fresh.length) {
+    fail('reminder schedule: duplicate ids, so a rebuild would stack rather than replace')
+    nBad++
+  }
+  if (new Set(fresh.map((n) => numericId(n.id))).size !== fresh.length) {
+    fail('reminder schedule: numeric ids collide, so one reminder would overwrite another')
+    nBad++
+  }
+  // Rebuilding from the same inputs must produce the same ids, or every app
+  // open would cancel and re-add a different set.
+  const again = planNotifications({ now, settings: allOn, studiedToday: false, streak: 4, due: 6 })
+  if (again.map((n) => n.id).join() !== fresh.map((n) => n.id).join()) {
+    fail('reminder schedule: not deterministic — two identical rebuilds disagree')
+    nBad++
+  }
+
+  // The streak-saver may only claim a streak is at risk when one exists.
+  const noStreak = planNotifications({ now, settings: allOn, studiedToday: false, streak: 0, due: 2 })
+  if (noStreak.some((n) => /streak/i.test(n.title) || /streak/i.test(n.body))) {
+    fail('reminder schedule: a reminder mentions a streak when there is no streak to lose')
+    nBad++
+  }
+  const live = fresh.find((n) => n.slotId === 'priority' && sameDay(n.at, now))
+  if (!live || !/streak/i.test(live.title + live.body)) {
+    fail('reminder schedule: the last-call reminder does not mention a live streak')
+    nBad++
+  }
+  // A reminder days out cannot know a due count, and must not invent one.
+  for (const n of fresh.filter((x) => !sameDay(x.at, now))) {
+    if (/\d+ cards? due/.test(n.body)) {
+      fail(`reminder schedule: ${n.id} claims a due count for a future day it cannot know`)
+      nBad++
+      break
+    }
+  }
+  // Off means off.
+  if (planNotifications({ now, settings: { ...allOn, enabled: false }, studiedToday: false }).length) {
+    fail('reminder schedule: reminders are produced while notifications are turned off')
+    nBad++
+  }
+
+  if (!nBad) {
+    console.log(
+      `  ok  reminder schedule: ${fresh.length} over ${HORIZON_DAYS} days, none past, none on a studied day, ids stable`,
+    )
   }
 }
 
