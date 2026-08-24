@@ -71,7 +71,7 @@ export default function App() {
     <div className="app-shell">
       <header className="app-header">
         {stack.length === 1 && !innerBack ? (
-          <h1>Orgo Prep</h1>
+          <h1>MedLadder</h1>
         ) : (
           <button className="back" onClick={goBack}>
             ‹ {backLabel}

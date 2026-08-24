@@ -112,7 +112,10 @@ export async function exportProgress() {
 
 /** Merge a backup in, keeping whichever record was seen most recently. */
 export async function importProgress(backup) {
-  if (backup?.format !== 'orgoprep-backup') throw new Error('Not an Orgo Prep backup file')
+  // The format string stays 'orgoprep-backup' even though the app is now
+  // called MedLadder. It is written into every backup file already exported,
+  // and renaming it would make the app reject its own past backups.
+  if (backup?.format !== 'orgoprep-backup') throw new Error('Not a MedLadder backup file')
   const db = await getDb()
   if (!db) throw new Error('Storage is unavailable, so the backup cannot be restored')
 

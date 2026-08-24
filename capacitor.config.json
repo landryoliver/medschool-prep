@@ -1,0 +1,14 @@
+{
+  "appId": "com.medladder.app",
+  "appName": "MedLadder",
+  "webDir": "dist",
+  "ios": {
+    "contentInset": "always"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#38bdf8"
+    }
+  }
+}

@@ -7,9 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "validate": "esbuild scripts/validate.js --bundle --platform=node --format=esm --jsx=automatic --outfile=node_modules/.cache/validate.mjs --log-level=error && node node_modules/.cache/validate.mjs"
+    "validate": "esbuild scripts/validate.js --bundle --platform=node --format=esm --jsx=automatic --outfile=node_modules/.cache/validate.mjs --log-level=error && node node_modules/.cache/validate.mjs",
+    "build:native": "vite build --mode native"
   },
   "dependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
+    "@capacitor/local-notifications": "^8.3.1",
     "idb": "^8.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

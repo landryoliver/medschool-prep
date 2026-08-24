@@ -23,8 +23,28 @@ function buildStamp() {
   }
 }
 
-export default defineConfig({
-  base: '/medschool-prep/',
+/**
+ * Two targets from one source.
+ *
+ * The web build is served from a GitHub Pages subpath and needs the service
+ * worker. The native build is served by Capacitor from the root of its own
+ * scheme, so an absolute '/medschool-prep/' base would 404 every asset, and a
+ * service worker is both unreliable in WKWebView and pointless when the whole
+ * bundle is already on disk inside the app.
+ *
+ *   npm run build          web, unchanged
+ *   npm run build:native   what Capacitor copies into the iOS project
+ */
+export default defineConfig(({ mode }) => {
+  const native = mode === 'native'
+  return {
+  base: native ? './' : '/medschool-prep/',
+  resolve: {
+    // main.jsx imports the plugin's virtual module unconditionally; in a
+    // native build the plugin is gone, so point it at a no-op instead of
+    // branching the entry point.
+    alias: native ? { 'virtual:pwa-register': '/src/lib/pwaRegisterStub.js' } : {},
+  },
   define: {
     // Shown in the footer so the user can tell whether an update landed.
     //
@@ -36,6 +56,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    ...(native ? [] : [
     VitePWA({
       strategies: 'injectManifest',
       srcDir: 'src',
@@ -47,8 +68,8 @@ export default defineConfig({
         type: 'module',
       },
       manifest: {
-        name: 'Orgo Prep',
-        short_name: 'OrgoPrep',
+        name: 'MedLadder',
+        short_name: 'MedLadder',
         description: 'Organic chemistry and gen-chem study drills',
         start_url: '/medschool-prep/',
         scope: '/medschool-prep/',
@@ -65,5 +86,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,json}'],
       },
     }),
+    ]),
   ],
+  }
 })
