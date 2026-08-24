@@ -8,6 +8,7 @@ import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
 import { courseIndex } from '../src/lib/courseWeeks.js'
 import { plan as planNotifications, SLOTS, HORIZON_DAYS, IOS_PENDING_CAP, numericId } from '../src/lib/notifications.js'
 import { todayProgress, shieldState, isStale, DEFAULT_GOAL } from '../src/lib/studyGoal.js'
+import * as screenTime from '../src/lib/screenTime.js'
 import { dayStamp, endOfDay, isSameDay } from '../src/lib/day.js'
 import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
@@ -973,6 +974,122 @@ console.log('\n=== Reference data ===')
     // which is a success line that cannot tell you it has stopped covering things.
     const typed = LADDERS.filter((l) => l.typeable !== false).length
     console.log(`  ok  ${typed} ladders: every typed answer is unambiguous and every set says what to type`)
+  }
+}
+
+// The native bridge is the one contract in this project that no compiler
+// checks. Swift decodes the study record with decodeIfPresent and a default, so
+// a field renamed on either side does not error — it silently decodes as false
+// or 0, which reads as "the floor was not met" and leaves the phone shielded
+// after the work is done. That is the worst available failure and it is
+// invisible on both sides.
+//
+// So the Swift is read as text and compared against what the JS actually sends.
+{
+  let bBad = 0
+  const swift = fs.readFileSync('ios/ScreenTime/Shared/StudyGate.swift', 'utf8')
+  const plugin = fs.readFileSync('ios/ScreenTime/Shared/ScreenTimePlugin.swift', 'utf8')
+
+  // --- the record's fields ---
+  const struct = /public struct StudyRecord: Codable \{([\s\S]*?)\n\}/.exec(swift)
+  if (!struct) {
+    fail('native bridge: could not find StudyRecord in StudyGate.swift')
+    bBad++
+  } else {
+    const swiftFields = new Set(
+      [...struct[1].matchAll(/public let (\w+):/g)].map((m) => m[1]),
+    )
+    const jsFields = new Set(Object.keys(shieldState([], DEFAULT_GOAL, new Date())))
+    for (const f of jsFields) {
+      if (!swiftFields.has(f)) {
+        fail(`native bridge: JS sends "${f}" but StudyRecord has no such field — it would decode as a default`)
+        bBad++
+      }
+    }
+    for (const f of swiftFields) {
+      if (!jsFields.has(f)) {
+        fail(`native bridge: StudyRecord expects "${f}" and JS never sends it`)
+        bBad++
+      }
+    }
+    // And the plugin has to actually read each one off the call.
+    for (const f of swiftFields) {
+      if (!new RegExp(`get\\w+\\("${f}"\\)`).test(plugin)) {
+        fail(`native bridge: ScreenTimePlugin never reads "${f}" from the call payload`)
+        bBad++
+      }
+    }
+  }
+
+  // --- the method names ---
+  const declared = new Set(
+    [...plugin.matchAll(/CAPPluginMethod\(name: "(\w+)"/g)].map((m) => m[1]),
+  )
+  const implemented = new Set([...plugin.matchAll(/@objc func (\w+)\(/g)].map((m) => m[1]))
+  for (const m of declared) {
+    if (!implemented.has(m)) {
+      fail(`native bridge: "${m}" is declared in pluginMethods but has no @objc func`)
+      bBad++
+    }
+  }
+  for (const m of implemented) {
+    if (!declared.has(m)) {
+      fail(`native bridge: @objc func ${m} is not declared in pluginMethods, so JS cannot call it`)
+      bBad++
+    }
+  }
+  // Every method the JS calls must exist on the Swift side.
+  const jsSource = fs.readFileSync('src/lib/screenTime.js', 'utf8')
+  for (const m of [...jsSource.matchAll(/\bp\.(\w+)\(/g)].map((x) => x[1])) {
+    if (!declared.has(m)) {
+      fail(`native bridge: screenTime.js calls p.${m}() which the plugin does not expose`)
+      bBad++
+    }
+  }
+
+  // --- the App Group id ---
+  // Wrong here and every write succeeds while every read returns nil, with no
+  // error anywhere. It has to match the bundle id the app actually ships as.
+  const groupId = /public static let id = "([^"]+)"/.exec(swift)?.[1]
+  const appId = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8')).appId
+  if (groupId !== `group.${appId}`) {
+    fail(`native bridge: App Group is "${groupId}" but the app id is "${appId}"`)
+    bBad++
+  }
+
+  // --- the day boundary, stated twice in two languages ---
+  if (!/Must match src\/lib\/day\.js/.test(swift)) {
+    fail('native bridge: the Swift day stamp no longer says which JS function it must match')
+    bBad++
+  }
+  if (!/%04d-%02d-%02d/.test(swift)) {
+    fail('native bridge: the Swift day stamp is not YYYY-MM-DD, so it cannot equal the JS one')
+    bBad++
+  }
+
+  // --- the escape hatch has to exist, per App Review and common sense ---
+  const action = fs.readFileSync('ios/ScreenTime/ShieldAction/StudyGateShieldAction.swift', 'utf8')
+  if (!/secondaryButtonPressed/.test(action)) {
+    fail('native bridge: the shield has no secondary button, so there is no way out of it')
+    bBad++
+  }
+  if (!/logUnlock/.test(action)) {
+    fail('native bridge: the escape hatch is not recorded')
+    bBad++
+  }
+
+  // --- reconcile must be called from every callback, not just some ---
+  const monitor = fs.readFileSync('ios/ScreenTime/MonitorExtension/StudyGateMonitor.swift', 'utf8')
+  for (const cb of ['intervalDidStart', 'intervalDidEnd', 'eventDidReachThreshold']) {
+    const body = new RegExp(`override func ${cb}\\([\\s\\S]*?\\n    \\}`).exec(monitor)?.[0] ?? ''
+    if (!/StudyGate\.reconcile\(\)/.test(body)) {
+      fail(`native bridge: ${cb} does not end in reconcile(), so a missed callback stays missed`)
+      bBad++
+    }
+  }
+
+  if (!bBad) {
+    console.log('  ok  native bridge: record fields, plugin methods, App Group id and day format agree')
   }
 }
 
