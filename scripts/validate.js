@@ -977,6 +977,109 @@ console.log('\n=== Reference data ===')
   }
 }
 
+// The Xcode project was assembled by scripts/addScreenTimeTargets.py without a
+// Mac, so nothing has opened it. These are the linkages that fail quietly:
+//
+//   an extension not embedded          installs fine, never runs
+//   StudyGate.swift missing a target    "cannot find X in scope", reads as a typo
+//   a wrong extension point id          rejected at upload, or silently never loads
+//   an entitlement missing              authorization fails with no useful error
+//
+// None of that is visible from the Swift, and all of it is visible in the
+// project file, so it is checked here.
+{
+  let xBad = 0
+  const pbx = fs.readFileSync('ios/App/App.xcodeproj/project.pbxproj', 'utf8')
+  const APP_ID = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8')).appId
+  const GROUP = `group.${APP_ID}`
+
+  const EXTS = [
+    ['Monitor', 'monitor', 'com.apple.deviceactivity.monitor', 'StudyGateMonitor', 'MonitorExtension'],
+    ['ShieldConfiguration', 'shield', 'com.apple.ManagedSettings.shield-configuration-service', 'StudyGateShield', 'ShieldConfiguration'],
+    ['ShieldAction', 'shieldaction', 'com.apple.ManagedSettings.shield-action-service', 'StudyGateShieldAction', 'ShieldAction'],
+  ]
+
+  for (const [name, suffix, point, principal, dir] of EXTS) {
+    if (!new RegExp(`/\\* ${name} \\*/ = \\{\\s*isa = PBXNativeTarget;`).test(pbx)) {
+      fail(`Xcode project: no target named ${name}`)
+      xBad++
+      continue
+    }
+    if (!pbx.includes(`PRODUCT_BUNDLE_IDENTIFIER = ${APP_ID}.${suffix};`)) {
+      fail(`Xcode project: ${name} does not build as ${APP_ID}.${suffix}`)
+      xBad++
+    }
+    // Embedded, or it ships inert.
+    if (!pbx.includes(`${name}.appex in Embed Foundation Extensions`)) {
+      fail(`Xcode project: ${name}.appex is not embedded in the app, so it will never run`)
+      xBad++
+    }
+
+    const plist = `ios/ScreenTime/${dir}/Info.plist`
+    if (!fs.existsSync(plist)) {
+      fail(`Xcode project: ${plist} is missing`)
+      xBad++
+    } else {
+      const t = fs.readFileSync(plist, 'utf8')
+      if (!t.includes(`<string>${point}</string>`)) {
+        fail(`Xcode project: ${name} has the wrong NSExtensionPointIdentifier — expected ${point}`)
+        xBad++
+      }
+      if (!t.includes(principal)) {
+        fail(`Xcode project: ${name}'s principal class is not ${principal}`)
+        xBad++
+      }
+    }
+
+    const ent = `ios/ScreenTime/${dir}/${name}.entitlements`
+    if (!fs.existsSync(ent)) {
+      fail(`Xcode project: ${ent} is missing`)
+      xBad++
+    } else {
+      const t = fs.readFileSync(ent, 'utf8')
+      if (!t.includes('com.apple.developer.family-controls')) {
+        fail(`Xcode project: ${name} lacks the family-controls entitlement`)
+        xBad++
+      }
+      if (!t.includes(GROUP)) {
+        fail(`Xcode project: ${name} is not in the App Group ${GROUP}`)
+        xBad++
+      }
+    }
+  }
+
+  // StudyGate.swift must be a member of all four targets. One PBXBuildFile per
+  // target off the same file reference, so the count of DEFINITIONS is the
+  // membership — the phrase itself appears twice per build file, once in the
+  // definition and once where the phase lists it, which counted 8 the first time.
+  const shared = (pbx.match(/StudyGate\.swift in Sources \*\/ = \{isa = PBXBuildFile/g) ?? []).length
+  if (shared !== 4) {
+    fail(`Xcode project: StudyGate.swift is in ${shared} target(s), needs all 4 (app + 3 extensions)`)
+    xBad++
+  }
+
+  // 13 is the PlugIns folder. Any other value copies the extension somewhere
+  // iOS does not look for it, and nothing reports that.
+  if (!/dstSubfolderSpec = 13;/.test(pbx)) {
+    fail('Xcode project: the embed phase does not target the PlugIns folder (dstSubfolderSpec 13)')
+    xBad++
+  }
+
+  const appEnt = 'ios/App/App/App.entitlements'
+  if (!fs.existsSync(appEnt) || !fs.readFileSync(appEnt, 'utf8').includes(GROUP)) {
+    fail('Xcode project: the app itself is not in the App Group, so it cannot talk to its extensions')
+    xBad++
+  }
+  if (!pbx.includes('CODE_SIGN_ENTITLEMENTS = App/App.entitlements;')) {
+    fail('Xcode project: the app target does not reference its entitlements file')
+    xBad++
+  }
+
+  if (!xBad) {
+    console.log('  ok  Xcode project: 4 targets, all embedded, StudyGate shared, entitlements and extension points set')
+  }
+}
+
 // The native bridge is the one contract in this project that no compiler
 // checks. Swift decodes the study record with decodeIfPresent and a default, so
 // a field renamed on either side does not error — it silently decodes as false
