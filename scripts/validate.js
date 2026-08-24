@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { execSync } from 'node:child_process'
 import { TOPICS, getTopicBank, getMixedBank, getSpeedBank } from '../src/lib/topics.js'
 import { molecularFormula, condensedFormula, hydrogensAt, degreesOfUnsaturation, hybridizationAt, canonicalKey, isValidMolecule } from '../src/lib/chem/molecule.js'
 import { nameHaloalkane, nameAlkanol, nameAlkene, nameAlkyne } from '../src/generators/nomenclature.js'
@@ -975,6 +976,69 @@ console.log('\n=== Reference data ===')
     const typed = LADDERS.filter((l) => l.typeable !== false).length
     console.log(`  ok  ${typed} ladders: every typed answer is unambiguous and every set says what to type`)
   }
+}
+
+// The Xcode Cloud post-clone script has to be executable and has to be where
+// Xcode Cloud looks. Neither is observable from Windows.
+//
+// It shipped as mode 100644 and so was never run at all, which surfaced as
+// "the package at .../node_modules/@capacitor/local-notifications doesn't
+// exist" — an error about SPM that is really an error about npm never having
+// been installed. Git on Windows does not set the exec bit, and nothing local
+// notices.
+//
+// The location is genuinely ambiguous: Apple's own docs and the community
+// disagree about repository root versus alongside the .xcodeproj. Rather than
+// spend a cloud build finding out, it lives in both, and this asserts the two
+// stay identical.
+{
+  let cBad = 0
+  const paths = ['ci_scripts/ci_post_clone.sh', 'ios/App/ci_scripts/ci_post_clone.sh']
+  let modes = ''
+  try {
+    modes = execSync('git ls-files -s ' + paths.join(' '), { encoding: 'utf8' })
+  } catch {
+    fail('CI script: could not read git index')
+    cBad++
+  }
+  for (const f of paths) {
+    if (!fs.existsSync(f)) {
+      fail(`CI script: ${f} is missing`)
+      cBad++
+      continue
+    }
+    const row = modes.split('\n').find((l) => l.endsWith(f))
+    if (!row) {
+      fail(`CI script: ${f} is not tracked by git, so Xcode Cloud will never see it`)
+      cBad++
+    } else if (!row.startsWith('100755')) {
+      fail(`CI script: ${f} is committed as ${row.slice(0, 6)}, not 100755 — Xcode Cloud cannot execute it`)
+      cBad++
+    }
+    const text = fs.readFileSync(f, 'utf8')
+    if (!text.startsWith('#!')) {
+      fail(`CI script: ${f} has no shebang`)
+      cBad++
+    }
+    if (text.includes('\r')) {
+      fail(`CI script: ${f} contains carriage returns — /bin/sh reports "bad interpreter"`)
+      cBad++
+    }
+  }
+  if (paths.every((f) => fs.existsSync(f))) {
+    const [a, b] = paths.map((f) => fs.readFileSync(f, 'utf8'))
+    if (a !== b) {
+      fail('CI script: the two copies have drifted, so which one runs changes what happens')
+      cBad++
+    }
+    // The whole point of the script: without npm ci there is no node_modules,
+    // and the local SPM package the project depends on does not exist.
+    if (!/npm ci/.test(a) || !/build:native/.test(a)) {
+      fail('CI script: does not run npm ci and build:native, which is the only reason it exists')
+      cBad++
+    }
+  }
+  if (!cBad) console.log('  ok  CI script: executable, LF, shebang, both locations identical')
 }
 
 // Which framework each type comes from, checked per file.
