@@ -7,6 +7,8 @@ import { nextProgressState, selectSessionQuestions, BOX_INTERVALS_MS } from '../
 import { TOPIC_META, buttonContrast } from '../src/lib/topicMeta.js'
 import { courseIndex } from '../src/lib/courseWeeks.js'
 import { plan as planNotifications, SLOTS, HORIZON_DAYS, IOS_PENDING_CAP, numericId } from '../src/lib/notifications.js'
+import { todayProgress, shieldState, isStale, DEFAULT_GOAL } from '../src/lib/studyGoal.js'
+import { dayStamp, endOfDay, isSameDay } from '../src/lib/day.js'
 import { ANCHORS as PKA_ANCHORS } from '../src/components/PkaLadder.jsx'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server.browser'
@@ -971,6 +973,108 @@ console.log('\n=== Reference data ===')
     // which is a success line that cannot tell you it has stopped covering things.
     const typed = LADDERS.filter((l) => l.typeable !== false).length
     console.log(`  ok  ${typed} ladders: every typed answer is unambiguous and every set says what to type`)
+  }
+}
+
+// The study floor decides whether a phone unlocks, so the ways it can be wrong
+// are worse than a wrong question. Two in particular: counting yesterday's work
+// toward today, and reporting a floor as met from a record that has expired.
+// Neither is observable on a device without waiting out a real midnight.
+{
+  let gBad = 0
+  const goal = { questions: 20, minAccuracy: 0 }
+  const noon = new Date(2026, 4, 12, 12, 0, 0)
+  const yesterday = new Date(2026, 4, 11, 12, 0, 0)
+
+  const row = (t, correct = true) => ({ timestamp: t.getTime(), correct, topic: 'x', subject: 'genchem' })
+  const todayRows = Array.from({ length: 25 }, () => row(noon))
+  const oldRows = Array.from({ length: 40 }, () => row(yesterday))
+
+  const met = todayProgress([...todayRows, ...oldRows], goal, noon)
+  if (met.answered !== 25) {
+    fail(`study floor: counted ${met.answered} for today when only 25 were answered today`)
+    gBad++
+  }
+  if (!met.met) {
+    fail('study floor: 25 answered against a goal of 20 did not meet the floor')
+    gBad++
+  }
+
+  // Yesterday's 40 must not carry over. This is the whole point of the filter.
+  const carry = todayProgress(oldRows, goal, noon)
+  if (carry.answered !== 0 || carry.met) {
+    fail(`study floor: yesterday's work counts toward today — ${carry.answered} answered, met=${carry.met}`)
+    gBad++
+  }
+
+  // A day with SOME work is touched but not met, or one question unlocks the day.
+  const partial = todayProgress([row(noon), row(noon)], goal, noon)
+  if (!partial.touched || partial.met) {
+    fail(`study floor: 2 of 20 reports touched=${partial.touched} met=${partial.met}`)
+    gBad++
+  }
+  if (partial.remaining !== 18) {
+    fail(`study floor: 2 of 20 leaves ${partial.remaining} remaining, expected 18`)
+    gBad++
+  }
+
+  // The record handed to the extension must expire at the day boundary the rest
+  // of the app uses, not at some other midnight.
+  const st = shieldState(todayRows, goal, noon)
+  if (st.expiresAt !== endOfDay(noon).getTime()) {
+    fail('study floor: the shield record expires at a different boundary than day.js defines')
+    gBad++
+  }
+  if (st.day !== dayStamp(noon)) {
+    fail(`study floor: shield record stamped ${st.day}, expected ${dayStamp(noon)}`)
+    gBad++
+  }
+
+  // Staleness, which is what stops a 00:05 callback reading yesterday as a pass.
+  if (isStale(st, noon)) {
+    fail('study floor: a record for the current day is reported stale')
+    gBad++
+  }
+  const justAfterMidnight = new Date(2026, 4, 13, 0, 5, 0)
+  if (!isStale(st, justAfterMidnight)) {
+    fail('study floor: yesterday\'s record is still accepted five minutes after midnight')
+    gBad++
+  }
+  if (!isStale(null, noon) || !isStale({ day: dayStamp(noon) }, noon)) {
+    fail('study floor: a missing or malformed record is not treated as stale')
+    gBad++
+  }
+  // The day check and the expiry check catch different things, and a test that
+  // only moves the clock forward exercises the expiry one alone — which is how
+  // the first version of this passed with the day check deleted. A record whose
+  // stamp says yesterday but whose expiry is still ahead is what a timezone
+  // change or a clock adjustment produces, and only the day check sees it.
+  const inconsistent = { day: dayStamp(yesterday), expiresAt: endOfDay(noon).getTime() }
+  if (!isStale(inconsistent, noon)) {
+    fail("study floor: a record stamped yesterday is accepted because its expiry has not passed")
+    gBad++
+  }
+
+  // Accuracy gating, when switched on, must actually gate.
+  const sloppy = Array.from({ length: 25 }, (_, i) => row(noon, i < 5))
+  const strict = { questions: 20, minAccuracy: 0.5 }
+  if (todayProgress(sloppy, strict, noon).met) {
+    fail('study floor: 20% accuracy met a floor requiring 50%')
+    gBad++
+  }
+  if (!todayProgress(todayRows, strict, noon).met) {
+    fail('study floor: 100% accuracy failed a floor requiring 50%')
+    gBad++
+  }
+
+  // One boundary shared by everything. streaks.js used to keep its own copy.
+  if (!isSameDay(noon.getTime(), noon) || isSameDay(yesterday.getTime(), noon)) {
+    fail('study floor: day.js disagrees with itself about what today is')
+    gBad++
+  }
+
+  if (!gBad) {
+    console.log(`  ok  study floor: derived from the log, no carry-over, expires at the shared day boundary`)
   }
 }
 

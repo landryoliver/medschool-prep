@@ -1,12 +1,10 @@
+import { dayStamp as todayStamp, daysBetween } from './day.js'
+
+// The day boundary used to live here as a private copy. It moved to day.js
+// when the daily goal and the shield started needing the same answer — two
+// definitions of "today" only disagree between one midnight and the other,
+// which is precisely when nobody is looking.
 const KEY = 'orgoprep.streak'
-
-function todayStamp(date = new Date()) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-}
-
-function daysBetween(a, b) {
-  return Math.round((new Date(b) - new Date(a)) / (24 * 60 * 60 * 1000))
-}
 
 function read() {
   try {
