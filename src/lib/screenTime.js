@@ -164,3 +164,19 @@ export async function unlockLog() {
   if (!p) return { entries: [] }
   return p.unlockLog()
 }
+
+/**
+ * Ground truth for reminders, read from iOS itself rather than inferred from
+ * what the JS side thinks it asked for. A missed reminder has too many
+ * candidate causes to guess between from a screenshot — permission never
+ * actually granted, scheduling never reaching this far, alerts allowed but
+ * banners specifically turned off in Settings, or a request iOS silently
+ * declined to add — and this settles all of them with one call.
+ */
+export async function notificationDiagnostics() {
+  const p = await plugin()
+  if (!p) {
+    return { unsupported: true, authorizationStatus: 'n/a', alertSetting: 'n/a', pendingCount: 0, pending: [] }
+  }
+  return p.notificationDiagnostics()
+}

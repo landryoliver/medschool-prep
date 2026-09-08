@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SLOTS, loadSettings, saveSettings, requestPermission } from '../lib/notifications.js'
 import { refreshReminders } from '../lib/refreshReminders.js'
-import { isAvailable as screenTimeAvailable, diagnostics } from '../lib/screenTime.js'
+import { isAvailable as screenTimeAvailable, diagnostics, notificationDiagnostics } from '../lib/screenTime.js'
 
 /**
  * The settings screen for study reminders.
@@ -45,11 +45,20 @@ const SLOT_DESCRIPTIONS = {
 export default function NotificationSettings() {
   const [settings, setSettings] = useState(() => loadSettings())
   const [available, setAvailable] = useState(null)
-  const [permission, setPermission] = useState(null)
+  const [diag, setDiag] = useState(null)
   const [saved, setSaved] = useState(0)
+
+  // The permission warning used to live only in React state set by the last
+  // requestPermission() call this session — so it read correctly for exactly
+  // as long as the component stayed mounted, and vanished on every remount
+  // even though the real OS setting had not changed. Reading real
+  // authorization status from iOS on mount, not just after asking, is what
+  // makes the warning honest across visits rather than a snapshot of one.
+  const refreshDiag = () => notificationDiagnostics().then(setDiag)
 
   useEffect(() => {
     screenTimeAvailable().then(setAvailable)
+    refreshDiag()
   }, [])
 
   const commit = async (next) => {
@@ -57,19 +66,20 @@ export default function NotificationSettings() {
     saveSettings(next)
 
     const anyOn = next.enabled && Object.values(next.slots).some((s) => s.on)
-    if (anyOn && permission !== 'granted') {
+    if (anyOn && diag?.authorizationStatus !== 'authorized') {
       const result = await requestPermission()
-      setPermission(result)
       if (result === 'denied') {
         // The setting stays on — denying the OS prompt does not mean the
         // user wants the toggle to silently flip back off behind them. It
         // means nothing will fire until they re-enable it in iOS Settings,
         // which the UI below says outright rather than pretending it worked.
+        await refreshDiag()
         return
       }
     }
 
     await refreshReminders(next)
+    await refreshDiag()
     setSaved((n) => n + 1)
   }
 
@@ -114,13 +124,44 @@ export default function NotificationSettings() {
           Each one stays silent on a day you have already studied. Rebuilt every time you open the app or
           answer a question, so turning this on takes effect immediately.
         </p>
-        {permission === 'denied' && (
+        {diag && diag.authorizationStatus !== 'authorized' && diag.authorizationStatus !== 'n/a' && (
           <p className="muted" style={{ color: 'var(--bad)' }}>
-            iOS notifications are turned off for MedLadder. Re-enable them in Settings → MedLadder →
-            Notifications, or nothing below will actually fire.
+            iOS notifications are turned off for MedLadder ({diag.authorizationStatus}). Re-enable them in
+            Settings → MedLadder → Notifications, or nothing below will actually fire.
+          </p>
+        )}
+        {diag && diag.authorizationStatus === 'authorized' && diag.alertSetting !== 'enabled' && (
+          <p className="muted" style={{ color: 'var(--bad)' }}>
+            Notifications are allowed, but banners are off (Settings → MedLadder → Notifications →
+            Allow Notifications → Banner Style). Reminders will be scheduled and silently never shown.
           </p>
         )}
       </div>
+
+      {/* Temporary, deliberately visible: a missed reminder has too many
+          candidate causes to guess between from a screenshot alone, and this
+          is ground truth read from iOS itself rather than inferred. */}
+      {diag && (
+        <div className="card">
+          <strong>Diagnostics</strong>
+          <p className="muted hint-line" style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+            authorizationStatus: {diag.authorizationStatus}
+            <br />
+            alertSetting: {diag.alertSetting}
+            <br />
+            pendingCount: {diag.pendingCount}
+            {diag.pending?.map((p) => (
+              <span key={p.id}>
+                <br />
+                {p.id}: "{p.title}" @ {p.nextFire ? new Date(p.nextFire).toLocaleString() : 'no next fire date'}
+              </span>
+            ))}
+          </p>
+          <button className="ghost" onClick={refreshDiag}>
+            Refresh
+          </button>
+        </div>
+      )}
 
       {settings.enabled &&
         SLOTS.map((slot) => {
@@ -138,7 +179,7 @@ export default function NotificationSettings() {
               {s.on && (
                 <input
                   type="time"
-                  className="text-input"
+                  className="time-input"
                   value={s.time}
                   onChange={(e) => setTime(slot.id, e.target.value)}
                 />

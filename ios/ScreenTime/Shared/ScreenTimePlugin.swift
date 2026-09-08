@@ -25,6 +25,7 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "unlockLog", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "requestNotificationPermission", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "scheduleNotifications", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "notificationDiagnostics", returnType: CAPPluginReturnPromise),
     ]
 
     private let center = DeviceActivityCenter()
@@ -186,6 +187,60 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
 
         group.notify(queue: .main) {
             call.resolve(["scheduled": scheduled])
+        }
+    }
+
+    /// Ground truth from iOS itself, not from what the JS side thinks it
+    /// asked for. A missed 6pm reminder has too many possible causes to guess
+    /// between — permission never actually granted, scheduling never reaching
+    /// this far, or a request that iOS silently declined to add — and only
+    /// one of those is visible from JS. This asks the real
+    /// UNUserNotificationCenter for its actual authorization status and its
+    /// actual pending request list, which settles all three at once.
+    @objc func notificationDiagnostics(_ call: CAPPluginCall) {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            let statusName: String
+            switch settings.authorizationStatus {
+            case .authorized: statusName = "authorized"
+            case .denied: statusName = "denied"
+            case .notDetermined: statusName = "notDetermined"
+            case .provisional: statusName = "provisional"
+            case .ephemeral: statusName = "ephemeral"
+            @unknown default: statusName = "unknown"
+            }
+            let alertStyleName: String
+            switch settings.alertSetting {
+            case .enabled: alertStyleName = "enabled"
+            case .disabled: alertStyleName = "disabled"
+            case .notSupported: alertStyleName = "notSupported"
+            @unknown default: alertStyleName = "unknown"
+            }
+
+            center.getPendingNotificationRequests { requests in
+                let pending: [[String: Any]] = requests.map { req in
+                    let trigger = req.trigger as? UNCalendarNotificationTrigger
+                    let next = trigger?.nextTriggerDate()
+                    return [
+                        "id": req.identifier,
+                        "title": req.content.title,
+                        "nextFire": next.map { $0.timeIntervalSince1970 * 1000 } ?? NSNull(),
+                    ]
+                }
+                DispatchQueue.main.async {
+                    call.resolve([
+                        "authorizationStatus": statusName,
+                        // Authorization can be granted while the alert banner
+                        // itself is off (Settings -> Notifications -> allow
+                        // Sounds/Badges but not banners) — a real, silent way
+                        // for a reminder to be scheduled and delivered but
+                        // never actually shown.
+                        "alertSetting": alertStyleName,
+                        "pendingCount": pending.count,
+                        "pending": pending,
+                    ])
+                }
+            }
         }
     }
 
