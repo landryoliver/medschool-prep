@@ -5,6 +5,8 @@ import CourseWeeks from './components/CourseWeeks.jsx'
 import { weekBank, courseBank, COURSE_LABELS } from './lib/courseWeeks.js'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
+import NotificationSettings from './components/NotificationSettings.jsx'
+import { refreshReminders } from './lib/refreshReminders.js'
 import ReferenceView from './components/ReferenceView.jsx'
 import Walkthroughs from './components/Walkthroughs.jsx'
 import LessonView from './components/LessonView.jsx'
@@ -32,6 +34,7 @@ const BACK_LABEL = {
   lesson: 'Lesson',
   plan: 'Progression',
   courses: 'Courses',
+  reminders: 'Reminders',
   cards: 'Flashcards',
   progress: 'Progress',
 }
@@ -67,6 +70,16 @@ export default function App() {
     getAllProgress().then((rows) => setMissedBank(getMissedBank(rows)))
   }, [view.name])
 
+  // Rebuilds today's reminder schedule on every app open — the other half of
+  // "answering a question rebuilds it too" (see useStudySession.js). Between
+  // the two, the schedule is never more than one open or one answer stale,
+  // which is as fresh as it can be without iOS running code at the moment a
+  // reminder fires. Fire-and-forget: a scheduling hiccup must never block the
+  // app from opening.
+  useEffect(() => {
+    refreshReminders().catch(() => {})
+  }, [])
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -101,8 +114,11 @@ export default function App() {
             }}
             onPlan={() => setView({ name: 'plan' })}
             onCourses={() => setView({ name: 'courses' })}
+            onReminders={() => setView({ name: 'reminders' })}
           />
         )}
+
+        {view.name === 'reminders' && <NotificationSettings />}
 
         {view.name === 'plan' && (
           <Progression

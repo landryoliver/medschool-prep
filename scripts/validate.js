@@ -1272,6 +1272,63 @@ console.log('\n=== Reference data ===')
   }
 }
 
+// The app background colour, independently written three times: --bg in
+// app.css, twice in capacitor.config.json (root and ios.backgroundColor,
+// which cover different layers — the WebView's own background versus what
+// contentInset "always" leaves showing behind the status bar), and once as a
+// UIColor literal in SceneDelegate.swift because that native layer cannot
+// read a CSS variable. Four independent copies of one fact is exactly the
+// shape of bug the extension-point identifiers already were — a fix landing
+// in one and not the others is invisible until someone looks at a screenshot,
+// which is how the status-bar strip actually appeared black in the first
+// place: nothing here had a background colour set for that layer at all.
+{
+  let cBad = 0
+  const css = fs.readFileSync('src/app.css', 'utf8')
+  const cssHex = /--bg:\s*(#[0-9a-fA-F]{6})/.exec(css)?.[1]?.toLowerCase()
+  if (!cssHex) {
+    fail('theme colour: could not find --bg in src/app.css')
+    cBad++
+  }
+
+  const capConfig = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8'))
+  const capRoot = capConfig.backgroundColor?.toLowerCase()
+  const capIos = capConfig.ios?.backgroundColor?.toLowerCase()
+  for (const [label, hex] of [
+    ['capacitor.config.json backgroundColor', capRoot],
+    ['capacitor.config.json ios.backgroundColor', capIos],
+  ]) {
+    if (hex !== cssHex) {
+      fail(`theme colour: ${label} is ${hex ?? 'unset'}, app.css --bg is ${cssHex}`)
+      cBad++
+    }
+  }
+
+  // SceneDelegate carries a UIColor(red:green:blue:) literal, not a hex
+  // string, because that is the API. Converted back to hex and compared with
+  // rounding tolerance, since 11/255 has no exact 3-decimal representation.
+  const swift = fs.readFileSync('ios/App/App/SceneDelegate.swift', 'utf8')
+  const m = /UIColor\(red:\s*([\d.]+),\s*green:\s*([\d.]+),\s*blue:\s*([\d.]+)/.exec(swift)
+  if (!m) {
+    fail('theme colour: no UIColor(red:green:blue:) literal found in SceneDelegate.swift')
+    cBad++
+  } else if (cssHex) {
+    const toByte = (f) => Math.round(parseFloat(f) * 255)
+    const swiftHex =
+      '#' +
+      [m[1], m[2], m[3]]
+        .map((f) => toByte(f).toString(16).padStart(2, '0'))
+        .join('')
+        .toLowerCase()
+    if (swiftHex !== cssHex) {
+      fail(`theme colour: SceneDelegate.swift's UIColor is ${swiftHex}, app.css --bg is ${cssHex}`)
+      cBad++
+    }
+  }
+
+  if (!cBad) console.log(`  ok  theme colour: ${cssHex} agrees across app.css, capacitor.config.json and SceneDelegate.swift`)
+}
+
 // The native bridge is the one contract in this project that no compiler
 // checks. Swift decodes the study record with decodeIfPresent and a default, so
 // a field renamed on either side does not error — it silently decodes as false

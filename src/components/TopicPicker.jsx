@@ -145,7 +145,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards, 
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan, onCourses }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan, onCourses, onReminders }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -242,6 +242,11 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
           <span className="action-sub">Week by week, from your readings</span>
         </button>
       )}
+
+      <button className="action-btn" onClick={onReminders}>
+        <span className="action-title">Study reminders</span>
+        <span className="action-sub">Set up notifications</span>
+      </button>
 
       <div className="action-row">
         <button className="action-btn" onClick={onPlan}>

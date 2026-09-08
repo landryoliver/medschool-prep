@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getProgressByMode, putProgress, logSession, deleteProgress, deleteSessionLog } from './db.js'
 import { nextProgressState, selectSessionQuestions } from './srs.js'
 import { recordAnswer, unrecordAnswer } from './streaks.js'
+import { refreshReminders } from './refreshReminders.js'
 
 export function checkAnswer(question, response) {
   if (question.kind === 'numeric') {
@@ -84,6 +85,12 @@ export function useStudySession(mode, bank, { sessionSize = 15, sessionMode = 'l
         correct,
       })
       recordAnswer()
+      // Answering is the only way "studied today" becomes true, and at this
+      // instant the app is provably running — the one moment notifications.js
+      // needs to rebuild today's schedule without waiting for a foreground
+      // event that might not come until tomorrow. Fire-and-forget: a reminder
+      // rebuild must never block the next question from rendering.
+      refreshReminders().catch(() => {})
       lastWrite.current = { questionId: question.id, prev, logId }
     },
     [mode, progressById],
