@@ -59,6 +59,25 @@ export async function isAvailable() {
   return (await plugin()) != null
 }
 
+/**
+ * Raw facts about the bridge, with no interpretation. Written because
+ * isAvailable() resolving false on an actual TestFlight build is not
+ * diagnosable from a screenshot alone — it collapses "no Capacitor object at
+ * all", "Capacitor thinks this is the web", and "Capacitor is native but the
+ * plugin itself never registered" into one boolean. Shown in the settings
+ * screen's unavailable state so the next report names which of those three
+ * it actually is, rather than another guess.
+ */
+export function diagnostics() {
+  const cap = globalThis.Capacitor
+  return {
+    hasCapacitor: typeof cap !== 'undefined',
+    isNativePlatform: typeof cap?.isNativePlatform === 'function' ? cap.isNativePlatform() : 'no such method',
+    platform: typeof cap?.getPlatform === 'function' ? cap.getPlatform() : 'no such method',
+    pluginKeys: cap?.Plugins ? Object.keys(cap.Plugins).join(', ') || '(empty)' : 'no Plugins object',
+  }
+}
+
 export async function authorize() {
   const p = await plugin()
   if (!p) return { granted: false, unsupported: true }

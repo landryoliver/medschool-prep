@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SLOTS, loadSettings, saveSettings, requestPermission } from '../lib/notifications.js'
 import { refreshReminders } from '../lib/refreshReminders.js'
-import { isAvailable as screenTimeAvailable } from '../lib/screenTime.js'
+import { isAvailable as screenTimeAvailable, diagnostics } from '../lib/screenTime.js'
 
 /**
  * The settings screen for study reminders.
@@ -72,12 +72,26 @@ export default function NotificationSettings() {
   const setTime = (id, time) => commit({ ...settings, slots: { ...settings.slots, [id]: { ...settings.slots[id], time } } })
 
   if (available === false) {
+    // Temporary, deliberately visible: this message alone was already wrong
+    // once (shown on an actual TestFlight build), and a screenshot of it says
+    // nothing about WHY the bridge looked unavailable. These four facts turn
+    // the next report into a diagnosis instead of another guess.
+    const diag = diagnostics()
     return (
       <div className="card">
         <h2 className="section-title">Study reminders</h2>
         <p className="muted">
           Reminders are scheduled on the phone itself, so they only work in the installed app, not in a
           browser tab. Install MedLadder to your home screen to use this.
+        </p>
+        <p className="muted hint-line" style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+          hasCapacitor: {String(diag.hasCapacitor)}
+          <br />
+          isNativePlatform: {String(diag.isNativePlatform)}
+          <br />
+          platform: {String(diag.platform)}
+          <br />
+          pluginKeys: {diag.pluginKeys}
         </p>
       </div>
     )

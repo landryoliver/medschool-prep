@@ -56,9 +56,17 @@ export default function ProgressView() {
 
   if (!log.length) {
     return (
-      <div className="card">
-        <h2 className="section-title">No data yet</h2>
-        <p className="muted">Finish a session and your accuracy by topic will show up here.</p>
+      <div>
+        <div className="card">
+          <h2 className="section-title">No data yet</h2>
+          <p className="muted">Finish a session and your accuracy by topic will show up here.</p>
+        </div>
+        {/* Import exists precisely for this screen: a fresh install with zero
+            history, migrating progress from the PWA or another device. An
+            early return here used to hide it until you already had progress
+            to lose — backwards, since Import is how you get that progress in
+            the first place. */}
+        <BackupPanel />
       </div>
     )
   }
