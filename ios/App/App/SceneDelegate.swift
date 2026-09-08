@@ -8,7 +8,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = CAPBridgeViewController()
+        // MedLadderViewController, not the plain CAPBridgeViewController — see
+        // MedLadderViewController.swift for why ScreenTimePlugin needs that.
+        window?.rootViewController = MedLadderViewController()
 
         // capacitor.config.json's ios.contentInset is "always", which insets
         // the WebView BELOW the status bar rather than drawing under it — so

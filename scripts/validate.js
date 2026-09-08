@@ -1455,6 +1455,86 @@ console.log('\n=== Reference data ===')
   }
 }
 
+// A compiled, correctly-conforming plugin can still be invisible to
+// Capacitor at runtime — confirmed on a real device: isNativePlatform true,
+// bridge alive, Capacitor.Plugins listing only the built-ins, ScreenTime
+// absent. ScreenTimePlugin.swift is a hand-added Swift file rather than an
+// npm package, so cap sync's packageClassList never lists it, and it never
+// gets instantiated no matter how correct the Swift is. The fix is
+// Capacitor's own documented path for exactly this (capacitorjs.com/docs/
+// ios/custom-code): a CAPBridgeViewController subclass that registers the
+// instance itself. Checked here because nothing about a missing
+// registration call fails to compile — it fails silently, on a device, and
+// was found once already by shipping it and reading a diagnostic panel.
+{
+  let rBad = 0
+  const vcPath = 'ios/App/App/MedLadderViewController.swift'
+  if (!fs.existsSync(vcPath)) {
+    fail(`native bridge: ${vcPath} is missing`)
+    rBad++
+  } else {
+    const vc = fs.readFileSync(vcPath, 'utf8')
+    if (!/class MedLadderViewController\s*:\s*CAPBridgeViewController/.test(vc)) {
+      fail('native bridge: MedLadderViewController does not subclass CAPBridgeViewController')
+      rBad++
+    }
+    if (!/override open func capacitorDidLoad/.test(vc)) {
+      fail('native bridge: MedLadderViewController does not override capacitorDidLoad()')
+      rBad++
+    }
+    if (!/bridge\?\.registerPluginInstance\(ScreenTimePlugin\(\)\)/.test(vc)) {
+      fail('native bridge: capacitorDidLoad() does not register ScreenTimePlugin — this is the actual fix, not decoration')
+      rBad++
+    }
+  }
+
+  const scene = fs.readFileSync('ios/App/App/SceneDelegate.swift', 'utf8')
+  if (/rootViewController = CAPBridgeViewController\(\)/.test(scene)) {
+    fail('native bridge: SceneDelegate still instantiates the plain CAPBridgeViewController, not MedLadderViewController — ScreenTime will not register')
+    rBad++
+  }
+  if (!/rootViewController = MedLadderViewController\(\)/.test(scene)) {
+    fail('native bridge: SceneDelegate does not instantiate MedLadderViewController')
+    rBad++
+  }
+
+  // The pbxproj graph, not just the file's existence — the same class of
+  // silent failure as a missing import: compiles nowhere without this.
+  const pbx = fs.readFileSync('ios/App/App.xcodeproj/project.pbxproj', 'utf8')
+  if (!/MedLadderViewController\.swift/.test(pbx)) {
+    fail('native bridge: MedLadderViewController.swift is not referenced in project.pbxproj — it exists on disk but is not compiled into any target')
+    rBad++
+  }
+
+  // The JS side: registerPlugin(), not a bare reach into
+  // globalThis.Capacitor.Plugins.ScreenTime. The latter happened to look
+  // reasonable and was wrong — Capacitor.Plugins is a plain object with real,
+  // finite keys, not an all-permissive proxy, so isAvailable() silently
+  // agreed with a broken native side instead of catching it.
+  const st = fs.readFileSync('src/lib/screenTime.js', 'utf8')
+  if (!/registerPlugin\(\s*['"]ScreenTime['"]\s*\)/.test(st)) {
+    fail("native bridge: screenTime.js does not call registerPlugin('ScreenTime') — Capacitor.Plugins.ScreenTime will not exist")
+    rBad++
+  }
+  if (!/isPluginAvailable\(\s*['"]ScreenTime['"]\s*\)/.test(st)) {
+    fail('native bridge: isAvailable() no longer checks Capacitor.isPluginAvailable — this is the check that actually reflects native registration')
+    rBad++
+  }
+  const notif = fs.readFileSync('src/lib/notifications.js', 'utf8')
+  if (/globalThis\.Capacitor\.Plugins\?\.ScreenTime/.test(notif) || /cap\.Plugins\?\.ScreenTime/.test(notif)) {
+    fail('native bridge: notifications.js reaches into Capacitor.Plugins.ScreenTime independently again, instead of importing ScreenTimeNative')
+    rBad++
+  }
+  if (!/import\s*\{\s*ScreenTimeNative\s*\}\s*from\s*['"]\.\/screenTime\.js['"]/.test(notif)) {
+    fail('native bridge: notifications.js does not import the shared ScreenTimeNative plugin handle')
+    rBad++
+  }
+
+  if (!rBad) {
+    console.log('  ok  native bridge: ScreenTimePlugin is actually registered — view controller, pbxproj wiring, and JS registerPlugin all agree')
+  }
+}
+
 // The study floor decides whether a phone unlocks, so the ways it can be wrong
 // are worse than a wrong question. Two in particular: counting yesterday's work
 // toward today, and reporting a floor as met from a record that has expired.

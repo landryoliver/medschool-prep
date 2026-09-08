@@ -1,4 +1,22 @@
+import { registerPlugin } from '@capacitor/core'
 import { shieldState, loadGoal } from './studyGoal.js'
+
+/**
+ * Capacitor.Plugins is a plain object with real, finite keys — not an
+ * all-permissive Proxy, which is what an earlier version of this file
+ * assumed. A diagnostic panel on a real device proved it: isNativePlatform
+ * was true and the bridge was alive, but Capacitor.Plugins listed only
+ * Capacitor's own built-ins (WebView, Console, CapacitorHttp, ...) and never
+ * ScreenTime, because ScreenTime is a hand-added Swift file rather than an
+ * npm package and nothing had told the JS runtime it exists.
+ *
+ * registerPlugin(name) is that missing declaration — the officially
+ * documented way to create the proxy object a custom native plugin needs on
+ * the JS side. Called once, at module scope, and every caller in this file
+ * and in notifications.js goes through the object it returns rather than
+ * independently reaching into globalThis.Capacitor.
+ */
+export const ScreenTimeNative = registerPlugin('ScreenTime')
 
 /**
  * The web side of the study gate.
@@ -50,23 +68,33 @@ export function saveGate(gate) {
 async function plugin() {
   const cap = globalThis.Capacitor
   if (!cap?.isNativePlatform?.()) return null
-  return cap.Plugins?.ScreenTime ?? null
+  return ScreenTimeNative
 }
 
-/** True only in the native app. The whole feature is absent on the web, and the
- *  UI should not offer a control that cannot do anything. */
+/**
+ * True only when the native app genuinely has this plugin registered.
+ * Capacitor.isPluginAvailable is the documented way to ask this — checking
+ * for a truthy Capacitor.Plugins.ScreenTime is not equivalent, because
+ * registerPlugin() always returns a usable proxy object regardless of
+ * whether the native side actually implements it; the proxy just throws on
+ * first real call if it does not. Asking isPluginAvailable up front is what
+ * lets the UI show "unavailable" before the user taps anything, rather than
+ * after a call fails.
+ */
 export async function isAvailable() {
-  return (await plugin()) != null
+  const cap = globalThis.Capacitor
+  return Boolean(cap?.isNativePlatform?.() && cap?.isPluginAvailable?.('ScreenTime'))
 }
 
 /**
  * Raw facts about the bridge, with no interpretation. Written because
- * isAvailable() resolving false on an actual TestFlight build is not
- * diagnosable from a screenshot alone — it collapses "no Capacitor object at
+ * isAvailable() resolving false on an actual TestFlight build was not
+ * diagnosable from a screenshot alone — it collapsed "no Capacitor object at
  * all", "Capacitor thinks this is the web", and "Capacitor is native but the
- * plugin itself never registered" into one boolean. Shown in the settings
- * screen's unavailable state so the next report names which of those three
- * it actually is, rather than another guess.
+ * plugin itself never registered" into one boolean, and that third case is
+ * exactly what a hand-added Swift plugin with no packageClassList entry
+ * looks like. Shown in the settings screen's unavailable state so a future
+ * report names which of those it actually is, rather than another guess.
  */
 export function diagnostics() {
   const cap = globalThis.Capacitor
@@ -75,6 +103,8 @@ export function diagnostics() {
     isNativePlatform: typeof cap?.isNativePlatform === 'function' ? cap.isNativePlatform() : 'no such method',
     platform: typeof cap?.getPlatform === 'function' ? cap.getPlatform() : 'no such method',
     pluginKeys: cap?.Plugins ? Object.keys(cap.Plugins).join(', ') || '(empty)' : 'no Plugins object',
+    screenTimeAvailable:
+      typeof cap?.isPluginAvailable === 'function' ? cap.isPluginAvailable('ScreenTime') : 'no such method',
   }
 }
 

@@ -15,6 +15,10 @@
  * thing is testable without an iPhone anywhere near it.
  */
 
+// Used only inside the adapter, at the bottom of this file — the one plugin
+// handle screenTime.js registers, not a second copy of it. See backend().
+import { ScreenTimeNative } from './screenTime.js'
+
 const KEY = 'orgoprep.notify'
 
 /** iOS keeps at most 64 pending local notifications and drops the rest without
@@ -158,11 +162,18 @@ export function plan({ now = new Date(), settings, studiedToday, streak = 0, due
  * a harder case. Adding two @objc funcs there costs less than a second SPM
  * dependency costs in resolve-and-commit friction, and it is one fewer entry
  * in Package.resolved for a Mac-only step to ever need to redo.
+ *
+ * ScreenTimeNative (imported above) is the one registered instance, not a
+ * second registerPlugin('ScreenTime') call. Two independent copies of "how do
+ * I reach the ScreenTime plugin" — reaching into
+ * globalThis.Capacitor.Plugins.ScreenTime by string in two files — is exactly
+ * the kind of drift that made the real registration bug invisible for as
+ * long as it was.
  */
 async function backend() {
   const cap = globalThis.Capacitor
   if (!cap?.isNativePlatform?.()) return null
-  return cap.Plugins?.ScreenTime ?? null
+  return ScreenTimeNative
 }
 
 /** Numeric ids are what the platform wants; the readable id is what we reason
