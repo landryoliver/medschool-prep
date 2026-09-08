@@ -55,6 +55,17 @@ button {
   margin: 0;
 }
 
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.header-gear {
+  font-size: 1.05rem;
+  padding: 0.15rem 0.4rem;
+}
+
 .back,
 .header-link {
   background: transparent;

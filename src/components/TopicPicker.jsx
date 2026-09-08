@@ -145,7 +145,7 @@ function TopicCard({ topic, stat, onLesson, onLearn, onStudy, onSpeed, onCards, 
   )
 }
 
-export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan, onCourses, onReminders }) {
+export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLesson, onCards, onBuild, onReviewMisses, onPlan, onCourses }) {
   const [stats, setStats] = useState(null)
   const [missedCount, setMissedCount] = useState(0)
   const streak = getStreak()
@@ -233,28 +233,13 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
         <span className="action-sub">One at a time</span>
       </button>
 
-      {/* My courses is only offered once a course reading has actually been
-          tagged — an empty one looks broken rather than waiting on input.
-          Paired with Study reminders in one row rather than two stacked
-          full-width buttons: with Mixed review, Build up a set and this row
-          all before a single topic card, height matters more than a label
-          having room to breathe. When there is no course yet, reminders
-          takes the row alone. */}
-      {courseIndex().length > 0 ? (
-        <div className="action-row">
-          <button className="action-btn" onClick={onCourses}>
-            <span className="action-title">My courses</span>
-            <span className="action-sub">Week by week</span>
-          </button>
-          <button className="action-btn" onClick={onReminders}>
-            <span className="action-title">Study reminders</span>
-            <span className="action-sub">Notifications</span>
-          </button>
-        </div>
-      ) : (
-        <button className="action-btn" onClick={onReminders}>
-          <span className="action-title">Study reminders</span>
-          <span className="action-sub">Set up notifications</span>
+      {/* Only offered once a course reading has actually been tagged. An
+          empty "My courses" button is worse than no button — it looks like a
+          feature that is broken rather than one waiting on input. */}
+      {courseIndex().length > 0 && (
+        <button className="action-btn" onClick={onCourses}>
+          <span className="action-title">My courses</span>
+          <span className="action-sub">Week by week, from your readings</span>
         </button>
       )}
 

@@ -34,7 +34,7 @@ const BACK_LABEL = {
   lesson: 'Lesson',
   plan: 'Progression',
   courses: 'Courses',
-  reminders: 'Reminders',
+  settings: 'Settings',
   cards: 'Flashcards',
   progress: 'Progress',
 }
@@ -84,7 +84,16 @@ export default function App() {
     <div className="app-shell">
       <header className="app-header">
         {stack.length === 1 && !innerBack ? (
-          <h1>MedLadder</h1>
+          <div className="header-title-row">
+            <h1>MedLadder</h1>
+            <button
+              className="header-link header-gear"
+              onClick={() => setView({ name: 'settings' })}
+              aria-label="Settings"
+            >
+              ⚙
+            </button>
+          </div>
         ) : (
           <button className="back" onClick={goBack}>
             ‹ {backLabel}
@@ -114,11 +123,13 @@ export default function App() {
             }}
             onPlan={() => setView({ name: 'plan' })}
             onCourses={() => setView({ name: 'courses' })}
-            onReminders={() => setView({ name: 'reminders' })}
           />
         )}
 
-        {view.name === 'reminders' && <NotificationSettings />}
+        {/* Reached only from the gear next to the app title, not from the
+            topic list — settings is not something you browse to while
+            studying, and the gear only shows on the root screen anyway. */}
+        {view.name === 'settings' && <NotificationSettings />}
 
         {view.name === 'plan' && (
           <Progression

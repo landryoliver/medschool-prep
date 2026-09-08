@@ -36,6 +36,12 @@ function OnOff({ on, onChange }) {
   )
 }
 
+const SLOT_DESCRIPTIONS = {
+  early: 'A morning reminder, skipped once you have studied today.',
+  late: 'An evening reminder, skipped once you have studied today.',
+  priority: 'A late nudge — if a streak is live, this is the one that says so.',
+}
+
 export default function NotificationSettings() {
   const [settings, setSettings] = useState(() => loadSettings())
   const [available, setAvailable] = useState(null)
@@ -125,22 +131,17 @@ export default function NotificationSettings() {
                 <strong>{slot.label}</strong>
                 <OnOff on={s.on} onChange={(on) => toggleSlot(slot.id, on)} />
               </div>
+              {/* Shown regardless of on/off — the description is what tells you
+                  whether to turn it on in the first place. Hiding it until
+                  after had it backwards. */}
+              <p className="muted hint-line">{SLOT_DESCRIPTIONS[slot.id]}</p>
               {s.on && (
-                <>
-                  <input
-                    type="time"
-                    className="text-input"
-                    value={s.time}
-                    onChange={(e) => setTime(slot.id, e.target.value)}
-                  />
-                  <p className="muted hint-line">
-                    {slot.id === 'priority'
-                      ? 'A late nudge — if a streak is live, this is the one that says so.'
-                      : slot.id === 'early'
-                        ? 'A morning reminder, skipped once you have studied today.'
-                        : 'An evening reminder, skipped once you have studied today.'}
-                  </p>
-                </>
+                <input
+                  type="time"
+                  className="text-input"
+                  value={s.time}
+                  onChange={(e) => setTime(slot.id, e.target.value)}
+                />
               )}
             </div>
           )
