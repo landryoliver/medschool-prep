@@ -2,9 +2,9 @@
   "appId": "com.medladder.app",
   "appName": "MedLadder",
   "webDir": "dist",
-  "backgroundColor": "#0b1220",
+  "backgroundColor": "#000000",
   "ios": {
     "contentInset": "always",
-    "backgroundColor": "#0b1220"
+    "backgroundColor": "#000000"
   }
 }

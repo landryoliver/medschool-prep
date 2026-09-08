@@ -191,6 +191,31 @@ on the same screen is a wall, not a shortcut. Define it inline, show the
 structure, or say plainly why it matters — and put UI explanations on
 screen rather than in a tooltip.
 
+### 10. The app should be a joy to use, not just correct
+
+A validated, bug-free screen can still look like nobody decided anything.
+The user's own verdict on the shipped app, after every check was green:
+"this just feels like a Feb 2026 Claude app" — not a bug report, but a real
+failure, and one `npm run validate` has no way to catch. Dark-navy background
+plus one flat blue accent, `system-ui` doing every job, identical bordered
+cards for every grouping, and an emoji standing in for an icon are the shape
+generated UI falls into by default when no one chooses otherwise. It is
+recognizable on sight, and being recognizable as "the default" is the
+problem. "It works" and "it is a joy to use" are different bars, and only
+the first one has a test suite.
+
+When building or changing UI, target a specific, considered look on purpose
+rather than whatever is fastest to write. On an iPhone app, that means
+actual iOS convention (Apple's Human Interface Guidelines) instead of an
+invented one: semantic system colors, not an arbitrary hex palette; grouped
+list rows with hairline separators, not a bordered card for every single
+thing; real vector icons at the system's visual weight, not emoji; blurred
+translucent navigation bars, not a flat rule line.
+
+This does not relax rule 7. A redesign is a hypothesis about what looks
+good until it is screenshotted, exactly like any other appearance claim —
+say so plainly rather than implying it has been seen.
+
 ## Adding questions
 
 Generated questions take an integer seed and return the same question every

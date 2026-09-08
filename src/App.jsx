@@ -6,6 +6,7 @@ import { weekBank, courseBank, COURSE_LABELS } from './lib/courseWeeks.js'
 import SpeedRound from './components/SpeedRound.jsx'
 import ProgressView from './components/ProgressView.jsx'
 import NotificationSettings from './components/NotificationSettings.jsx'
+import GearIcon from './components/GearIcon.jsx'
 import { refreshReminders } from './lib/refreshReminders.js'
 import ReferenceView from './components/ReferenceView.jsx'
 import Walkthroughs from './components/Walkthroughs.jsx'
@@ -91,7 +92,7 @@ export default function App() {
               onClick={() => setView({ name: 'settings' })}
               aria-label="Settings"
             >
-              ⚙
+              <GearIcon size={19} />
             </button>
           </div>
         ) : (

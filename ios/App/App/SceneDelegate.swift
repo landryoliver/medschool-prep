@@ -19,8 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // does not reach it. That strip is this window's plain UIKit
         // background, defaulting to black with nothing set here, which is
         // what actually showed as the "ugly black header." Match the app's
-        // own --bg token (src/app.css) so the two are seamless.
-        window?.backgroundColor = UIColor(red: 0.043, green: 0.071, blue: 0.125, alpha: 1)
+        // own --bg token (src/app.css) so the two are seamless. --bg is
+        // iOS's own systemBackground dark-mode value, true black.
+        window?.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         window?.rootViewController?.view.backgroundColor = window?.backgroundColor
 
         window?.makeKeyAndVisible()

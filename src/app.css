@@ -1,13 +1,18 @@
 :root {
-  --bg: #0b1220;
-  --panel: #172033;
-  --panel-2: #1e293b;
-  --line: #2b3a52;
-  --text: #e6edf7;
-  --muted: #93a3bb;
-  --accent: #38bdf8;
-  --good: #4ade80;
-  --bad: #f87171;
+  /* iOS dark-mode semantic colors (Apple HIG), not an invented palette.
+     systemBackground/secondarySystemBackground/tertiarySystemBackground,
+     systemBlue, label/secondaryLabel, separator, systemGreen, systemRed —
+     the same values UIKit itself uses in dark mode, so the app reads as
+     "this platform's app" rather than a hand-picked navy-and-cyan look. */
+  --bg: #000000;
+  --panel: #1c1c1e;
+  --panel-2: #2c2c2e;
+  --line: rgba(84, 84, 88, 0.65);
+  --text: #ffffff;
+  --muted: rgba(235, 235, 245, 0.6);
+  --accent: #0a84ff;
+  --good: #30d158;
+  --bad: #ff453a;
   color-scheme: dark;
 }
 
@@ -46,7 +51,13 @@ button {
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
-  background: var(--bg);
+  /* iOS nav bars are translucent over scrolled content, not a flat opaque
+     panel with a hard rule beneath it. Needs the -webkit- prefix here
+     specifically, not just for older-browser reach — this renders inside
+     WKWebView, which is WebKit, so it is the prefix that actually matters. */
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   z-index: 5;
 }
 
@@ -1342,6 +1353,74 @@ button.wide {
 .action-row .action-btn {
   flex: 1;
   min-width: 0;
+}
+
+/* Genuine iOS grouped-list rows (Settings.app style), scoped to the home
+   screen only for now rather than replacing .action-btn everywhere — a
+   direction gets confirmed on one screen before it is rolled out, not
+   applied blind across all thirty. One rounded container per group, hairline
+   separators BETWEEN rows instead of a border and a gap around every single
+   one, and a chevron standing in for "this goes somewhere" instead of a
+   whole second line of subtitle text repeating what the title already said. */
+.ios-group {
+  background: var(--panel);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 1.1rem;
+}
+
+.ios-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  padding: 0.8rem 1rem;
+}
+
+.ios-row:last-child {
+  border-bottom: none;
+}
+
+.ios-row:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ios-row-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ios-row-title {
+  display: block;
+  font-size: 1rem;
+}
+
+.ios-row-sub {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.05rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ios-chevron {
+  flex-shrink: 0;
+  color: rgba(235, 235, 245, 0.3);
+}
+
+/* The HIG way to mark a primary action inside a list is tinted text, not a
+   filled gradient button sitting among otherwise-plain rows. */
+.ios-row-featured .ios-row-title {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* ---- Topic card refinements ---------------------------------------- */

@@ -11,6 +11,31 @@ import progression from '../data/progression.json'
 
 const hasLesson = (id) => Boolean(lessons[id])
 
+/** A simple, symmetric ">" — verified by construction: both legs of the
+ *  angle measure the same length, not eyeballed. */
+function ChevronIcon() {
+  return (
+    <svg width="9" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 6 L15 12 L9 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/** One iOS-style grouped-list row: title, optional subtitle, a chevron.
+ *  `featured` tints the title instead of using a filled button — the HIG way
+ *  to mark a primary action inside an otherwise plain list. */
+function Row({ title, sub, onClick, featured = false }) {
+  return (
+    <button className={`ios-row${featured ? ' ios-row-featured' : ''}`} onClick={onClick}>
+      <span className="ios-row-text">
+        <span className="ios-row-title">{title}</span>
+        {sub && <span className="ios-row-sub">{sub}</span>}
+      </span>
+      <ChevronIcon />
+    </button>
+  )
+}
+
 // Two short sessions a day — enough to keep the spacing engine fed
 // without being the kind of target that gets abandoned on a busy day.
 const DAILY_GOAL = 30
@@ -216,44 +241,36 @@ export default function TopicPicker({ onStudy, onSpeed, onMixed, onLearn, onLess
         {goalHit && <p className="feedback good goal-hit">Daily goal hit — nice.</p>}
       </div>
 
-      {/* Compact two-line buttons: the explanation sits inside the control
-          rather than as a paragraph beneath it, which previously pushed the
-          first topic most of a screen down. */}
-      <button className="action-btn primary-action" onClick={onMixed}>
-        <span className="action-title">Mixed review</span>
-        <span className="action-sub">All topics, weighted toward your weak spots</span>
-      </button>
+      {/* Two genuine iOS grouped-list sections rather than a stack of
+          individually bordered buttons — a scoped first pass at rule 10
+          (CLAUDE.md): the home screen only, so a direction can be judged on
+          a screenshot before it is rolled out everywhere. The two primary
+          actions get tinted titles instead of a filled gradient button,
+          which is the HIG way to mark "this one matters more" inside a list
+          rather than making it a different kind of control entirely. */}
+      <div className="ios-group">
+        <Row
+          title="Mixed review"
+          sub="All topics, weighted toward your weak spots"
+          onClick={onMixed}
+          featured
+        />
+        {/* The amino acid deck is the daily driver while biochemistry is
+            running, and it used to sit four stage-blocks down the page behind
+            a button labelled only "Cards". Pinned here so it costs no
+            scrolling and says what it actually does. */}
+        <Row title="Build up a set" sub="One at a time" onClick={() => onBuild(null)} featured />
+      </div>
 
-      {/* The amino acid deck is the daily driver while biochemistry is
-          running, and it used to sit four stage-blocks down the page behind
-          a button labelled only "Cards". Pinned here so it costs no
-          scrolling and says what it actually does. */}
-      <button className="action-btn primary-action" onClick={() => onBuild(null)}>
-        <span className="action-title">Build up a set</span>
-        <span className="action-sub">One at a time</span>
-      </button>
-
-      {/* Only offered once a course reading has actually been tagged. An
-          empty "My courses" button is worse than no button — it looks like a
-          feature that is broken rather than one waiting on input. */}
-      {courseIndex().length > 0 && (
-        <button className="action-btn" onClick={onCourses}>
-          <span className="action-title">My courses</span>
-          <span className="action-sub">Week by week, from your readings</span>
-        </button>
-      )}
-
-      <div className="action-row">
-        <button className="action-btn" onClick={onPlan}>
-          <span className="action-title">Progression</span>
-          <span className="action-sub">What's still needed</span>
-        </button>
-        {missedCount > 0 && (
-          <button className="action-btn" onClick={onReviewMisses}>
-            <span className="action-title">Your misses</span>
-            <span className="action-sub">{missedCount} to redo</span>
-          </button>
+      <div className="ios-group">
+        {/* Only offered once a course reading has actually been tagged. An
+            empty "My courses" row is worse than no row — it looks like a
+            feature that is broken rather than one waiting on input. */}
+        {courseIndex().length > 0 && (
+          <Row title="My courses" sub="Week by week, from your readings" onClick={onCourses} />
         )}
+        <Row title="Progression" sub="What's still needed" onClick={onPlan} />
+        {missedCount > 0 && <Row title="Your misses" sub={`${missedCount} to redo`} onClick={onReviewMisses} />}
       </div>
 
       {grouped.map((stage) => {
