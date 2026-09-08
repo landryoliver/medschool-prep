@@ -77,6 +77,31 @@ button {
   padding: 0.15rem 0.4rem;
 }
 
+/* Root-screen header: two stacked rows instead of .app-header's single flex
+   row, so the large title can sit BELOW a slim utility row rather than
+   competing with it for the same line. */
+.app-header-large {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.15rem;
+}
+
+.header-utility-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app-header-large .header-title-row {
+  justify-content: space-between;
+}
+
+.header-title-large {
+  font-size: 2rem;
+  font-weight: 750;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
 .back,
 .header-link {
   background: transparent;

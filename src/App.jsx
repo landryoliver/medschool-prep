@@ -83,30 +83,50 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <header className="app-header">
-        {stack.length === 1 && !innerBack ? (
+      {/* Root screen gets a large title (Settings.app / Health.app
+          convention): the safe-area gap above the header is real and
+          correct on every screen — 59px of un-doubled
+          env(safe-area-inset-top), confirmed by measurement, not a bug — but
+          on the root screen nothing filled it, which is what actually read
+          as "broken", not the space itself. A pushed screen (Progress,
+          Settings, any topic view) keeps the plain slim bar: that same gap
+          above a small title is completely normal iOS navigation-bar
+          behaviour, present above every pushed screen in every real app, and
+          is not a second instance of the same problem. */}
+      {stack.length === 1 && !innerBack ? (
+        <header className="app-header app-header-large">
+          <div className="header-utility-row">
+            <button
+              className={`header-link ${view.name === 'progress' ? 'active' : ''}`}
+              onClick={() => (view.name === 'progress' ? goBack() : setView({ name: 'progress' }))}
+            >
+              Progress
+            </button>
+          </div>
           <div className="header-title-row">
-            <h1>MedLadder</h1>
+            <h1 className="header-title-large">MedLadder</h1>
             <button
               className="header-link header-gear"
               onClick={() => setView({ name: 'settings' })}
               aria-label="Settings"
             >
-              <GearIcon size={19} />
+              <GearIcon size={20} />
             </button>
           </div>
-        ) : (
+        </header>
+      ) : (
+        <header className="app-header">
           <button className="back" onClick={goBack}>
             ‹ {backLabel}
           </button>
-        )}
-        <button
-          className={`header-link ${view.name === 'progress' ? 'active' : ''}`}
-          onClick={() => (view.name === 'progress' ? goBack() : setView({ name: 'progress' }))}
-        >
-          Progress
-        </button>
-      </header>
+          <button
+            className={`header-link ${view.name === 'progress' ? 'active' : ''}`}
+            onClick={() => (view.name === 'progress' ? goBack() : setView({ name: 'progress' }))}
+          >
+            Progress
+          </button>
+        </header>
+      )}
 
       <main className="app-main">
         {view.name === 'topics' && (
