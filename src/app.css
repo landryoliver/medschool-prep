@@ -100,6 +100,11 @@ button {
   font-weight: 750;
   margin: 0;
   letter-spacing: -0.01em;
+  /* line-height is inherited, and body sets 1.5 for paragraph text — on a
+     32px bold heading that is real, confirmed extra height, not a guess: a
+     48px line box (32 * 1.5) padding out space above and below the glyphs
+     themselves, on every large title. Native titles run tight, ~1.1. */
+  line-height: 1.1;
 }
 
 .back,
