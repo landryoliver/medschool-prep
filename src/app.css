@@ -77,24 +77,15 @@ button {
   padding: 0.15rem 0.4rem;
 }
 
-/* Root-screen header: two stacked rows instead of .app-header's single flex
-   row, so the large title can sit BELOW a slim utility row rather than
-   competing with it for the same line. */
-.app-header-large {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.15rem;
+/* Progress rides the same row as the title and the gear now, rather than a
+   second row of its own — that second row was real, measured extra header
+   height (~35px) on top of the large title, independent of and in addition
+   to the contentInset bug that got fixed separately. margin-left: auto
+   consumes the row's remaining space, so Progress lands at the far right
+   while title+gear keep their own small gap and stay clustered at the left. */
+.header-progress-inline {
+  margin-left: auto;
 }
-
-.header-utility-row {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* .header-title-row's base rule (display:flex, small gap) already clusters
-   the gear right next to the title with nothing overridden — the
-   space-between rule this used to have here is what pushed it to the far
-   edge of the row instead. */
 
 .header-title-large {
   font-size: 2rem;

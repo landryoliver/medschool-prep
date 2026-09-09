@@ -94,15 +94,14 @@ export default function App() {
           behaviour, present above every pushed screen in every real app, and
           is not a second instance of the same problem. */}
       {stack.length === 1 && !innerBack ? (
-        <header className="app-header app-header-large">
-          <div className="header-utility-row">
-            <button
-              className={`header-link ${view.name === 'progress' ? 'active' : ''}`}
-              onClick={() => (view.name === 'progress' ? goBack() : setView({ name: 'progress' }))}
-            >
-              Progress
-            </button>
-          </div>
+        // Back to one row: the extra row Progress sat on its own added real,
+        // measured height on top of the large title (≈35px), independent of
+        // the contentInset bug that was fixed separately — a header can be
+        // correctly un-doubled by the native fix and still be taller than it
+        // needs to be by design. Progress goes back to the same row as the
+        // title, pushed to the far right by its own margin so it does not
+        // wedge itself between the title and the gear, which stay clustered.
+        <header className="app-header">
           <div className="header-title-row">
             <h1 className="header-title-large">MedLadder</h1>
             <button
@@ -111,6 +110,12 @@ export default function App() {
               aria-label="Settings"
             >
               <GearIcon size={20} />
+            </button>
+            <button
+              className={`header-link header-progress-inline ${view.name === 'progress' ? 'active' : ''}`}
+              onClick={() => (view.name === 'progress' ? goBack() : setView({ name: 'progress' }))}
+            >
+              Progress
             </button>
           </div>
         </header>
