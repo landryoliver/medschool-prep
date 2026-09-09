@@ -91,9 +91,10 @@ button {
   justify-content: flex-end;
 }
 
-.app-header-large .header-title-row {
-  justify-content: space-between;
-}
+/* .header-title-row's base rule (display:flex, small gap) already clusters
+   the gear right next to the title with nothing overridden — the
+   space-between rule this used to have here is what pushed it to the far
+   edge of the row instead. */
 
 .header-title-large {
   font-size: 2rem;
