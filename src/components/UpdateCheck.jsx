@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 /**
  * The actual computed env(safe-area-inset-top), in pixels, measured directly
@@ -31,6 +31,21 @@ function measureSafeAreaTop() {
  */
 export default function UpdateCheck() {
   const [status, setStatus] = useState('idle')
+  const [headerHeight, setHeaderHeight] = useState(null)
+
+  // A second, independent measurement, because a screenshot showing a large
+  // gap does not say WHOSE gap it is. safe-top confirms the CSS value going
+  // in; this confirms what the header element actually renders as, in real
+  // pixels. If the two roughly reconcile with the header's own designed
+  // structure, the gap is something outside this app's DOM entirely — iOS's
+  // own "back to TestFlight" affordance shown after launching a build from
+  // inside TestFlight rather than from the home-screen icon is exactly that
+  // kind of thing, and would inflate a screenshot without this measurement
+  // moving at all.
+  useEffect(() => {
+    const el = document.querySelector('.app-header')
+    if (el) setHeaderHeight(Math.round(el.getBoundingClientRect().height))
+  }, [])
 
   async function check() {
     if (!('serviceWorker' in navigator)) {
@@ -80,7 +95,13 @@ export default function UpdateCheck() {
       {/* Temporary, deliberately visible: names the real safe-area-inset-top
           pixel value on whatever device this is, so the header-gap question
           gets settled by a number instead of another guess. */}
-      {isNative && <span className="muted"> · safe-top: {measureSafeAreaTop()}</span>}
+      {isNative && (
+        <span className="muted">
+          {' '}
+          · safe-top: {measureSafeAreaTop()}
+          {headerHeight != null && <> · header: {headerHeight}px</>}
+        </span>
+      )}
     </footer>
   )
 }
