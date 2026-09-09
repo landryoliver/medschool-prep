@@ -6,16 +6,16 @@ import './app.css'
 
 registerSW({ immediate: true })
 
-// A screenshot showed a much larger gap above the header on the native app
-// than the PWA has ever shown, and the obvious suspect is capacitor.config
-// .json's ios.contentInset "always" interacting with app.css's own
-// env(safe-area-inset-top) padding. But env(safe-area-inset-top) inside a
-// WKWebView is documented to be DERIVED FROM contentInsetAdjustmentBehavior
-// rather than independent of it, so the two are not obviously additive, and
-// changing the CSS on a guess risks the opposite failure — the header
-// sliding under the status bar, which is worse than too much space. Tagging
-// native here so a diagnostic can show the real computed value instead of
-// guessing from a screenshot's pixel proportions.
+// Settled, not guessed: capacitor.config.json's ios.contentInset was
+// "always", which turned out to zero out env(safe-area-inset-top) inside the
+// WebView while still reserving real native space above it — proven by a
+// header-height diagnostic (this app's own .app-header measured almost
+// exactly what its CSS predicts with zero safe-area contribution), not
+// assumed from a screenshot. contentInset is now "never", the documented
+// default and the pattern CSS env(safe-area-inset-*) is meant to be used
+// with. Tagging native here so the diagnostic stays available — worth
+// keeping even resolved, since it is cheap and was the thing that actually
+// closed this out instead of another guess.
 if (globalThis.Capacitor?.isNativePlatform?.()) {
   document.documentElement.classList.add('native-shell')
 }

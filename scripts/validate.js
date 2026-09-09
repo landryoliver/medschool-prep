@@ -1274,10 +1274,11 @@ console.log('\n=== Reference data ===')
 
 // The app background colour, independently written three times: --bg in
 // app.css, twice in capacitor.config.json (root and ios.backgroundColor,
-// which cover different layers — the WebView's own background versus what
-// contentInset "always" leaves showing behind the status bar), and once as a
-// UIColor literal in SceneDelegate.swift because that native layer cannot
-// read a CSS variable. Four independent copies of one fact is exactly the
+// which cover different layers — the WebView's own background versus
+// whatever region the native window itself shows through, regardless of
+// which ios.contentInset mode is active), and once as a UIColor literal in
+// SceneDelegate.swift because that native layer cannot read a CSS variable.
+// Four independent copies of one fact is exactly the
 // shape of bug the extension-point identifiers already were — a fix landing
 // in one and not the others is invisible until someone looks at a screenshot,
 // which is how the status-bar strip actually appeared black in the first

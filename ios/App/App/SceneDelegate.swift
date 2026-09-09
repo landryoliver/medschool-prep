@@ -12,15 +12,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // MedLadderViewController.swift for why ScreenTimePlugin needs that.
         window?.rootViewController = MedLadderViewController()
 
-        // capacitor.config.json's ios.contentInset is "always", which insets
-        // the WebView BELOW the status bar rather than drawing under it — so
-        // the status-bar strip is never WebView content at all, and setting
-        // the WebView's own background (also done in capacitor.config.json)
-        // does not reach it. That strip is this window's plain UIKit
-        // background, defaulting to black with nothing set here, which is
-        // what actually showed as the "ugly black header." Match the app's
-        // own --bg token (src/app.css) so the two are seamless. --bg is
-        // iOS's own systemBackground dark-mode value, true black.
+        // capacitor.config.json's ios.contentInset was "always" when this
+        // fix first landed, which insets the WebView below the status bar
+        // rather than letting it draw under it — so whatever this window's
+        // own background is, is what shows through that strip. That is what
+        // actually produced the "ugly black header": no background was set
+        // here at all. contentInset later moved to "never" (see
+        // capacitor.config.json — "always" was independently found to zero
+        // out env(safe-area-inset-top) inside the WebView while still
+        // reserving real space for it, confirmed by a header-height
+        // diagnostic rather than assumed), but this stays regardless of
+        // which mode is active: whatever region the WebView does not cover,
+        // native or CSS, this window's own background is what shows, and it
+        // should always match --bg (src/app.css) — iOS's own
+        // systemBackground dark-mode value, true black.
         window?.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         window?.rootViewController?.view.backgroundColor = window?.backgroundColor
 

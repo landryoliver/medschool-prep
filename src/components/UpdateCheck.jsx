@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react'
 
 /**
  * The actual computed env(safe-area-inset-top), in pixels, measured directly
- * rather than assumed. A screenshot showed a much bigger gap above the header
- * on the native app than the PWA has ever shown, and the obvious suspect —
- * capacitor.config.json's contentInset "always" double-counting against
- * app.css's own safe-area padding — is not something to fix on a guess:
- * env(safe-area-inset-top) inside a WKWebView is documented to be DERIVED
- * FROM that same native setting rather than independent of it, so whether
- * they are actually additive here is genuinely unknown without a real number
- * off a real device. A detached element with the padding actually applied is
- * the standard, reliable way to read an env() value from JS — reading a CSS
- * custom property holding env() back through getComputedStyle is not
- * consistently supported across engines.
+ * rather than assumed. This is what actually closed out the header-gap
+ * question: with capacitor.config.json's ios.contentInset set to "always",
+ * this read 0px while scrolled — not a bug in the measurement, but proof
+ * that "always" mode was letting the WebView's own scroll-inset absorb the
+ * safe area invisibly to CSS while still reserving real native space above
+ * it, which is exactly what a header-height reading close to the CSS's own
+ * zero-safe-area math confirmed at the same time. contentInset is now
+ * "never" — kept measuring here anyway, since a real number is what solved
+ * this and a guess is what nearly made it worse twice. A detached element
+ * with the padding actually applied is the standard, reliable way to read an
+ * env() value from JS — reading a CSS custom property holding env() back
+ * through getComputedStyle is not consistently supported across engines.
  */
 function measureSafeAreaTop() {
   const el = document.createElement('div')
