@@ -84,25 +84,24 @@ export default function NotificationSettings() {
 
   useEffect(() => {
     screenTimeAvailable().then(setAvailable)
-    // A slot can already be saved "on" from a session before the user ever
-    // reached this screen — or from before the OS ever actually asked. In
-    // that case commit() never runs again on its own, so the request
-    // permanently never happens: the toggle looks on forever, iOS never
-    // gained a Notifications row for this app, and nothing fires. notDetermined
-    // specifically means the OS has never shown the prompt at all, so asking
-    // here — the user just navigated to Settings on purpose — is the one
-    // real ask, not a repeat of one that already happened.
-    notificationDiagnostics()
-      .then(async (d) => {
-        setDiag(d)
-        const anyOn = settings.enabled && Object.values(settings.slots).some((s) => s.on)
-        if (anyOn && d.authorizationStatus === 'notDetermined') {
-          const result = await requestPermission()
-          if (result === 'granted') await refreshReminders(settings)
-          await refreshDiag()
-        }
-      })
-      .catch((err) => setDiag(errorDiag(err)))
+    // notificationDiagnostics() has been observed to hang on device — a
+    // still-open, separate bug (see the loading/tick diagnostics below).
+    // The permission ask used to be gated behind that call resolving,
+    // which meant requestPermission() was never actually reached, not
+    // once, across every build shipped tonight. Decoupled: fire it
+    // independently whenever a slot is on. iOS's own requestAuthorization
+    // is safe to call unconditionally — once the user has answered, it
+    // resolves immediately with the existing decision instead of
+    // re-prompting, so there is no notDetermined precondition to check
+    // here; it costs nothing to call on every visit.
+    refreshDiag()
+    const anyOn = settings.enabled && Object.values(settings.slots).some((s) => s.on)
+    if (anyOn) {
+      requestPermission()
+        .then((result) => (result === 'granted' ? refreshReminders(settings) : null))
+        .catch(() => {})
+        .finally(refreshDiag)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
