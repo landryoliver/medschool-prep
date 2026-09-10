@@ -176,6 +176,17 @@ async function backend() {
   return ScreenTimeNative
 }
 
+/** See the identical helper in screenTime.js: a native call that never
+ *  resolves OR rejects is invisible to every .catch, so a hang here would
+ *  leave the settings screen stuck awaiting requestPermission() forever with
+ *  no error to show. */
+function withTimeout(promise, ms, label) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)),
+  ])
+}
+
 /** Numeric ids are what the platform wants; the readable id is what we reason
  *  about. Hash rather than a counter so it stays stable across rebuilds. */
 export function numericId(id) {
@@ -190,7 +201,7 @@ export function numericId(id) {
 export async function requestPermission() {
   const api = await backend()
   if (!api) return 'unsupported'
-  const res = await api.requestNotificationPermission()
+  const res = await withTimeout(api.requestNotificationPermission(), 10000, 'requestNotificationPermission')
   return res?.granted ? 'granted' : 'denied'
 }
 

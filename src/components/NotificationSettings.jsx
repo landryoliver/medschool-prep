@@ -97,7 +97,16 @@ export default function NotificationSettings() {
 
     const anyOn = next.enabled && Object.values(next.slots).some((s) => s.on)
     if (anyOn && diag?.authorizationStatus !== 'authorized') {
-      const result = await requestPermission()
+      let result
+      try {
+        result = await requestPermission()
+      } catch (err) {
+        // A hung native call rejects here now (see withTimeout in
+        // notifications.js) instead of leaving this await pending forever
+        // with the toggle showing "on" and nothing to show for why.
+        setDiag(errorDiag(err))
+        return
+      }
       if (result === 'denied' || result === 'unsupported') {
         // The setting stays on — denying the OS prompt (or the native bridge
         // being unavailable) does not mean the user wants the toggle to

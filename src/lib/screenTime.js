@@ -72,6 +72,20 @@ async function plugin() {
 }
 
 /**
+ * A native call that never resolves OR rejects is invisible to every .catch
+ * in the app — the diagnostics screen showed nothing at all rather than an
+ * error, because nothing had actually failed yet from JS's point of view. A
+ * timeout is the only way to turn "silently still waiting" into a visible,
+ * reportable fact instead of a blank card forever.
+ */
+function withTimeout(promise, ms, label) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)),
+  ])
+}
+
+/**
  * True only when the native app genuinely has this plugin registered.
  * Capacitor.isPluginAvailable is the documented way to ask this — checking
  * for a truthy Capacitor.Plugins.ScreenTime is not equivalent, because
@@ -178,5 +192,5 @@ export async function notificationDiagnostics() {
   if (!p) {
     return { unsupported: true, authorizationStatus: 'n/a', alertSetting: 'n/a', pendingCount: 0, pending: [] }
   }
-  return p.notificationDiagnostics()
+  return withTimeout(p.notificationDiagnostics(), 5000, 'notificationDiagnostics')
 }
