@@ -52,6 +52,16 @@ export default function NotificationSettings() {
   // it in is itself the answer.
   const [diag, setDiag] = useState({ authorizationStatus: 'loading…', alertSetting: '', pendingCount: 0, pending: [] })
   const [saved, setSaved] = useState(0)
+  // A plain setInterval, no plugin involved at all. diag stuck on "loading…"
+  // past the 5s timeout is either the native call genuinely hanging forever
+  // with the JS timer somehow not firing either, or this whole screen's JS
+  // is frozen and nothing here would ever update regardless of cause. This
+  // number climbing in a screenshot rules the second one out on its own.
+  const [tick, setTick] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 1000)
+    return () => clearInterval(id)
+  }, [])
 
   // The permission warning used to live only in React state set by the last
   // requestPermission() call this session — so it read correctly for exactly
@@ -194,6 +204,8 @@ export default function NotificationSettings() {
         <div className="card">
           <strong>Diagnostics</strong>
           <p className="muted hint-line" style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+            screen alive: {tick}s
+            <br />
             authorizationStatus: {diag.authorizationStatus}
             <br />
             alertSetting: {diag.alertSetting}
