@@ -45,7 +45,12 @@ const SLOT_DESCRIPTIONS = {
 export default function NotificationSettings() {
   const [settings, setSettings] = useState(() => loadSettings())
   const [available, setAvailable] = useState(null)
-  const [diag, setDiag] = useState(null)
+  // "Loading…" from the first render, not null: a null diag and a hung
+  // native call rendered identically — nothing — so a screenshot could not
+  // tell "still waiting" from "never asked" apart. Starting non-null means
+  // the card is always on screen, and whichever state a screenshot catches
+  // it in is itself the answer.
+  const [diag, setDiag] = useState({ authorizationStatus: 'loading…', alertSetting: '', pendingCount: 0, pending: [] })
   const [saved, setSaved] = useState(0)
 
   // The permission warning used to live only in React state set by the last
@@ -165,7 +170,10 @@ export default function NotificationSettings() {
           Each one stays silent on a day you have already studied. Rebuilt every time you open the app or
           answer a question, so turning this on takes effect immediately.
         </p>
-        {diag && diag.authorizationStatus !== 'authorized' && diag.authorizationStatus !== 'n/a' && (
+        {diag &&
+          diag.authorizationStatus !== 'authorized' &&
+          diag.authorizationStatus !== 'n/a' &&
+          diag.authorizationStatus !== 'loading…' && (
           <p className="muted" style={{ color: 'var(--bad)' }}>
             iOS notifications are turned off for MedLadder ({diag.authorizationStatus}). Re-enable them in
             Settings → MedLadder → Notifications, or nothing below will actually fire.
