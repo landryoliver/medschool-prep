@@ -58,7 +58,24 @@ export default function NotificationSettings() {
 
   useEffect(() => {
     screenTimeAvailable().then(setAvailable)
-    refreshDiag()
+    // A slot can already be saved "on" from a session before the user ever
+    // reached this screen — or from before the OS ever actually asked. In
+    // that case commit() never runs again on its own, so the request
+    // permanently never happens: the toggle looks on forever, iOS never
+    // gained a Notifications row for this app, and nothing fires. notDetermined
+    // specifically means the OS has never shown the prompt at all, so asking
+    // here — the user just navigated to Settings on purpose — is the one
+    // real ask, not a repeat of one that already happened.
+    notificationDiagnostics().then(async (d) => {
+      setDiag(d)
+      const anyOn = settings.enabled && Object.values(settings.slots).some((s) => s.on)
+      if (anyOn && d.authorizationStatus === 'notDetermined') {
+        const result = await requestPermission()
+        if (result === 'granted') await refreshReminders(settings)
+        await refreshDiag()
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const commit = async (next) => {
@@ -68,11 +85,13 @@ export default function NotificationSettings() {
     const anyOn = next.enabled && Object.values(next.slots).some((s) => s.on)
     if (anyOn && diag?.authorizationStatus !== 'authorized') {
       const result = await requestPermission()
-      if (result === 'denied') {
-        // The setting stays on — denying the OS prompt does not mean the
-        // user wants the toggle to silently flip back off behind them. It
-        // means nothing will fire until they re-enable it in iOS Settings,
-        // which the UI below says outright rather than pretending it worked.
+      if (result === 'denied' || result === 'unsupported') {
+        // The setting stays on — denying the OS prompt (or the native bridge
+        // being unavailable) does not mean the user wants the toggle to
+        // silently flip back off behind them. It means nothing will fire
+        // until the real cause is fixed, which the UI below says outright
+        // rather than pretending "Schedule updated" when nothing was
+        // actually scheduled natively.
         await refreshDiag()
         return
       }
