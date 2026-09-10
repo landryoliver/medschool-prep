@@ -54,7 +54,18 @@ export default function NotificationSettings() {
   // even though the real OS setting had not changed. Reading real
   // authorization status from iOS on mount, not just after asking, is what
   // makes the warning honest across visits rather than a snapshot of one.
-  const refreshDiag = () => notificationDiagnostics().then(setDiag)
+  //
+  // A rejected native call used to leave diag permanently null with nothing
+  // on screen at all — the exact failure this panel exists to catch,
+  // swallowed silently instead of shown. errorDiag turns that rejection into
+  // a visible authorizationStatus string instead of a blank screen.
+  const errorDiag = (err) => ({
+    authorizationStatus: `error: ${err?.message ?? String(err)}`,
+    alertSetting: 'n/a',
+    pendingCount: 0,
+    pending: [],
+  })
+  const refreshDiag = () => notificationDiagnostics().then(setDiag).catch((err) => setDiag(errorDiag(err)))
 
   useEffect(() => {
     screenTimeAvailable().then(setAvailable)
@@ -66,15 +77,17 @@ export default function NotificationSettings() {
     // specifically means the OS has never shown the prompt at all, so asking
     // here — the user just navigated to Settings on purpose — is the one
     // real ask, not a repeat of one that already happened.
-    notificationDiagnostics().then(async (d) => {
-      setDiag(d)
-      const anyOn = settings.enabled && Object.values(settings.slots).some((s) => s.on)
-      if (anyOn && d.authorizationStatus === 'notDetermined') {
-        const result = await requestPermission()
-        if (result === 'granted') await refreshReminders(settings)
-        await refreshDiag()
-      }
-    })
+    notificationDiagnostics()
+      .then(async (d) => {
+        setDiag(d)
+        const anyOn = settings.enabled && Object.values(settings.slots).some((s) => s.on)
+        if (anyOn && d.authorizationStatus === 'notDetermined') {
+          const result = await requestPermission()
+          if (result === 'granted') await refreshReminders(settings)
+          await refreshDiag()
+        }
+      })
+      .catch((err) => setDiag(errorDiag(err)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
