@@ -226,10 +226,21 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
             }
             // Only the streak-risk slot, not every reminder — a Focus mode
             // that lets three "study time" pings through a day stops being a
-            // Focus mode. .timeSensitive needs the entitlement in
-            // App.entitlements to actually take effect; without it iOS
-            // silently treats this as .active instead of refusing, so this
-            // fails soft exactly like the icon attachment does.
+            // Focus mode. .timeSensitive needs the
+            // com.apple.developer.usernotifications.time-sensitive
+            // entitlement to actually take effect; a build that added it to
+            // App.entitlements failed to export for every distribution
+            // method (App Store, Ad Hoc, Development) — most likely because
+            // the App ID itself doesn't have the capability turned on yet in
+            // Apple's developer portal (Certificates, Identifiers & Profiles
+            // → Identifiers → com.medladder.app → Time Sensitive
+            // Notifications), which automatic signing can't do on its own.
+            // The entitlement was reverted so the pipeline exports again;
+            // this line is left in place because it fails soft exactly like
+            // the icon attachment does — without the entitlement, iOS just
+            // treats it as .active instead of refusing anything, so there is
+            // nothing to lose by leaving it and something to gain if the
+            // portal capability gets enabled later.
             if (item["slotId"] as? String) == "priority" {
                 content.interruptionLevel = .timeSensitive
             }

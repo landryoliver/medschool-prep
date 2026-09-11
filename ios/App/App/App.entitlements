@@ -8,11 +8,5 @@
 	<array>
 		<string>group.com.medladder.app</string>
 	</array>
-	<!-- Self-service capability, no Apple approval needed (unlike Critical
-	     Alerts) — lets the "Last call" streak reminder set
-	     interruptionLevel = .timeSensitive so it breaks through Focus modes
-	     the way an actually urgent notification should. -->
-	<key>com.apple.developer.usernotifications.time-sensitive</key>
-	<true/>
 </dict>
 </plist>
