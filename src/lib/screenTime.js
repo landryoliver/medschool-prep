@@ -65,7 +65,23 @@ export function saveGate(gate) {
   }
 }
 
-async function plugin() {
+// Not async, and never awaited by callers — see every `const p = plugin()`
+// below. registerPlugin()'s returned proxy is a known-buggy "thenable" on
+// this Capacitor version (its `.then` property is itself callable, so
+// anything that treats the proxy object as a value to resolve — `await`ing
+// it directly, or returning it from an async function, which implicitly
+// does the same) tries to call that `.then` and hangs forever, because the
+// proxy doesn't actually behave like a real promise. This was the true
+// cause of every native call in this app appearing to hang: this getter
+// used to carry the async keyword and simply return ScreenTimeNative,
+// so just getting the plugin reference — before ever calling a real method
+// on it — already hung on every single call site. Confirmed on device: a
+// native-side probe proved registration itself succeeds and the method
+// body is never even reached, which only makes sense if the JS call never
+// leaves this function. Calling an actual method on the returned object
+// (e.g. `p.unlockLog()`) is fine — that returns Capacitor's real per-call
+// promise, not the proxy itself.
+function plugin() {
   const cap = globalThis.Capacitor
   if (!cap?.isNativePlatform?.()) return null
   return ScreenTimeNative
@@ -123,7 +139,7 @@ export function diagnostics() {
 }
 
 export async function authorize() {
-  const p = await plugin()
+  const p = plugin()
   if (!p) return { granted: false, unsupported: true }
   return p.authorize()
 }
@@ -135,13 +151,13 @@ export async function authorize() {
  * able to say which it was.
  */
 export async function status() {
-  const p = await plugin()
+  const p = plugin()
   if (!p) return { unsupported: true, authorized: false, armed: false, selectedCount: 0 }
   return p.status()
 }
 
 export async function pickApps() {
-  const p = await plugin()
+  const p = plugin()
   if (!p) return { selectedCount: 0, unsupported: true }
   return p.pickApps()
 }
@@ -150,7 +166,7 @@ export async function setArmed(on, ceilingMinutes) {
   const gate = { ...loadGate(), armed: on === true }
   if (Number.isInteger(ceilingMinutes) && ceilingMinutes > 0) gate.ceilingMinutes = ceilingMinutes
   saveGate(gate)
-  const p = await plugin()
+  const p = plugin()
   if (!p) return { armed: gate.armed, unsupported: true }
   return p.arm({ on: gate.armed, ceilingMinutes: gate.ceilingMinutes })
 }
@@ -165,7 +181,7 @@ export async function setArmed(on, ceilingMinutes) {
  */
 export async function pushRecord(sessionLog, now = new Date()) {
   const record = shieldState(sessionLog, loadGoal(), now)
-  const p = await plugin()
+  const p = plugin()
   if (!p) return { record, unsupported: true }
   const res = await p.pushRecord(record)
   return { record, ...res }
@@ -174,7 +190,7 @@ export async function pushRecord(sessionLog, now = new Date()) {
 /** The escape hatch, read back. An override that is not visible is one you stop
  *  noticing you use. */
 export async function unlockLog() {
-  const p = await plugin()
+  const p = plugin()
   if (!p) return { entries: [] }
   return p.unlockLog()
 }
@@ -188,7 +204,7 @@ export async function unlockLog() {
  * declined to add — and this settles all of them with one call.
  */
 export async function notificationDiagnostics() {
-  const p = await plugin()
+  const p = plugin()
   if (!p) {
     return { unsupported: true, authorizationStatus: 'n/a', alertSetting: 'n/a', pendingCount: 0, pending: [] }
   }

@@ -170,7 +170,13 @@ export function plan({ now = new Date(), settings, studiedToday, streak = 0, due
  * the kind of drift that made the real registration bug invisible for as
  * long as it was.
  */
-async function backend() {
+// Not async, and never awaited — see the identical, more detailed note on
+// plugin() in screenTime.js. registerPlugin()'s proxy is unintentionally
+// "thenable" on this Capacitor version; awaiting the bare proxy reference
+// (or returning it from an async function, which does the same implicitly)
+// hangs forever instead of erroring. This was the actual cause of every
+// native call in this app appearing to hang, notifications included.
+function backend() {
   const cap = globalThis.Capacitor
   if (!cap?.isNativePlatform?.()) return null
   return ScreenTimeNative
@@ -199,7 +205,7 @@ export function numericId(id) {
 }
 
 export async function requestPermission() {
-  const api = await backend()
+  const api = backend()
   if (!api) return 'unsupported'
   const res = await withTimeout(api.requestNotificationPermission(), 10000, 'requestNotificationPermission')
   return res?.granted ? 'granted' : 'denied'
@@ -211,7 +217,7 @@ export async function requestPermission() {
  */
 export async function reschedule(input) {
   const items = plan(input)
-  const api = await backend()
+  const api = backend()
   if (!api) return items // browser: planning still runs, nothing is delivered
 
   await api.scheduleNotifications({

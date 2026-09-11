@@ -1531,6 +1531,35 @@ console.log('\n=== Reference data ===')
     rBad++
   }
 
+  // registerPlugin()'s returned proxy is unintentionally "thenable" on this
+  // Capacitor version (its .then property is itself callable), so awaiting
+  // the bare proxy reference — or returning it from an async function,
+  // which adopts a returned thenable's state automatically — hangs forever
+  // instead of erroring, because the proxy doesn't behave like a real
+  // promise. This was the actual cause of every native call in the app
+  // appearing to hang for an entire session: plugin()/backend() used to be
+  // `async function ... { return ScreenTimeNative }`, so just getting the
+  // plugin reference already hung, before any real method call was ever
+  // reached. Calling an actual method on the returned object is fine —
+  // that returns Capacitor's real per-call promise, not the proxy itself —
+  // so this only checks the reference-getters, not every call site.
+  if (/async function plugin\s*\(/.test(st)) {
+    fail('native bridge: screenTime.js\'s plugin() is async again — returning the bare ScreenTimeNative proxy from an async function hangs forever (see the comment on plugin())')
+    rBad++
+  }
+  if (/await plugin\(\)/.test(st)) {
+    fail('native bridge: screenTime.js awaits plugin() somewhere — awaiting the bare proxy reference hangs forever, only await a call on the object it returns')
+    rBad++
+  }
+  if (/async function backend\s*\(/.test(notif)) {
+    fail('native bridge: notifications.js\'s backend() is async again — returning the bare ScreenTimeNative proxy from an async function hangs forever (see the comment on backend())')
+    rBad++
+  }
+  if (/await backend\(\)/.test(notif)) {
+    fail('native bridge: notifications.js awaits backend() somewhere — awaiting the bare proxy reference hangs forever, only await a call on the object it returns')
+    rBad++
+  }
+
   if (!rBad) {
     console.log('  ok  native bridge: ScreenTimePlugin is actually registered — view controller, pbxproj wiring, and JS registerPlugin all agree')
   }
