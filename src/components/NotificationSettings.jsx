@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SLOTS, loadSettings, saveSettings, requestPermission } from '../lib/notifications.js'
 import { refreshReminders } from '../lib/refreshReminders.js'
-import { isAvailable as screenTimeAvailable, diagnostics, notificationDiagnostics } from '../lib/screenTime.js'
+import { isAvailable as screenTimeAvailable, diagnostics, notificationDiagnostics, unlockLog } from '../lib/screenTime.js'
 
 /**
  * The settings screen for study reminders.
@@ -52,6 +52,23 @@ export default function NotificationSettings() {
   // it in is itself the answer.
   const [diag, setDiag] = useState({ authorizationStatus: 'loading…', alertSetting: '', pendingCount: 0, pending: [] })
   const [saved, setSaved] = useState(0)
+  // Every method tried so far — notificationDiagnostics, requestPermission —
+  // has hung identically, including from a fresh reinstall. That is
+  // consistent with the whole plugin instance never actually being live
+  // ("bridge?.registerPluginInstance(...)" is a silent no-op if bridge is
+  // nil there, and isPluginAvailable can reflect a static compile-time
+  // manifest rather than proof a live instance is registered). unlockLog()
+  // touches no notification or FamilyControls API at all — just an AppGroup
+  // dictionary read — so it isolates "every call to this plugin hangs" from
+  // "something about UNUserNotificationCenter specifically hangs."
+  const [bridgeTest, setBridgeTest] = useState(null)
+  const testBridge = () => {
+    setBridgeTest('calling…')
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timed out after 5000ms')), 5000))
+    Promise.race([unlockLog(), timeout])
+      .then((res) => setBridgeTest(`ok: ${JSON.stringify(res)}`))
+      .catch((err) => setBridgeTest(`error: ${err?.message ?? String(err)}`))
+  }
   // A plain setInterval, no plugin involved at all. diag stuck on "loading…"
   // past the 5s timeout is either the native call genuinely hanging forever
   // with the JS timer somehow not firing either, or this whole screen's JS
@@ -222,6 +239,19 @@ export default function NotificationSettings() {
           </button>
         </div>
       )}
+
+      {/* Temporary: isolates "every call to this plugin hangs" from
+          "something notification-specific hangs" — unlockLog touches no
+          UserNotifications or FamilyControls API at all. */}
+      <div className="card">
+        <strong>Bridge test (unlockLog)</strong>
+        <p className="muted hint-line" style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+          {bridgeTest ?? 'not run yet'}
+        </p>
+        <button className="ghost" onClick={testBridge}>
+          Test bridge
+        </button>
+      </div>
 
       {settings.enabled &&
         SLOTS.map((slot) => {
