@@ -36,7 +36,7 @@ class MedLadderViewController: CAPBridgeViewController {
         // report ground truth regardless of what's actually wrong.
         let bridgeWasNilAtLoad = bridge == nil
         bridge?.registerPluginInstance(ScreenTimePlugin())
-        let foundAfterRegister = bridge?.getPlugin(pluginName: "ScreenTime") != nil
+        let foundAfterRegister = bridge?.plugin(withName: "ScreenTime") != nil
         // localStorage, not a bare window property: a window property set
         // before the real page has navigated to would be wiped the instant
         // navigation happens, and this project has no way to verify from
