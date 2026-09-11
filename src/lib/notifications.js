@@ -47,6 +47,9 @@ export const SLOTS = [
 
 export const DEFAULT_SETTINGS = {
   enabled: false,
+  // Optional. Used only to personalize the notification body ("Save your
+  // streak, Landry!") — never sent anywhere, never required.
+  name: '',
   slots: Object.fromEntries(SLOTS.map((s) => [s.id, { on: s.defaultOn, time: s.defaultTime }])),
 }
 
@@ -59,6 +62,7 @@ export function loadSettings() {
     // slot with no time in it.
     return {
       enabled: raw.enabled === true,
+      name: typeof raw.name === 'string' ? raw.name.trim().slice(0, 40) : '',
       slots: Object.fromEntries(
         SLOTS.map((s) => {
           const got = raw.slots?.[s.id]
@@ -96,12 +100,38 @@ function at(day, time) {
   return d
 }
 
-function body({ slotId, streak, due, hasStreak }) {
-  if (slotId === 'priority' && hasStreak) {
-    return `Your ${streak}-day streak ends at midnight.`
+// Rounded down, never up: a notification that claims "1h" with 61 minutes
+// actually left is a small, needless lie, and rounding up is the direction
+// that produces one.
+function minutesUntilMidnight(when) {
+  const midnight = new Date(when)
+  midnight.setHours(24, 0, 0, 0)
+  return Math.floor((midnight - when) / 60000)
+}
+
+function formatDuration(minutes) {
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  if (h > 0 && m > 0) return `${h}h ${m}m`
+  if (h > 0) return `${h}h`
+  return `${m}m`
+}
+
+// A notification's text is fixed the moment it is scheduled (see the file
+// header), so "time left" here is computed once, from the fire time itself,
+// not a live clock — it reads correctly at the moment the notification
+// actually arrives, same as Duolingo's streak countdown does at the moment
+// it arrives, without needing a live-updating widget to get there.
+function body({ slotId, streak, due, hasStreak, name, minutesLeft }) {
+  const who = name ? `, ${name}` : ''
+  if (slotId === 'priority') {
+    const left = formatDuration(minutesLeft)
+    return hasStreak
+      ? `Your ${streak}-day streak ends in ${left}${who}.`
+      : `${left} left today${who} — a few minutes is enough.`
   }
-  if (due > 0) return `${due} card${due === 1 ? '' : 's'} due.`
-  return 'A few minutes is enough to keep the day.'
+  if (due > 0) return `${due} card${due === 1 ? '' : 's'} due${who}.`
+  return `A few minutes is enough to keep the day${who}.`
 }
 
 /**
@@ -142,7 +172,14 @@ export function plan({ now = new Date(), settings, studiedToday, streak = 0, due
         title: slot.id === 'priority' && d === 0 && streak > 0 ? 'Streak at risk' : 'Study time',
         // Only today's numbers are real. A notification three days out cannot
         // know the due count then, so it does not claim one.
-        body: body({ slotId: slot.id, streak, due: d === 0 ? due : 0, hasStreak: d === 0 && streak > 0 }),
+        body: body({
+          slotId: slot.id,
+          streak,
+          due: d === 0 ? due : 0,
+          hasStreak: d === 0 && streak > 0,
+          name: settings.name,
+          minutesLeft: minutesUntilMidnight(when),
+        }),
       })
     }
   }

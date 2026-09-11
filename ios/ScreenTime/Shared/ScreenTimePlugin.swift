@@ -3,6 +3,7 @@ import DeviceActivity
 import FamilyControls
 import ManagedSettings
 import SwiftUI
+import UIKit
 import UserNotifications
 
 /// The bridge. Everything the web layer can ask for, and nothing it cannot.
@@ -161,6 +162,32 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
     // the native side has exactly two jobs: ask once, and write whatever it is
     // given after clearing what came before.
 
+    /// A visual attachment, not just title/body text — the plain-text
+    /// reminder read correctly but looked nothing like the notifications
+    /// that actually get a second glance (Duolingo's streak alert, with its
+    /// own mascot image). UIImage(named:) resolving an appiconset entry by
+    /// its set name (here "AppIcon") is a real, commonly used pattern, but
+    /// this project has no Swift toolchain to actually run it against —
+    /// unverified until a real notification is screenshotted. Written to
+    /// fail soft either way: nil anywhere in this chain just means the
+    /// notification ships as plain text, exactly as it already did.
+    ///
+    /// A fresh temp file per notification id, not one shared file reused
+    /// across attachments — UNNotificationAttachment's initializer can move
+    /// rather than copy a source file from the app's own container, which
+    /// would leave a second attachment pointing at a file the first one
+    /// already consumed.
+    private func iconAttachment(forId id: Int) -> UNNotificationAttachment? {
+        guard let image = UIImage(named: "AppIcon"), let data = image.pngData() else { return nil }
+        let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent("medladder-notif-\(id).png")
+        do {
+            try data.write(to: fileURL)
+            return try UNNotificationAttachment(identifier: "icon-\(id)", url: fileURL, options: nil)
+        } catch {
+            return nil
+        }
+    }
+
     @objc func requestNotificationPermission(_ call: CAPPluginCall) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             call.resolve(["granted": granted, "error": error?.localizedDescription ?? NSNull()])
@@ -194,6 +221,9 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
             content.title = title
             content.body = body
             content.sound = .default
+            if let attachment = iconAttachment(forId: id) {
+                content.attachments = [attachment]
+            }
 
             let fireDate = Date(timeIntervalSince1970: atMillis / 1000)
             let comps = Calendar.current.dateComponents(

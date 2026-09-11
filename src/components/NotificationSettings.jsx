@@ -159,6 +159,14 @@ export default function NotificationSettings() {
   const toggleSlot = (id, on) => commit({ ...settings, slots: { ...settings.slots, [id]: { ...settings.slots[id], on } } })
   const setTime = (id, time) => commit({ ...settings, slots: { ...settings.slots, [id]: { ...settings.slots[id], time } } })
 
+  // Local state, committed on blur rather than on every keystroke: commit()
+  // re-requests permission and reschedules on every call, which a plain
+  // onChange would do once per character typed.
+  const [nameInput, setNameInput] = useState(settings.name)
+  const commitName = () => {
+    if (nameInput !== settings.name) commit({ ...settings, name: nameInput })
+  }
+
   if (available === false) {
     // Temporary, deliberately visible: this message alone was already wrong
     // once (shown on an actual TestFlight build), and a screenshot of it says
@@ -196,6 +204,19 @@ export default function NotificationSettings() {
           Each one stays silent on a day you have already studied. Rebuilt every time you open the app or
           answer a question, so turning this on takes effect immediately.
         </p>
+        {/* Optional — used only to personalize the reminder text below
+            ("Your 4-day streak ends in 2h, Landry."). Never required, never
+            sent anywhere. Committed on blur, not on every keystroke, since
+            commit() re-requests permission and reschedules on every call. */}
+        <input
+          type="text"
+          className="text-input"
+          placeholder="Your name (optional)"
+          value={nameInput}
+          onChange={(e) => setNameInput(e.target.value)}
+          onBlur={commitName}
+          maxLength={40}
+        />
         {diag &&
           diag.authorizationStatus !== 'authorized' &&
           diag.authorizationStatus !== 'n/a' &&
