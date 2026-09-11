@@ -253,6 +253,29 @@ export default function NotificationSettings() {
         </button>
       </div>
 
+      {/* Temporary: written by MedLadderViewController.capacitorDidLoad()
+          via evaluateJavaScript straight into localStorage — a channel with
+          nothing to do with Capacitor's plugin call routing, the one thing
+          every result so far has in common. Read here with plain
+          localStorage.getItem, no plugin call involved, so this line can
+          report ground truth even if plugin dispatch itself is what's
+          broken: whether capacitorDidLoad() ran at all, whether bridge was
+          nil at that moment, and whether the bridge's own lookup found
+          ScreenTimePlugin immediately after registering it. */}
+      <div className="card">
+        <strong>Native load debug</strong>
+        <p className="muted hint-line" style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+          {(() => {
+            try {
+              const raw = localStorage.getItem('medladderNativeDebug')
+              return raw ? JSON.stringify(JSON.parse(raw)) : 'not set — capacitorDidLoad() may not have run, or bridge was nil'
+            } catch (err) {
+              return `error reading: ${err?.message ?? String(err)}`
+            }
+          })()}
+        </p>
+      </div>
+
       {settings.enabled &&
         SLOTS.map((slot) => {
           const s = settings.slots[slot.id]
