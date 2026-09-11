@@ -28,7 +28,21 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "notificationDiagnostics", returnType: CAPPluginReturnPromise),
     ]
 
-    private let center = DeviceActivityCenter()
+    // lazy, not a plain `let`: every method on this plugin — even ones that
+    // touch nothing but UNUserNotificationCenter or a plain AppGroup
+    // dictionary — was hanging forever on device, timing out from JS with no
+    // native error at all. A `let` here means DeviceActivityCenter() is
+    // constructed the instant ScreenTimePlugin() is, i.e. inside
+    // registerPluginInstance(ScreenTimePlugin()) in capacitorDidLoad(). If
+    // that init blocks on an XPC handshake to the Screen Time daemon — a
+    // real failure mode when the restricted family-controls entitlement
+    // isn't actually honored for this signing at runtime, even though it is
+    // present in the raw entitlements dump — the whole registration call
+    // never returns, so the plugin is never actually added to the bridge's
+    // live dispatch table and every method on it hangs, regardless of which
+    // framework that particular method touches. lazy defers construction to
+    // arm()'s first real call, which nothing in the shipped UI reaches yet.
+    private lazy var center = DeviceActivityCenter()
 
     /// .individual, not .child: the user restricting themselves, one device, one
     /// Apple ID. .child needs Family Sharing and a second Apple ID holding the
