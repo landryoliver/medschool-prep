@@ -224,6 +224,15 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
             if let attachment = iconAttachment(forId: id) {
                 content.attachments = [attachment]
             }
+            // Only the streak-risk slot, not every reminder — a Focus mode
+            // that lets three "study time" pings through a day stops being a
+            // Focus mode. .timeSensitive needs the entitlement in
+            // App.entitlements to actually take effect; without it iOS
+            // silently treats this as .active instead of refusing, so this
+            // fails soft exactly like the icon attachment does.
+            if (item["slotId"] as? String) == "priority" {
+                content.interruptionLevel = .timeSensitive
+            }
 
             let fireDate = Date(timeIntervalSince1970: atMillis / 1000)
             let comps = Calendar.current.dateComponents(

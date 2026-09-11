@@ -263,6 +263,11 @@ export async function reschedule(input) {
       title: n.title,
       body: n.body,
       at: n.at.getTime(),
+      // Read on the native side to decide interruptionLevel — the "Last
+      // call" slot is the one where being seen actually matters, so it's
+      // the one that should break through Focus modes like a real urgent
+      // notification instead of sitting in the stack unread.
+      slotId: n.slotId,
     })),
   })
   return items
