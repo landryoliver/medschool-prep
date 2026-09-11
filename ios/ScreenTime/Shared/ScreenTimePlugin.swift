@@ -228,19 +228,16 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
             // that lets three "study time" pings through a day stops being a
             // Focus mode. .timeSensitive needs the
             // com.apple.developer.usernotifications.time-sensitive
-            // entitlement to actually take effect; a build that added it to
-            // App.entitlements failed to export for every distribution
-            // method (App Store, Ad Hoc, Development) — most likely because
-            // the App ID itself doesn't have the capability turned on yet in
-            // Apple's developer portal (Certificates, Identifiers & Profiles
-            // → Identifiers → com.medladder.app → Time Sensitive
-            // Notifications), which automatic signing can't do on its own.
-            // The entitlement was reverted so the pipeline exports again;
-            // this line is left in place because it fails soft exactly like
-            // the icon attachment does — without the entitlement, iOS just
-            // treats it as .active instead of refusing anything, so there is
-            // nothing to lose by leaving it and something to gain if the
-            // portal capability gets enabled later.
+            // entitlement (App.entitlements) AND the matching "Time
+            // Sensitive Notifications" capability enabled on the App ID
+            // itself in Apple's developer portal — a build that added the
+            // entitlement without that second, account-side step failed to
+            // export for every distribution method, because automatic
+            // signing cannot grant a capability the App ID doesn't have.
+            // Fails soft either way: without the entitlement actually
+            // taking effect, iOS just treats this as .active instead of
+            // refusing anything, so there is nothing to lose by leaving it
+            // set unconditionally here.
             if (item["slotId"] as? String) == "priority" {
                 content.interruptionLevel = .timeSensitive
             }

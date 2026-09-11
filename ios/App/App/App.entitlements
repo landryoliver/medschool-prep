@@ -8,5 +8,12 @@
 	<array>
 		<string>group.com.medladder.app</string>
 	</array>
+	<!-- Re-added after the App ID's own "Time Sensitive Notifications"
+	     capability was enabled in the developer portal — that's what a
+	     prior build (29) was missing, which is why export failed for every
+	     distribution method until this entitlement was reverted. See the
+	     comment on content.interruptionLevel in ScreenTimePlugin.swift. -->
+	<key>com.apple.developer.usernotifications.time-sensitive</key>
+	<true/>
 </dict>
 </plist>
