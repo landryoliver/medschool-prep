@@ -138,6 +138,17 @@ public class ScreenTimePlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func unlockLog(_ call: CAPPluginCall) {
+        // Registration is now confirmed working (see
+        // MedLadderViewController.swift's localStorage debug write) — bridge
+        // finds this plugin instance immediately after registering it. Every
+        // JS call into it has still hung regardless, so the remaining
+        // question is whether a JS call ever actually reaches THIS method
+        // body at all, versus reaching it and having call.resolve()'s
+        // response fail to get back to JS. Writing straight to localStorage
+        // the instant this runs settles which half of the pipeline is broken.
+        let js = "try { localStorage.setItem('medladderUnlockLogReached', JSON.stringify({ reached: true, at: Date.now() })); } catch (e) {}"
+        DispatchQueue.main.async { self.bridge?.webView?.evaluateJavaScript(js) }
+
         let log = AppGroup.defaults.array(forKey: "unlockLog") as? [[String: Any]] ?? []
         call.resolve(["entries": log])
     }

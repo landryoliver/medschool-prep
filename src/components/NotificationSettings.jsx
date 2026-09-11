@@ -276,6 +276,28 @@ export default function NotificationSettings() {
         </p>
       </div>
 
+      {/* Temporary: written from inside unlockLog()'s own Swift method body,
+          the instant it runs, via the same bypass-Capacitor's-own-dispatch
+          evaluateJavaScript channel. Registration is confirmed working
+          (see the card above); this settles whether tapping "Test bridge"
+          above ever actually reaches this method at all, versus reaching it
+          fine and having call.resolve()'s response fail to get back to JS.
+          Re-reads on every re-render, which the screen-alive tick already
+          drives every second, so no button is needed to refresh it. */}
+      <div className="card">
+        <strong>unlockLog() reached?</strong>
+        <p className="muted hint-line" style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
+          {(() => {
+            try {
+              const raw = localStorage.getItem('medladderUnlockLogReached')
+              return raw ? JSON.stringify(JSON.parse(raw)) : 'not set — tap "Test bridge" above, then wait a couple seconds'
+            } catch (err) {
+              return `error reading: ${err?.message ?? String(err)}`
+            }
+          })()}
+        </p>
+      </div>
+
       {settings.enabled &&
         SLOTS.map((slot) => {
           const s = settings.slots[slot.id]
